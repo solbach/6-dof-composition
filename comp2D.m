@@ -1,46 +1,37 @@
-% initial State [ X, Y, Z, roll, pitch, yaw ]
-x = [0, 0, 0, 0, 0, 0];
+function [Xplus, Jac1, Jac2] = comp2D(X1, X2)
 
-% movements to perform
-mX  = 12;
-mY  = 50;
-mZ  = 10;
-
-mRX = -20;
-mRY = 10;
-mRZ = 18;
-
-% movements repetitions
-dt = 1;
-tt = 1:dt:20;
-
-vX = 0;
-vY = 0;
-vZ = 0;
-
-% main loop
-for t = tt
+    Xplus = [...
+             [ X1(1) + X2(1) * cos( X1(3) ) - X2(2) * sin( X1(3) ) ]
+             [ X1(2) + X2(1) * sin( X1(3) ) + X2(2) * cos( X1(3) ) ]
+             [ X1(3) + X2(3) ]];
+      
+    if nargout > 1
     
-    % I.    rotate
-    % measurement update (Odometry)
-    y = [0, 0, 0, mRX*pi/180, mRY*pi/180, mRZ*pi/180];
-    x = comp(x,y);
+        Jac1 = [...
+                [ 1, 0, - X2(2)*cos( X1(3) ) - X2(1)*sin( X1(3) )]
+                [ 0, 1,   X2(1)*cos( X1(3) ) - X2(2)*sin( X1(3) )]
+                [ 0, 0,                                         1]];
+        
+        Jac2 = [...
+                [ cos( X1(3) ), -sin( X1(3) ),  0]
+                [ sin( X1(3) ),  cos( X1(3) ),  0]
+                [            0,             0,  1]];
     
-    % II.   translate
-    % measurement update (Odometry)
-    y = [mX, mY, mZ, 0*pi/180, 0*pi/180, 0*pi/180];
-    x = comp(x,y);
-    
-    % III.  save data to plot them afterwards
-    vX = [vX x(1)];
-    vY = [vY x(2)];
-    vZ = [vZ x(3)];
-    
+    end
+   
+             
 end
 
-% plot 3D with direction
-plot_dir3(vX, vY, vZ);
-
+%%
+function f()
+%%
+    syms x y a x2 y2 a2 real
+    x1 = [x, y, a];
+    x2 = [x2, y2, a2];
+    p_r = comp2D(x1, x2);
+    Jac1 = jacobian(p_r, x1)
+    Jac2 = jacobian(p_r, x2)
+end
 
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.

@@ -1,35 +1,35 @@
 function Xplus = comp(X1, X2)
-    
-    % calculate new x-Position 
-    result(1) = X1(1) + X2(1) * cos(X1(5)) * cos(X1(6)) - ...
+
+    result = [...
+             [ X1(1) + X2(1) * cos(X1(5)) * cos(X1(6)) - ...
                 X2(2) * cos(X1(5)) * sin(X1(6)) + ...
-                X2(3) * sin(X1(5));
-    
-	% calculate new y-Position 
-    result(2) = X1(2) + X2(1) * ( sin(X1(4)) * sin(X1(5)) * cos(X1(6)) +...
+                X2(3) * sin(X1(5))]
+             [  X1(2) + X2(1) * ( sin(X1(4)) * sin(X1(5)) * cos(X1(6)) +...
                 cos(X1(4)) * sin(X1(6)) ) + ...
                 X2(2) * ( -sin(X1(4)) * sin(X1(5)) * sin(X1(6)) + ...
                 cos(X1(4)) * cos(X1(6)) ) + ...
-                X2(3) * -sin(X1(4)) * cos(X1(5));
-    
-	% calculate new z-Position 
-    result(3) = X1(3) + X2(1) * ( -cos(X1(4)) * sin(X1(5)) * cos(X1(6))+...
+                X2(3) * -sin(X1(4)) * cos(X1(5))]
+             [  X1(3) + X2(1) * ( -cos(X1(4)) * sin(X1(5)) * cos(X1(6))+...
                 sin(X1(4)) * sin(X1(6)) ) + ...
                 X2(2) * ( cos(X1(4)) * sin(X1(5)) * sin(X1(6)) + ...
                 sin(X1(4)) * cos(X1(6)) ) + ...
-                X2(3) * cos(X1(4)) * cos(X1(5));
-    
-	% calculate new roll-Position 
-    result(4) = X1(4) + X2(4);
-    
-    % calculate new pitch-Position 
-    result(5) = X1(5) + X2(5);
-    
-    % calculate new yaw-Position 
-    result(6) = X1(6) + X2(6);
+                X2(3) * cos(X1(4)) * cos(X1(5))]
+             [  X1(4) + X2(4)]
+             [  X1(5) + X2(5)]
+             [  X1(6) + X2(6)]];
     
     Xplus = result;
 
+end
+
+%%
+function f()
+%%
+syms x y z rx ry rz x2 y2 z2 rx2 ry2 rz2 real
+x1 = [x, y, z, rx, ry, rz];
+x2 = [x2, y2, z2, rx2, ry2, rz2];
+p_r = comp(x1, x2);
+PR_r = jacobian(p_r, r)
 end
 
 % Copyright (c) 2014, Markus Solbach
