@@ -3,5 +3,6 @@ composition6DOF
 
 * Full 3D Frame Composition with six degress of freedom
 * Composition-Function 
-* Simple Simulator
-* Written in Matlab
+* Jacobian
+* Simple Simulator (Not yet)
+* Written in Matlab (should also work with Octave)
