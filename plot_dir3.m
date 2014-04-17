@@ -7,6 +7,19 @@ function [h1, h2] = plot_dir3 (vX, vY, vZ)
 %   vZ = cos (vX);
 %   plot_dir3(vX, vY, vZ);
 
+% row / column vector check
+if ( isrow(vX) )
+    vX = vX';
+end
+
+if ( isrow(vY) )
+    vY = vY';
+end
+
+if ( isrow(vZ) )
+    vZ = vZ';
+end
+
 rMag = 0.5;
 
 % Length of vector
@@ -41,9 +54,14 @@ h1 = plot3 (vX, vY, vZ, '.-'); hold on;
 % add arrows 
 h2 = quiver3 (vXQ0, vYQ0, vZQ0, vPx, vPy, vPz, 0, 'r'); grid on; hold off
 axis equal
+legend(' robot movement ',' robot orientation ');
 
 
 % Copyright (c) 2010, Kangwon Lee
+% Update: Markus Solbach [17.04.2014]
+%       - legend
+%       - invariance to row / column vector
+
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without

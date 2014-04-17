@@ -1,39 +1,45 @@
-% State
+% initial State [ X, Y, Z, roll, pitch, yaw ]
 x = [0, 0, 0, 0, 0, 0];
 
-% Measurement (Odometry)
-y = [2, 0, 0, 0*pi/180, 0*pi/180, 90*pi/180];
+% movements to perform
+mX  = 1;
+mY  = 0;
+mZ  = 0;
+
+mRX = 2;
+mRY = 0;
+mRZ = 18;
+
+% movements repetitions
 dt = 1;
-tt = 0:dt:10;
+tt = 1:dt:20;
 
 vX = 0;
 vY = 0;
 vZ = 0;
 
-% Loop
+% main loop
 for t = tt
     
-    % I.    Rotate
-    y = [0, 0, 0, 0*pi/180, 10*pi/180, 4*pi/180];
+    % I.    rotate
+    % measurement update (Odometry)
+    y = [0, 0, 0, mRX*pi/180, mRY*pi/180, mRZ*pi/180];
     x = comp(x,y);
     
-    % II.   Translate
-    y = [1, 0, 0, 0*pi/180, 0*pi/180, 0*pi/180];
+    % II.   translate
+    % measurement update (Odometry)
+    y = [mX, mY, mZ, 0*pi/180, 0*pi/180, 0*pi/180];
     x = comp(x,y);
     
-    % III.  Save Data to plot them
+    % III.  save data to plot them afterwards
     vX = [vX x(1)];
     vY = [vY x(2)];
     vZ = [vZ x(3)];
     
 end
 
-   % vX = linspace(0,2*pi, 10)';
-   % vY = sin (vX);
-   % vZ = cos (vX);
-   % plot_dir3(vX, vY, vZ);
-    
-plot_dir3(vX', vY', vZ');
+% plot 3D with direction
+plot_dir3(vX, vY, vZ);
 
 
 % Copyright (c) 2014, Markus Solbach
