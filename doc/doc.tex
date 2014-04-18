@@ -34,16 +34,23 @@ Markus Solbach\\
 \begin{document}
 
 
-
 \title{3D Composition (6 DOF)}
 \subtitle{A Short overview}
 \maketitle
 \newpage
 
+\section{Introduction}
+Adding relative motion, given by odometry for instance (observation), to an absolute state its called composition. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
+\\\\ In more detail. Let $X$ the state-vector and $Y$ the observation-vector. Defined as follows:
+\begin{equation}
+X = \begin{bmatrix} x_x \\ y_x \\ z_x \\ \phi_x \\ \theta_x \\ \psi_x \end{bmatrix}, \hspace{15 mm} Y = \begin{bmatrix} x_y \\ y_y \\ z_y \\ \phi_y \\ \theta_y \\ \psi_y \end{bmatrix}
+\end{equation}
 
 
-\section{}
+\section{Transformation}
+% plus operator
 
+\section{Jacobians}
 
 %\begin{figure}[ht]
 %	\centering
