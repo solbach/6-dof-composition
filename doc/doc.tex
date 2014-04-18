@@ -7,12 +7,13 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{rotating}
 
 % Kopf und Fußzeile
 \usepackage{fancyhdr}
 \usepackage{cite}
 
-\author{Markus Solbach \\ \href{mailto:solbach@uni-koblenz.de}{\texttt{solbach@uni-koblenz.de}}}
+\author{\\Markus Solbach \\ \href{mailto:solbach@uni-koblenz.de}{\texttt{solbach@uni-koblenz.de}} \\\\  University of the Balearic Islands \\ \href{http://srv.uib.es/}{System, Robotics \& Vision Group} }
 \date{\today}
 
 
@@ -35,9 +36,8 @@ Markus Solbach\\
 
 
 \title{Transformations in 3D (6 DOF)}
-\subtitle{A Short overview}
-\maketitle
-\newpage
+\subtitle{a short overview}
+\maketitle\newpage
 
 \section{Introduction}\label{ch:intro}
 Adding relative motion, given by odometry for instance (observation), to an absolute state its called \textit{transformation composition}. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
@@ -57,15 +57,15 @@ X_+ = X \oplus Y
 In our case the \textit{Transformation Composition} Matrix can be derived starting by 3D Rotation Matrix for each axis:
 
 \begin{equation}
-R_x(\phi) = \begin{bmatrix} 1 & 0 & 0 & 0 \\0 & cos(\phi) & -sin(\phi) & 0\\ 0 & sin(\phi) & cos(\phi) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+R_x(\phi) = \begin{bmatrix} 1 & 0 & 0 & 0 \\0 & \cos(\phi) & -\sin(\phi) & 0\\ 0 & \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation} 
 
 \begin{equation}
-R_y(\theta) = \begin{bmatrix} cos(\theta) & 0 & \sin(\theta) & 0 \\0 & 1 & 0 & 0\\ -sin(\theta) & 0 & cos(\theta) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+R_y(\theta) = \begin{bmatrix} \cos(\theta) & 0 & \sin(\theta) & 0 \\0 & 1 & 0 & 0\\ -\sin(\theta) & 0 & \cos(\theta) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation}
 
 \begin{equation}
-R_z(\psi) = \begin{bmatrix} cos(\psi) & -sin(\psi) & 0 & 0 \\ sin(\psi) & cos(\psi) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+R_z(\psi) = \begin{bmatrix} \cos(\psi) & -\sin(\psi) & 0 & 0 \\ \sin(\psi) & \cos(\psi) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation} 
 
 First of all we put all 3 Matrices to one closed Matrix. Due to that rotation is not commutative, we multiply them in the following order: $R_x \cdot R_y \cdot R_z$ what gives us $R(\phi, \theta, \psi)$. The solution for $R(\phi, \theta, \psi)$ can be found in formula \ref{eq:R}
@@ -88,7 +88,7 @@ R(\phi, \theta, \psi) =
 This Matrix multiplied by the observation vector $y$, but without the rotation part, this is handled separately , gives us the \textit{Transformation Composition} Matrix, as shown in \ref{eq:comp}
 
 \begin{equation*}
-T_{comp} = R(\phi, \theta, \psi) \cdot \begin{bmatrix}
+X \oplus Y = R(\phi, \theta, \psi) \cdot \begin{bmatrix}
 x_y \\
 y_y \\
 z_y \\
@@ -97,17 +97,58 @@ z_y \\
 \end{equation*}
 
 \tiny
-\begin{equation*}
-T_{comp} = \begin{bmatrix} 
+\begin{equation}
+X \oplus Y = \begin{bmatrix} 
 x_x + x_y   \cos(\theta_x)   \cos(\psi_x) - y_y   \cos(\theta_x)   \sin(\psi_x) + z_y  (\theta_x) \\ 
 y_x + x_y   \left(\sin(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \cos(\theta_x)   \sin(\psi_x)\right) + y_y   (-\sin(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \cos(\phi_x)   \cos(\psi_x) ) + z_y   (-\sin(\phi_x)   \cos(\theta_x)) \\ 
 z_x + x_y \left(-\cos(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \sin(\theta_x)   \sin(\psi_x)\right) + y_y   (\cos(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \sin(\phi_x)   \cos(\psi_x) ) + z_y   (\cos(\phi_x)   \cos(\theta_x)) \\ 
 \phi_x + \phi_y\\ 
 \theta_x + \theta_y \\ 
 \psi_x + \psi_x \end{bmatrix}\label{eq:comp}
-\end{equation*}
+\end{equation}
 \normalsize
+
 \section{Jacobians}
+In the context of SLAM it is also useful to derive the Jacobians from the Matrix given in \ref{eq:comp}. In this case we have two Jacobians. The first with respect to $X$ ($J_{1\oplus}$) and the second with respect to $Y$ ($J_{2\oplus}$).
+
+\begin{frame}
+
+\resizebox{\linewidth}{!}{%
+$\displaystyle
+J_{1\oplus} = 
+\begin{bmatrix}
+1& 0& 0& 0& z_y \cos(\theta_x) - x_y \cos(\psi_x) \sin(\theta_x) + y_y \sin(\psi_x) \sin(\theta_x)&                                                                         - y_y \cos(\psi_x) \cos(\theta_x) - x_y \cos(\theta_x) \sin(\psi_x) \\
+0& 1& 0& - x_y (\sin(\phi_x) \sin(\psi_x) - \cos(\phi_x) \cos(\psi_x) \sin(\theta_x)) - y_y (\cos(\psi_x) \sin(\phi_x) + \cos(\phi_x) \sin(\psi_x) \sin(\theta_x)) - z_y \cos(\phi_x) \cos(\theta_x)& z_y \sin(\phi_x) \sin(\theta_x) + x_y \cos(\psi_x) \cos(\theta_x) \sin(\phi_x) - y_y \cos(\theta_x) \sin(\phi_x) \sin(\psi_x)& x_y (\cos(\phi_x) \cos(\psi_x) - \sin(\phi_x) \sin(\psi_x) \sin(\theta_x)) - y_y (\cos(\phi_x) \sin(\psi_x) + \cos(\psi_x) \sin(\phi_x) \sin(\theta_x)) \\
+0& 0& 1& x_y (\cos(\phi_x) \sin(\psi_x) + \cos(\psi_x) \sin(\phi_x) \sin(\theta_x)) + y_y (\cos(\phi_x) \cos(\psi_x) - \sin(\phi_x) \sin(\psi_x) \sin(\theta_x)) - z_y \cos(\theta_x) \sin(\phi_x)& y_y \cos(\phi_x) \cos(\theta_x) \sin(\psi_x) - x_y \cos(\phi_x) \cos(\psi_x) \cos(\theta_x) - z_y \cos(\phi_x) \sin(\theta_x)& x_y (\cos(\psi_x) \sin(\phi_x) + \cos(\phi_x) \sin(\psi_x) \sin(\theta_x)) - y_y (\sin(\phi_x) \sin(\psi_x) - \cos(\phi_x) \cos(\psi_x) \sin(\theta_x) \\
+0& 0& 0& 1& 0& 0 \\
+0& 0& 0& 0& 1& 0 \\
+0& 0& 0& 0& 0& 1 
+\end{bmatrix}
+$}
+\end{frame}
+
+\tiny
+\begin{equation}
+J_{2\oplus} = 
+\begin{bmatrix} 
+\cos( \psi_x) \cos(\theta_x) & -\cos(\theta_x) \sin( \psi_x) & \sin(\theta_x) & 0 & 0 & 0 \\
+\cos(\phi_x) \sin( \psi_x) + \cos( \psi_x) \sin(\phi_x) \sin(\theta_x) & \cos(\phi_x) \cos( \psi_x) - \sin(\phi_x) \sin( \psi_x) \sin(\theta_x) & -\cos(\theta_x) \sin(\phi_x) & 0 & 0 & 0 \\
+\sin(\phi_x) \sin( \psi_x) - \cos(\phi_x) \cos( \psi_x) \sin(\theta_x) & \cos( \psi_x) \sin(\phi_x) + \cos(\phi_x) \sin( \psi_x) \sin(\theta_x) &  \cos(\phi_x) \cos(\theta_x) & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 
+\end{bmatrix}
+\end{equation}
+\normalsize
+\section{Implementation}
+An implementation can be found on \href{https://github.com/solbach/composition6DOF}{www.github.com/solbach/composition6DOF}. \\The implementation covers following points:
+\begin{itemize}
+\item Full 3D Frame Composition with six degress of freedom
+\item Transformation Composition-Function
+\item Jacobians
+\item Simple Simulator
+\item Written in Matlab (should also work with Octave)
+\end{itemize}
 
 %\begin{figure}[ht]
 %	\centering

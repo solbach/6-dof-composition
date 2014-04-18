@@ -64,9 +64,9 @@ end
 %%
 function f()
 %%
-    syms x1 y1 z1 alpha1 beta1 theta1 x2 y2 z2 alpha2 beta2 theta2 real
-    x1 = [x1, y1, z1, alpha1, beta1, theta1];
-    x2 = [x2, y2, z2, alpha2, beta2, theta2];
+    syms x_x y_x z_x phi_x theta_x psi_x x_y y_y z_y phi_y theta_y psi_y real
+    x1 = [x_x, y_x, z_x, phi_x, theta_x, psi_x];
+    x2 = [x_y, y_y, z_y, phi_y, theta_y, psi_y];
     p_r = comp(x1, x2);
     Jac1 = jacobian(p_r, x1)
     Jac2 = jacobian(p_r, x2)
