@@ -55,11 +55,21 @@ h2 = quiver3 (vXQ0, vYQ0, vZQ0, vPx, vPy, vPz, 0, 'r'); grid on; hold off
 axis equal
 legend(' robot movement ',' robot orientation ');
 
+ii = 1:1:lenTime;
+for i = ii
+    if mod(i,100) == 0
+    text(vX(i),vY(i), vZ(i),['x = ',num2str(vX(i)), ', ', ...
+        num2str(vY(i)), ', ', num2str(vZ(i))],...
+     'FontSize',8)
+    end
+end
+
 
 % Copyright (c) 2010, Kangwon Lee
 % Update: Markus Solbach [17.04.2014]
 %       - legend
 %       - invariance to row / column vector
+%       - vector annotation (18.04.2014)
 
 % All rights reserved.
 
