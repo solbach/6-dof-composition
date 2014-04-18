@@ -1,3 +1,4 @@
+% Main program ( or example ) to test the composition.
 % initial State [ X, Y, Z, roll, pitch, yaw ]
 x = [0, 0, 0, 0, 0, 0];
 
@@ -6,8 +7,8 @@ mX  = 12;
 mY  = 50;
 mZ  = 10;
 
-mRX = -20;
-mRY = 10;
+mRX = -5;
+mRY = 5;
 mRZ = 18;
 
 % movements repetitions

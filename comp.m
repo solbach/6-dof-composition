@@ -1,4 +1,6 @@
 function [Xplus Jac1 Jac2] = comp(X1, X2)
+%   The actual Composition is done here. Including the calculation 
+%   of both Jacobians
 
     Xplus = [...
              [ X1(1) + X2(1) * cos(X1(5)) * cos(X1(6)) - ...

@@ -1,19 +1,50 @@
 % Full 3D Frame Composition with six degress of freedom
 %
-% I. System
+% I.    System
 % 
-%   x+ = f ( x, y )
+%   Xplus   = f ( x, y )
 %
-%   x : state vector            
-%   y : measurement vector
+%   x       : state vector            
+%   y       : measurement vector
 %
+%   Xplus   : Updated state vector 
+%   Jac1    : Jacobian Matrix with respect to x
+%   Jac2    : Jacobian Matrix with respect to y
 %
-% II. Calculation
+% II.   Calculation
 %   
-%   Formulars can be taken sometime somewhere
+%   Delivered with this Project as a PDF
 %
-% III. Plot result
+% III.  Plot result
+%   
+%   Full 3D Plot including robot movement and robot orientation
 %
+%
+% IV.   Usage
+%
+%   Starting point is compMain.m. Here you can define the initial
+%   state vector and the measurement vector and how often the 
+%   measurement vector is applied to the state vector is defined 
+%   with tt (the amount of loop iterations). 
+%   Off course you can alternate the measurement vector for each
+%   composition call. If you edit the loop keep in mind that
+%   with the given approach here the robot 
+%       first:  translates
+%       second: rotates
+%   With other Words: if you want the robot to do it vice versa
+%   you need to play around with the measurement vector y:
+%       first:  rotation angles but no translation (0, 0, 0)
+%       second: translation
+%   As it is right now implented in the loop.
+%   Off course this can be easily solved with calculating the angles
+%   first before applying the matrix (comp.m)
+%
+%   Necessary files are:
+%       1.  comp.m
+%       2.  compMain.m
+%       3.  plot_dir3.m
+%
+%   All other files exist for better understanding.
 
 
 % Copyright (c) 2014, Markus Solbach

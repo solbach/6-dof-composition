@@ -1,6 +1,5 @@
 function [h1, h2] = plot_dir3 (vX, vY, vZ)
-%function [h1, h2] = plot_dir3 (vX, vY, vZ)
-%Plotting x-y variables with direction indicating vector to the next element.
+%Plotting x, y, z variables with direction indicating vector to the next element.
 %Example
 %   vX = linspace(0,2*pi, 10)';
 %   vY = sin (vX);
