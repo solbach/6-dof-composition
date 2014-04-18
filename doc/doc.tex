@@ -34,22 +34,79 @@ Markus Solbach\\
 \begin{document}
 
 
-\title{3D Composition (6 DOF)}
+\title{Transformations in 3D (6 DOF)}
 \subtitle{A Short overview}
 \maketitle
 \newpage
 
-\section{Introduction}
-Adding relative motion, given by odometry for instance (observation), to an absolute state its called composition. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
+\section{Introduction}\label{ch:intro}
+Adding relative motion, given by odometry for instance (observation), to an absolute state its called \textit{transformation composition}. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
 \\\\ In more detail. Let $X$ the state-vector and $Y$ the observation-vector. Defined as follows:
 \begin{equation}
 X = \begin{bmatrix} x_x \\ y_x \\ z_x \\ \phi_x \\ \theta_x \\ \psi_x \end{bmatrix}, \hspace{15 mm} Y = \begin{bmatrix} x_y \\ y_y \\ z_y \\ \phi_y \\ \theta_y \\ \psi_y \end{bmatrix}
 \end{equation}
 
 
-\section{Transformation}
+\section{Transformation Composition}
 % plus operator
+The \textit{Transformation Composition} is commonly represented by means of the operator $\oplus$, as shown in formula \ref{eq:plus}.
+\begin{equation}\label{eq:plus}
+X_+ = X \oplus Y
+\end{equation}
 
+In our case the \textit{Transformation Composition} Matrix can be derived starting by 3D Rotation Matrix for each axis:
+
+\begin{equation}
+R_x(\phi) = \begin{bmatrix} 1 & 0 & 0 & 0 \\0 & cos(\phi) & -sin(\phi) & 0\\ 0 & sin(\phi) & cos(\phi) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+\end{equation} 
+
+\begin{equation}
+R_y(\theta) = \begin{bmatrix} cos(\theta) & 0 & \sin(\theta) & 0 \\0 & 1 & 0 & 0\\ -sin(\theta) & 0 & cos(\theta) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+R_z(\psi) = \begin{bmatrix} cos(\psi) & -sin(\psi) & 0 & 0 \\ sin(\psi) & cos(\psi) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+\end{equation} 
+
+First of all we put all 3 Matrices to one closed Matrix. Due to that rotation is not commutative, we multiply them in the following order: $R_x \cdot R_y \cdot R_z$ what gives us $R(\phi, \theta, \psi)$. The solution for $R(\phi, \theta, \psi)$ can be found in formula \ref{eq:R}
+
+\tiny
+\begin{equation}
+R(\phi, \theta, \psi) = 
+\begin{bmatrix}
+\cos(\theta)   \cos(\psi) & -\cos(\theta)   \sin(\psi) & \sin(\theta) & 0\\
+\sin(\phi)   \sin(\theta)   \cos(\psi) + \cos(\phi)   \sin(\psi) &
+-\sin(\phi)   \sin(\theta)   \sin(\psi) + \cos(\phi)   \cos(\psi) & 
+-\sin(\phi)   \cos(\theta) & 0 \\
+-\cos(\phi)   \sin(\theta)   \cos(\psi) + \sin(\phi)   \sin(\psi) &
+\cos(\phi)   \sin(\theta)   \sin(\psi) + \sin(\phi)   \cos(\psi) & 
+\cos(\phi)   \cos(\theta) & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}\label{eq:R}
+\end{equation}
+\normalsize
+This Matrix multiplied by the observation vector $y$, but without the rotation part, this is handled separately , gives us the \textit{Transformation Composition} Matrix, as shown in \ref{eq:comp}
+
+\begin{equation*}
+T_{comp} = R(\phi, \theta, \psi) \cdot \begin{bmatrix}
+x_y \\
+y_y \\
+z_y \\
+1
+\end{bmatrix}
+\end{equation*}
+
+\tiny
+\begin{equation*}
+T_{comp} = \begin{bmatrix} 
+x_x + x_y   \cos(\theta_x)   \cos(\psi_x) - y_y   \cos(\theta_x)   \sin(\psi_x) + z_y  (\theta_x) \\ 
+y_x + x_y   \left(\sin(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \cos(\theta_x)   \sin(\psi_x)\right) + y_y   (-\sin(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \cos(\phi_x)   \cos(\psi_x) ) + z_y   (-\sin(\phi_x)   \cos(\theta_x)) \\ 
+z_x + x_y \left(-\cos(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \sin(\theta_x)   \sin(\psi_x)\right) + y_y   (\cos(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \sin(\phi_x)   \cos(\psi_x) ) + z_y   (\cos(\phi_x)   \cos(\theta_x)) \\ 
+\phi_x + \phi_y\\ 
+\theta_x + \theta_y \\ 
+\psi_x + \psi_x \end{bmatrix}\label{eq:comp}
+\end{equation*}
+\normalsize
 \section{Jacobians}
 
 %\begin{figure}[ht]
