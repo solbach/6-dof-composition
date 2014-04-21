@@ -40,8 +40,8 @@ Markus Solbach\\
 \maketitle\newpage
 
 \section{Introduction}\label{ch:intro}
-Adding relative motion, given by odometry for instance (observation), to an absolute state its called \textit{transformation composition}. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
-\\\\ In more detail. Let $X$ the state-vector and $Y$ the observation-vector. Defined as follows:
+Adding relative motion, for instance given by odometry (observation), to an absolute state its called \textit{transformation composition}. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction, what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
+\\\\ In more detail: Let $X$ the state-vector and $Y$ the observation-vector. Defined as follows:
 \begin{equation}
 X = \begin{bmatrix} x_x \\ y_x \\ z_x \\ \phi_x \\ \theta_x \\ \psi_x \end{bmatrix}, \hspace{15 mm} Y = \begin{bmatrix} x_y \\ y_y \\ z_y \\ \phi_y \\ \theta_y \\ \psi_y \end{bmatrix}
 \end{equation}
@@ -54,21 +54,21 @@ The \textit{Transformation Composition} is commonly represented by means of the 
 X_+ = X \oplus Y
 \end{equation}
 
-In our case the \textit{Transformation Composition} Matrix can be derived starting by 3D Rotation Matrix for each axis:
+In our case the \textit{Transformation Composition} Matrix can be derived starting by defining the 3D rotation Matrices for each axis:
 
 \begin{equation}
-R_x(\phi) = \begin{bmatrix} 1 & 0 & 0 & 0 \\0 & \cos(\phi) & -\sin(\phi) & 0\\ 0 & \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+R(\phi) = \begin{bmatrix} 1 & 0 & 0 & 0 \\0 & \cos(\phi) & -\sin(\phi) & 0\\ 0 & \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation} 
 
 \begin{equation}
-R_y(\theta) = \begin{bmatrix} \cos(\theta) & 0 & \sin(\theta) & 0 \\0 & 1 & 0 & 0\\ -\sin(\theta) & 0 & \cos(\theta) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+R(\theta) = \begin{bmatrix} \cos(\theta) & 0 & \sin(\theta) & 0 \\0 & 1 & 0 & 0\\ -\sin(\theta) & 0 & \cos(\theta) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation}
 
 \begin{equation}
-R_z(\psi) = \begin{bmatrix} \cos(\psi) & -\sin(\psi) & 0 & 0 \\ \sin(\psi) & \cos(\psi) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
+R(\psi) = \begin{bmatrix} \cos(\psi) & -\sin(\psi) & 0 & 0 \\ \sin(\psi) & \cos(\psi) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation} 
 
-First of all we put all 3 Matrices to one closed Matrix. Due to that rotation is not commutative, we multiply them in the following order: $R_x \cdot R_y \cdot R_z$ what gives us $R(\phi, \theta, \psi)$. The solution for $R(\phi, \theta, \psi)$ can be found in formula \ref{eq:R}
+First of all we put all 3 Matrices to one closed Matrix together. Due to rotation is not commutative, we define the multiplication order as follows: $R_x \cdot R_y \cdot R_z$. What gives us $R(\phi, \theta, \psi)$. The solution for $R(\phi, \theta, \psi)$ can be found in formula \ref{eq:R}
 
 \tiny
 \begin{equation}
@@ -85,10 +85,10 @@ R(\phi, \theta, \psi) =
 \end{bmatrix}\label{eq:R}
 \end{equation}
 \normalsize
-This Matrix multiplied by the observation vector $y$, but without the rotation part, this is handled separately , gives us the \textit{Transformation Composition} Matrix, as shown in \ref{eq:comp}
+This Matrix is filled with data from $X$ and is multiplied by the observation vector $Y$, but without the rotation part, this is handled separately. The result gives us the \textit{Transformation Composition} Matrix, as shown in \ref{eq:comp}
 
 \begin{equation*}
-X \oplus Y = R(\phi, \theta, \psi) \cdot \begin{bmatrix}
+X \oplus Y = R(\phi_x, \theta_x, \psi_x) \cdot \begin{bmatrix}
 x_y \\
 y_y \\
 z_y \\
@@ -100,8 +100,8 @@ z_y \\
 \begin{equation}
 X \oplus Y = \begin{bmatrix} 
 x_x + x_y   \cos(\theta_x)   \cos(\psi_x) - y_y   \cos(\theta_x)   \sin(\psi_x) + z_y  (\theta_x) \\ 
-y_x + x_y   \left(\sin(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \cos(\theta_x)   \sin(\psi_x)\right) + y_y   (-\sin(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \cos(\phi_x)   \cos(\psi_x) ) + z_y   (-\sin(\phi_x)   \cos(\theta_x)) \\ 
-z_x + x_y \left(-\cos(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \sin(\theta_x)   \sin(\psi_x)\right) + y_y   (\cos(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \sin(\phi_x)   \cos(\psi_x) ) + z_y   (\cos(\phi_x)   \cos(\theta_x)) \\ 
+y_x + x_y   \left(\sin(\phi_x)   \sin(\theta_x)   \cos(\psi_x) + \cos(\theta_x)   \sin(\psi_x)\right) + y_y   (-\sin(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \cos(\phi_x)   \cos(\psi_x) ) + z_y   (-\sin(\phi_x)   \cos(\theta_x)) \\ 
+z_x + x_y \left(-\cos(\phi_x)   \sin(\theta_x)   \cos(\psi_x) + \sin(\theta_x)   \sin(\psi_x)\right) + y_y   (\cos(\phi_x)   \sin(\theta_x)   \sin(\psi_x) + \sin(\phi_x)   \cos(\psi_x) ) + z_y   (\cos(\phi_x)   \cos(\theta_x)) \\ 
 \phi_x + \phi_y\\ 
 \theta_x + \theta_y \\ 
 \psi_x + \psi_x \end{bmatrix}\label{eq:comp}
@@ -109,7 +109,7 @@ z_x + x_y \left(-\cos(\phi_1)   \sin(\theta_x)   \cos(\psi_x) + \sin(\theta_x)  
 \normalsize
 
 \section{Jacobians}
-In the context of SLAM it is also useful to derive the Jacobians from the Matrix given in \ref{eq:comp}. In this case we have two Jacobians. The first with respect to $X$ ($J_{1\oplus}$) and the second with respect to $Y$ ($J_{2\oplus}$).
+In the context of EKF-SLAM it is also necessary to derive the Jacobians from the Matrix given in \ref{eq:comp}. In this case we need to calculate two Jacobians. The first with respect to $X$ ($J_{1\oplus}$) and the second with respect to $Y$ ($J_{2\oplus}$).
 
 \begin{frame}
 
@@ -141,9 +141,9 @@ J_{2\oplus} =
 \end{equation}
 \normalsize
 \section{Implementation}
-An implementation can be found on \href{https://github.com/solbach/composition6DOF}{www.github.com/solbach/composition6DOF}. \\The implementation covers following points:
+An implementation can be found on \href{https://github.com/solbach/composition6DOF}{www.github.com/solbach/composition6DOF}. \\It covers the following points:
 \begin{itemize}
-\item Full 3D Frame Composition with six degress of freedom
+\item Full 3D Frame Composition with six degrees of freedom
 \item Transformation Composition-Function
 \item Jacobians
 \item Simple Simulator
