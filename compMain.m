@@ -11,27 +11,38 @@ dY   = data(:, 5);
 dZ   = data(:, 6);
 
 % Get relative motion
-rX   = data(:, 47);
-rY   = data(:, 48);
-rZ   = data(:, 49);
-rR   = data(:, 50);
-rP   = data(:, 51);
-rY   = data(:, 52);
+rX       = data(:, 47);
+rY       = data(:, 48);
+rZ       = data(:, 49);
+rRoll    = data(:, 50);
+rPitch   = data(:, 51);
+rYaw     = data(:, 52);
 
 % movements repetitions
 dt = 1;
-tt = 1:dt:size(dX);
+tt = 2:dt:size(dX);
 
-vX = 0;
-vY = 0;
-vZ = 0;
+cX = 0;
+cY = 0;
+cZ = 0;
 
 % main loop
 for t = tt
+    % Get relative motion:
+    
+    deltaTnano = data( t, 1 ) - data( t-1, 1 );
+    detaTsec   = deltaTnano / 1000000000.0;
+    
+    mX      = rX(t) * detaTsec;
+    mY      = rY(t) * detaTsec;
+    mZ      = rZ(t) * detaTsec;
+    mRoll   = rRoll(t)  * detaTsec;
+    mPith   = rPitch(t) * detaTsec;
+    mYaw    = rYaw(t)   * detaTsec;
     
     % I.    rotate
     % measurement update (Odometry)
-    y = [0, 0, 0, rX(t), rY(t), rZ(t)];
+    y = [0, 0, 0, mRoll, mPith, mYaw];
     x = comp(x,y);
     
     % II.   translate
@@ -39,23 +50,33 @@ for t = tt
     y = [mX, mY, mZ, 0, 0, 0];
     x = comp(x,y);
     
+    
+%     % I.    rotate
+%     % measurement update (Odometry)
+%     y = [0, 0, 0, rRoll(t), rPitch(t), rYaw(t)];
+%     x = comp(x,y);
+%     
+%     % II.   translate
+%     % measurement update (Odometry)
+%     y = [rX(t), rY(t), rZ(t), 0, 0, 0];
+%     x = comp(x,y);
+    
     % III.  save data to plot them afterwards
-    vX = [vX x(1)];
-    vY = [vY x(2)];
-    vZ = [vZ x(3)];
+    cX = [cX x(1)];
+    cY = [cY x(2)];
+    cZ = [cZ x(3)];
     
 end
 
 % plot 3D with direction
-% Plot Groundtruth
+% plot groundtruth
 hold on;
 color = 'r';
 plot_dir3(dX, dY, dZ, color);
 
-
-
+% plot calculated data
 color = 'b';
-plot_dir3(dX, dY, dZ, color);
+plot_dir3(cX, cY, cZ, color);
 
 hold off;
 

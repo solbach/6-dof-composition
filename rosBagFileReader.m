@@ -2,11 +2,26 @@
 %   input:    filename
 %   output:   Vector of Vector
 
-function out = rosBagFileReader()
+function out2 = rosBagFileReader()
     
-    out     = dlmread( 'bag/viso.txt', ',' );
+    out2     = dlmread( 'bag/viso.txt', ',' );
     
-    disp( size(out) );
+    size = [590, 88];
+    
+    out = load('bag/viso.txt', '-ascii');    
+    
+    fid = fopen('bag/viso.txt');
+    % read, and transpose so samevals = myvals
+    out = fread(fid, [590 88], 'double')';
+    fclose(fid);
+    
+%     test2 = out(2,1) - out(3, 1)
+%     test3 = out(3,1) - out(4, 1)
+%     test4 = out(4,1) - out(5, 1)
+%     test5 = out(5,1) - out(6, 1)
+%     test6 = out(6,1) - out(7, 1)
+%     test7 = out(7,1) - out(8, 1)
+%     test8 = out(8,1) - out(9, 1)
         
 end
 
