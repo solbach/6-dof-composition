@@ -1,4 +1,4 @@
-function [h1, h2] = plot_dir3 (vX, vY, vZ)
+function [h1, h2] = plot_dir3 (vX, vY, vZ, color)
 %Plotting x, y, z variables with direction indicating vector to the next element.
 %Example
 %   vX = linspace(0,2*pi, 10)';
@@ -48,21 +48,40 @@ vPx = (vXQ1 - vXQ0) * rMag;
 vPy = (vYQ1 - vYQ0) * rMag;
 vPz = (vZQ1 - vZQ0) * rMag;
 
-% make plot 
-h1 = plot3 (vX, vY, vZ, '.-'); hold on;
-% add arrows 
-h2 = quiver3 (vXQ0, vYQ0, vZQ0, vPx, vPy, vPz, 0, 'r'); grid on; hold off
+if  color == 'r'
+    % make plot 
+    h1 = plot3 (vX, vY, vZ, 'r--');
+    % add arrows 
+    h2 = quiver3 (vXQ0, vYQ0, vZQ0, vPx, vPy, vPz, 0, color); grid on; 
+elseif color == 'b'
+    % make plot 
+    h1 = plot3 (vX, vY, vZ, 'b-');
+    % add arrows 
+    h2 = quiver3 (vXQ0, vYQ0, vZQ0, vPx, vPy, vPz, 0, color); grid on; 
+else
+    % make plot 
+    h1 = plot3 (vX, vY, vZ, 'r-');
+    % add arrows 
+    h2 = quiver3 (vXQ0, vYQ0, vZQ0, vPx, vPy, vPz, 0, 'b'); grid on; 
+    legend(' robot movement ',' robot orientation ');
+end
+
 axis equal
-legend(' robot movement ',' robot orientation ');
+
+text(vX(1),vY(1), vZ(1),['start'],...
+     'FontSize',8)
+ 
+text(vX(lenTime),vY(lenTime), vZ(lenTime),['end'],...
+     'FontSize',8)
 
 ii = 1:1:lenTime;
-for i = ii
-    if mod(i,100) == 0
-    text(vX(i),vY(i), vZ(i),['x = ',num2str(vX(i)), ', ', ...
-        num2str(vY(i)), ', ', num2str(vZ(i))],...
-     'FontSize',8)
-    end
-end
+% for i = ii
+%     if mod(i,100) == 0
+%         text(vX(i),vY(i), vZ(i),['x = ',num2str(vX(i)), ', ', ...
+%             num2str(vY(i)), ', ', num2str(vZ(i))],...
+%             'FontSize',8)
+%     end
+% end
 
 
 % Copyright (c) 2010, Kangwon Lee
@@ -70,6 +89,8 @@ end
 %       - legend
 %       - invariance to row / column vector
 %       - vector annotation (18.04.2014)
+%       - plotting of more than one trajectorie (28.04.2014)
+%       - supports new parameter for color (28.04.2014)
 
 % All rights reserved.
 

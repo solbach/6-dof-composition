@@ -1,63 +1,15 @@
-% Main program ( or example ) to test the composition.
-% initial State [ X, Y, Z, roll, pitch, yaw ]
-x = [0, 0, 0, 0, 0, 0];
+% Util program to read ROS visual odometry data
+%   input:    filename
+%   output:   Vector of Vector
 
-% Get Data
-data = rosBagFileReader;
-
-% Get groundtruth
-dX   = data(:, 4);
-dY   = data(:, 5);
-dZ   = data(:, 6);
-
-% Get relative motion
-rX   = data(:, 47);
-rY   = data(:, 48);
-rZ   = data(:, 49);
-rR   = data(:, 50);
-rP   = data(:, 51);
-rY   = data(:, 52);
-
-% movements repetitions
-dt = 1;
-tt = 1:dt:size(dX);
-
-vX = 0;
-vY = 0;
-vZ = 0;
-
-% main loop
-for t = tt
+function out = rosBagFileReader()
     
-    % I.    rotate
-    % measurement update (Odometry)
-    y = [0, 0, 0, rX(t), rY(t), rZ(t)];
-    x = comp(x,y);
+    out     = dlmread( 'bag/viso.txt', ',' );
     
-    % II.   translate
-    % measurement update (Odometry)
-    y = [mX, mY, mZ, 0, 0, 0];
-    x = comp(x,y);
-    
-    % III.  save data to plot them afterwards
-    vX = [vX x(1)];
-    vY = [vY x(2)];
-    vZ = [vZ x(3)];
-    
+    disp( size(out) );
+        
 end
 
-% plot 3D with direction
-% Plot Groundtruth
-hold on;
-color = 'r';
-plot_dir3(dX, dY, dZ, color);
-
-
-
-color = 'b';
-plot_dir3(dX, dY, dZ, color);
-
-hold off;
 
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
