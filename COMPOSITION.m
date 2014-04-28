@@ -47,6 +47,13 @@
 %   All other files exist for better understanding.
 
 
+% Example Data:
+%   X, Y, Z:
+%       0.000275892037187, 0.000481960249349, -0.010633903437,
+%   Quaternion:
+%       -0.00633593165818, -0.00695387613718, 0.002822295697, 0.999951765949
+
+
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
