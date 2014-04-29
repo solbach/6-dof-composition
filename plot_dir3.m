@@ -75,13 +75,17 @@ text(vX(lenTime),vY(lenTime), vZ(lenTime),['end'],...
      'FontSize',8)
 
 ii = 1:1:lenTime;
-% for i = ii
+for i = ii
 %     if mod(i,100) == 0
 %         text(vX(i),vY(i), vZ(i),['x = ',num2str(vX(i)), ', ', ...
 %             num2str(vY(i)), ', ', num2str(vZ(i))],...
 %             'FontSize',8)
 %     end
-% end
+    if mod(i,20) == 0
+        text(vX(i),vY(i), vZ(i),['t = ',num2str(i)],...
+            'FontSize',8)
+    end
+end
 
 
 % Copyright (c) 2010, Kangwon Lee

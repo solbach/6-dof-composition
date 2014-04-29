@@ -4,17 +4,11 @@
 
 function out = rosBagFileReader()
     
-    out     = dlmread( 'bag/viso_edit.txt', ',' );
+    out     = double( dlmread( 'bag/viso_edit.txt', ',' ) );
     
 %     out2 = sym( out );
-    
-    out(1,1)
-%     out2(1,1)
-%     out2(2,1)
-%     out2(4,1)
-    
+%     out(1,1)
 %     size = [590, 88];
-    
 %     out = load('bag/viso.txt', 'uint64');    
      
 %     fid = fopen('bag/viso.txt');
@@ -23,7 +17,6 @@ function out = rosBagFileReader()
 %     fclose(fid);
      
 %     A = csvread('bag/viso.txt', 0,0);
-
     
 %     x3 = sym('3^(1/3)');
 %     vpa(x3)

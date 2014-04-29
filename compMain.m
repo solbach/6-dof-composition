@@ -22,6 +22,8 @@ rYaw     = data(:, 52);
 dt = 1;
 tt = 2:dt:size(dX);
 
+% tt = 2:dt:280;
+
 cX = 0;
 cY = 0;
 cZ = 0;
@@ -30,19 +32,19 @@ cZ = 0;
 for t = tt
     % Get relative motion:
     
-    deltaTnano = data( t, 1 ) - data( t-1, 1 );
-    detaTsec   = deltaTnano / 1000000000.0;
+    deltaTnano = data( t, 1 ) - data( t-1, 1 )
+    deltaTsec   = deltaTnano / 1000000000.0
     
-    mX      = rX(t) * detaTsec;
-    mY      = rY(t) * detaTsec;
-    mZ      = rZ(t) * detaTsec;
-    mRoll   = rRoll(t)  * detaTsec;
-    mPith   = rPitch(t) * detaTsec;
-    mYaw    = rYaw(t)   * detaTsec;
+    mX      = rX(t) * deltaTsec;
+    mY      = rY(t) * deltaTsec;
+    mZ      = rZ(t) * deltaTsec;
+    mRoll   = rRoll(t)  * deltaTsec;
+    mPitch  = rPitch(t) * deltaTsec;
+    mYaw    = rYaw(t)   * deltaTsec;
     
     % I.    rotate
     % measurement update (Odometry)
-    y = [mX, mY, mZ, mRoll, mPith, mYaw];
+    y = [mX, mY, mZ, mRoll, mPitch, mYaw];
     x = comp(x,y);
     
     % II.   translate
