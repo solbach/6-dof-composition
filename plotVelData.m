@@ -1,14 +1,8 @@
-% Main program ( or example ) to test the composition.
-% initial State [ X, Y, Z, roll, pitch, yaw ]
-x = [0, 0, 0, 0, 0, 0];
+% Util program to plot the visul odometry data
 
 % Get Data
 data = rosBagFileReader;
 
-% Get groundtruth
-dX   = data(:, 4);
-dY   = data(:, 5);
-dZ   = data(:, 6);
 
 % Get velocity
 rX       = data(:, 47);
@@ -18,68 +12,19 @@ rRoll    = data(:, 50);
 rPitch   = data(:, 51);
 rYaw     = data(:, 52);
 
-% movements repetitions
 dt = 1;
-tt = 2:dt:size(dX);
+tt = 1:dt:size(rX);
+tt = tt';
 
-% tt = 2:dt:280;
-
-cX = 0;
-cY = 0;
-cZ = 0;
-
-% main loop
-for t = tt
-    % Get relative motion:
-    
-    deltaTnano = data( t, 1 ) - data( t-1, 1 )
-    deltaTsec   = deltaTnano / 1000000000.0
-    
-    mX      = rX(t) * deltaTsec;
-    mY      = rY(t) * deltaTsec;
-    mZ      = rZ(t) * deltaTsec;
-    mRoll   = rRoll(t)  * deltaTsec;
-    mPitch  = rPitch(t) * deltaTsec;
-    mYaw    = rYaw(t)   * deltaTsec;
-    
-    % I.    rotate
-    % measurement update (Odometry)
-    y = [mX, mY, mZ, mRoll, mPitch, mYaw];
-    x = comp(x,y);
-    
-    % II.   translate
-    % measurement update (Odometry)
-%     y = [mX, mY, mZ, 0, 0, 0];
-%     x = comp(x,y);
-    
-    
-%     % I.    rotate
-%     % measurement update (Odometry)
-%     y = [0, 0, 0, rRoll(t), rPitch(t), rYaw(t)];
-%     x = comp(x,y);
-%     
-%     % II.   translate
-%     % measurement update (Odometry)
-%     y = [rX(t), rY(t), rZ(t), 0, 0, 0];
-%     x = comp(x,y);
-    
-    % III.  save data to plot them afterwards
-    cX = [cX x(1)];
-    cY = [cY x(2)];
-    cZ = [cZ x(3)];
-    
-end
-
-% plot 3D with direction
-% plot groundtruth
 hold on;
-color = 'r';
-plot_dir3(dX, dY, dZ, color);
-
-% plot calculated data
-color = 'b';
-plot_dir3(cX, cY, cZ, color);
-
+plot(tt, rX, 'r-');
+plot(tt, rY, 'g-');
+plot(tt, rZ, 'b-');
+plot(tt, rRoll, 'k+');
+plot(tt, rRoll, 'k-');
+plot(tt, rPitch, 'c-');
+plot(tt, rYaw, 'm-');
+legend('x', 'y', 'z', 'roll', 'roll', 'pitch', 'yaw')
 hold off;
 
 % Copyright (c) 2014, Markus Solbach
