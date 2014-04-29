@@ -42,13 +42,13 @@ for t = tt
     
     % I.    rotate
     % measurement update (Odometry)
-    y = [0, 0, 0, mRoll, mPith, mYaw];
+    y = [mX, mY, mZ, mRoll, mPith, mYaw];
     x = comp(x,y);
     
     % II.   translate
     % measurement update (Odometry)
-    y = [mX, mY, mZ, 0, 0, 0];
-    x = comp(x,y);
+%     y = [mX, mY, mZ, 0, 0, 0];
+%     x = comp(x,y);
     
     
 %     % I.    rotate

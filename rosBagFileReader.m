@@ -2,27 +2,32 @@
 %   input:    filename
 %   output:   Vector of Vector
 
-function out2 = rosBagFileReader()
+function out = rosBagFileReader()
     
-    out2     = dlmread( 'bag/viso.txt', ',' );
+    out     = dlmread( 'bag/viso_edit.txt', ',' );
     
-    size = [590, 88];
+%     out2 = sym( out );
     
-    out = load('bag/viso.txt', '-ascii');    
+    out(1,1)
+%     out2(1,1)
+%     out2(2,1)
+%     out2(4,1)
     
-    fid = fopen('bag/viso.txt');
-    % read, and transpose so samevals = myvals
-    out = fread(fid, [590 88], 'double')';
-    fclose(fid);
+%     size = [590, 88];
     
-%     test2 = out(2,1) - out(3, 1)
-%     test3 = out(3,1) - out(4, 1)
-%     test4 = out(4,1) - out(5, 1)
-%     test5 = out(5,1) - out(6, 1)
-%     test6 = out(6,1) - out(7, 1)
-%     test7 = out(7,1) - out(8, 1)
-%     test8 = out(8,1) - out(9, 1)
-        
+%     out = load('bag/viso.txt', 'uint64');    
+     
+%     fid = fopen('bag/viso.txt');
+%     % read, and transpose so samevals = myvals
+%     out = fread(fid, [88 590], 'uint64')';
+%     fclose(fid);
+     
+%     A = csvread('bag/viso.txt', 0,0);
+
+    
+%     x3 = sym('3^(1/3)');
+%     vpa(x3)
+           
 end
 
 
