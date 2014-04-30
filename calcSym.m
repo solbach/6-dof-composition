@@ -1,9 +1,19 @@
-function result = calcSym(theta)
+function result = calcSym(val)
 
-    result = [...
-             [  cos(theta) -sin(theta) 0]
-             [  sin(theta) cos(theta) 0]
-             [  0 0 1]];
+%   Rotation around Z
+%     result = [...
+%              [  cos(theta) -sin(theta) 0]
+%              [  sin(theta) cos(theta) 0]
+%              [  0 0 1]];
+     
+%   2D Inversion
+%       result = [...
+%                [  -val(1)*cos(val(3)) - val(2) * sin(val(3)) ]
+%                [  val(1) * sin(val(3)) - val(2) * cos(val(3)) ]
+%                [  -val(3) ]];
+
+%   3D Inversion
+
     
      if nargout > 1
          
@@ -15,9 +25,10 @@ end
 %%
 function f()
 %%
-    syms theta
-    p_r = calcSym(theta);
-    inver = inv(p_r)
+    syms x y theta
+    x1 = [x, y, theta];
+    p_r = calcSym(x1);
+    Jac1 = jacobian(p_r, x1)
     
 end
 

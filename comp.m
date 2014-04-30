@@ -18,7 +18,7 @@ function [Xplus Jac1 Jac2] = comp(X1, X2)
                 X2(3) * cos(X1(4)) * cos(X1(5))]
              [  X1(4) + X2(4)]
              [  X1(5) + X2(5)]
-             [  X1(6) + X2(6)]];
+             [  X1(6) + X2(6)]]
     
      if nargout > 1
          
