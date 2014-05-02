@@ -81,10 +81,10 @@ for i = ii
 %             num2str(vY(i)), ', ', num2str(vZ(i))],...
 %             'FontSize',8)
 %     end
-    if mod(i,20) == 0
-        text(vX(i),vY(i), vZ(i),['t = ',num2str(i)],...
-            'FontSize',8)
-    end
+%     if mod(i,20) == 0
+%         text(vX(i),vY(i), vZ(i),['t = ',num2str(i)],...
+%             'FontSize',8)
+%     end
 end
 
 

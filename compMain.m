@@ -1,4 +1,6 @@
 % Main program ( or example ) to test the composition.
+% mode (1 = using velocity data, 2 = using absolute states)
+mode = 2;
 % initial State [ X, Y, Z, roll, pitch, yaw ]
 x = [0, 0, 0, 0, 0, 0];
 
@@ -18,11 +20,20 @@ rRoll    = data(:, 50);
 rPitch   = data(:, 51);
 rYaw     = data(:, 52);
 
+% Get absolute states
+aX      = data(:, 4);
+aY      = data(:, 5);
+aZ      = data(:, 6);
+aw      = data(:, 7);
+aq1     = data(:, 8);
+aq2     = data(:, 9);
+aq3     = data(:, 10);
+
 % movements repetitions
 dt = 1;
 tt = 2:dt:size(dX);
 
-% tt = 2:dt:280;
+% tt = 2:dt:30;
 
 cX = 0;
 cY = 0;
@@ -30,40 +41,59 @@ cZ = 0;
 
 % main loop
 for t = tt
-    % Get relative motion:
     
-    deltaTnano = data( t, 1 ) - data( t-1, 1 )
-    deltaTsec   = deltaTnano / 1000000000.0
+    if mode == 2
+        % Get relative motion from absolute motion
+        
+        % Calculate euler angles from quaternions
+        q1 = [ aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1) ];
+        [ a1Roll a1Pitch a1Yaw ] = quatToEuler(q1);
     
-    mX      = rX(t) * deltaTsec;
-    mY      = rY(t) * deltaTsec;
-    mZ      = rZ(t) * deltaTsec;
-    mRoll   = rRoll(t)  * deltaTsec;
-    mPitch  = rPitch(t) * deltaTsec;
-    mYaw    = rYaw(t)   * deltaTsec;
+        q2 = [ aw(t), aq1(t), aq2(t), aq3(t) ];
+        [ a2Roll a2Pitch a2Yaw ] = quatToEuler(q2);
     
-    % I.    rotate
+        A1  = [ aX(t-1), aY(t-1), aZ(t-1), a1Roll, a1Pitch, a1Yaw ];
+        A2  = [ aX(t), aY(t), aZ(t), a2Roll, a2Pitch, a2Yaw ];
+        
+        rx = - aX(t-1) + aX(t);
+        ry = - aY(t-1) + aY(t);
+        rz = - aZ(t-1) + aZ(t);
+    
+%         R   = relativeMotionFromAbsoluteMotion(A1, A2);
+%         mX      = R(1);
+%         mY      = R(2);
+%         mZ      = R(3);
+%         mRoll   = R(4);
+%         mPitch  = R(5);
+%         mYaw    = R(6);
+        
+        mX      = rx;
+        mY      = ry;
+        mZ      = rz;
+        mRoll   = 0;
+        mPitch  = 0;
+        mYaw    = 0;
+    else
+        % Get relative motion from velocity:
+    
+        deltaTnano = data( t, 1 ) - data( t-1, 1 );
+        deltaTsec   = deltaTnano / 1000000000.0;
+     
+        mX      = rX(t) * deltaTsec;
+        mY      = rY(t) * deltaTsec;
+        mZ      = rZ(t) * deltaTsec;
+        mRoll   = rRoll(t)  * deltaTsec;
+        mPitch  = rPitch(t) * deltaTsec;
+        mYaw    = rYaw(t)   * deltaTsec;
+    end
+    
+    % I.    transformation
     % measurement update (Odometry)
     y = [mX, mY, mZ, mRoll, mPitch, mYaw];
     x = comp(x,y);
+
     
-    % II.   translate
-    % measurement update (Odometry)
-%     y = [mX, mY, mZ, 0, 0, 0];
-%     x = comp(x,y);
-    
-    
-%     % I.    rotate
-%     % measurement update (Odometry)
-%     y = [0, 0, 0, rRoll(t), rPitch(t), rYaw(t)];
-%     x = comp(x,y);
-%     
-%     % II.   translate
-%     % measurement update (Odometry)
-%     y = [rX(t), rY(t), rZ(t), 0, 0, 0];
-%     x = comp(x,y);
-    
-    % III.  save data to plot them afterwards
+    % II.  save data to plot them afterwards
     cX = [cX x(1)];
     cY = [cY x(2)];
     cZ = [cZ x(3)];
