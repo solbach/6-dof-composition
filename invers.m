@@ -20,8 +20,6 @@ function [Xminus Jac1] = invers(X)
           -sin(X(4))*cos(X(5)); ...
           cos(X(4))*cos(X(5)); ...
           0];
-
-    A = [n o a p];
       
     Xminus = [ dot(-n, p);
                dot(-o, p);
