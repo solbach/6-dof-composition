@@ -1,4 +1,5 @@
 \documentclass[10pt,a4paper]{scrartcl}
+\usepackage{todonotes}
 \usepackage[utf8]{inputenc}
 \usepackage[german, english]{babel} 
 \usepackage{graphicx}
@@ -39,6 +40,10 @@ Markus Solbach\\
 \subtitle{a short overview}
 \maketitle\newpage
 
+\listoftodos
+
+\newpage
+
 \section{Introduction}\label{ch:intro}
 Adding relative motion, for instance given by odometry (observation), to an absolute state its called \textit{transformation composition}. In our case we deal with a full 3 dimensional composition with 6 degrees of freedom (DOF). With other words it is possible to translate the system in $x, y, z$ direction, what gives us the first 3 DOF and to rotate the system around $\phi, \theta, \psi$ (roll, pitch, yaw), that gives us the missing 3 DOF.
 \\\\ In more detail: Let $X$ the state-vector and $Y$ the observation-vector. Defined as follows:
@@ -55,7 +60,7 @@ X_+ = X \oplus Y
 \end{equation}
 
 In our case the \textit{Transformation Composition} Matrix can be derived starting by defining the 3D rotation Matrices for each axis:
-
+\todo[inline]{Add axis-index:}
 \begin{equation}
 R(\phi) = \begin{bmatrix} 1 & 0 & 0 & 0 \\0 & \cos(\phi) & -\sin(\phi) & 0\\ 0 & \sin(\phi) & \cos(\phi) & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation} 
@@ -68,7 +73,7 @@ R(\theta) = \begin{bmatrix} \cos(\theta) & 0 & \sin(\theta) & 0 \\0 & 1 & 0 & 0\
 R(\psi) = \begin{bmatrix} \cos(\psi) & -\sin(\psi) & 0 & 0 \\ \sin(\psi) & \cos(\psi) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{bmatrix}
 \end{equation} 
 
-First of all we put all 3 Matrices to one closed Matrix together. Due to rotation is not commutative, we define the multiplication order as follows: $R_x \cdot R_y \cdot R_z$. What gives us $R(\phi, \theta, \psi)$. The solution for $R(\phi, \theta, \psi)$ can be found in formula \ref{eq:R}
+First of all we put all 3 Matrices to one closed Matrix together. Due to rotation is not commutative, we define the multiplication order as follows: $R_x \cdot R_y \cdot R_z$\todo{This has to be re-engineered. The proper order is probably: $R_z \cdot R_y \cdot R_x$. With this adjustment formula \ref{eq:R} and following has to be adjust as well}. What gives us $R(\phi, \theta, \psi)$. The solution for $R(\phi, \theta, \psi)$ can be found in formula \ref{eq:R}
 
 \tiny
 \begin{equation}
@@ -108,7 +113,7 @@ z_x + x_y \left(-\cos(\phi_x)   \sin(\theta_x)   \cos(\psi_x) + \sin(\theta_x)  
 \end{equation}
 \normalsize
 
-\section{Jacobians}
+\subsection{Jacobians}
 In the context of EKF-SLAM it is also necessary to derive the Jacobians from the Matrix given in \ref{eq:comp}. In this case we need to calculate two Jacobians. The first with respect to $X$ ($J_{1\oplus}$) and the second with respect to $Y$ ($J_{2\oplus}$).
 
 \begin{frame}
@@ -140,12 +145,29 @@ J_{2\oplus} =
 \end{bmatrix}
 \end{equation}
 \normalsize
+
+\section{Transformation Inversion}
+\todo[inline]{not written yet. have a look at \textit{../invers.m}.}
+\subsection{Jacobians}
+\todo[inline]{not written yet. Coming soon. have a look at \textit{../invers.m}.}
+
 \section{Implementation}
 An implementation can be found on \href{https://github.com/solbach/composition6DOF}{www.github.com/solbach/composition6DOF}. \\It covers the following points:
 \begin{itemize}
 \item Full 3D Frame Composition with six degrees of freedom
 \item Transformation Composition-Function
+\item Transformation Inversion-Function
 \item Jacobians
+\item A lot of Utilization-Function
+\begin{itemize}
+\item relative motion from absolute motion 
+\item relative motion from velocity
+\item rosbag (visualodometry message) reader (really simple $\hookrightarrow$ uses a pre-captured text file)
+\item quaternion to euler
+\item euler to quaternion
+\item simple function to use matlabs symbolic toolbox
+\item function to apply a 3D transformation matrix
+\end{itemize}
 \item Simple Simulator
 \item Written in Matlab (should also work with Octave)
 \end{itemize}

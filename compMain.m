@@ -1,6 +1,6 @@
 % Main program ( or example ) to test the composition.
 % mode (1 = using velocity data, 2 = using absolute states)
-mode = 2;
+mode = 1;
 % initial State [ X, Y, Z, roll, pitch, yaw ]
 x = [0, 0, 0, 0, 0, 0];
 
@@ -55,24 +55,24 @@ for t = tt
         A1  = [ aX(t-1), aY(t-1), aZ(t-1), a1Roll, a1Pitch, a1Yaw ];
         A2  = [ aX(t), aY(t), aZ(t), a2Roll, a2Pitch, a2Yaw ];
         
-        rx = - aX(t-1) + aX(t);
-        ry = - aY(t-1) + aY(t);
-        rz = - aZ(t-1) + aZ(t);
+%         rx = - aX(t-1) + aX(t);
+%         ry = - aY(t-1) + aY(t);
+%         rz = - aZ(t-1) + aZ(t);
     
-%         R   = relativeMotionFromAbsoluteMotion(A1, A2);
-%         mX      = R(1);
-%         mY      = R(2);
-%         mZ      = R(3);
-%         mRoll   = R(4);
-%         mPitch  = R(5);
-%         mYaw    = R(6);
+        R   = relativeMotionFromAbsoluteMotion(A1, A2);
+        mX      = R(1);
+        mY      = R(2);
+        mZ      = R(3);
+        mRoll   = R(4);
+        mPitch  = R(5);
+        mYaw    = R(6);
         
-        mX      = rx;
-        mY      = ry;
-        mZ      = rz;
-        mRoll   = 0;
-        mPitch  = 0;
-        mYaw    = 0;
+%         mX      = rx;
+%         mY      = ry;
+%         mZ      = rz;
+%         mRoll   = 0;
+%         mPitch  = 0;
+%         mYaw    = 0;
     else
         % Get relative motion from velocity:
     
