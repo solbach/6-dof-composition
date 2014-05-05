@@ -4,7 +4,7 @@
 
 function out = rosBagFileReader()
     
-    out     = double( dlmread( 'bag/viso2.txt', ',' ) );
+    out     = double( dlmread( 'bag/viso_edit.txt', ',' ) );
     
 %     out2 = sym( out );
 %     out(1,1)
