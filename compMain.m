@@ -94,9 +94,32 @@ for t = tt
 
     
     % II.  save data to plot them afterwards
-    cX = [cX x(1)];
+    cX = [cX 1];
     cY = [cY x(2)];
     cZ = [cZ x(3)];
+    
+    xo = x(1) - dX(t);
+    yo = x(2) - dY(t);
+    zo = x(3) - dZ(t);
+    
+    tresh = 0.001;
+    if xo > tresh | xo < -tresh | yo > tresh | yo < -tresh | zo > tresh | zo < -tresh
+        t
+        
+        xo
+        yo
+        zo
+        
+        x(1)
+        x(2)
+        x(3)
+        
+        dX(t)
+        dY(t)
+        dZ(t)
+        
+%         return;
+    end
     
 end
 
@@ -104,7 +127,7 @@ end
 % plot groundtruth
 hold on;
 color = 'r';
-plot_dir3(dX, dY, dZ, color);
+plot_dir3(cX, dY, dZ, color);
 
 % plot calculated data
 color = 'b';
