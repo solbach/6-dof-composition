@@ -20,6 +20,15 @@ function q = eulerToQuat(roll, pitch, yaw)
     
 end
 
+%%
+function f()
+%%
+    syms w x y z
+    q = [w, x, y, z];
+    p_r = quatToMatrix(q)
+    
+end
+
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 

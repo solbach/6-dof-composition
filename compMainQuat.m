@@ -1,8 +1,6 @@
 % Main program ( or example ) to test the composition.
-% mode (1 = using velocity data, 2 = using absolute states)
-mode = 1;
-% initial State [ X, Y, Z, roll, pitch, yaw ]
-x = [0, 0, 0, 0, 0, 0];
+% initial State [ X, Y, Z, w, q1, q2, q3 ]
+x = [ 0, 0, 0, 0, 0, 0, 1 ];
 
 % Get Data
 data = rosBagFileReader;
@@ -11,14 +9,6 @@ data = rosBagFileReader;
 dX   = data(:, 4);
 dY   = data(:, 5);
 dZ   = data(:, 6);
-
-% Get velocity
-rX       = data(:, 47);
-rY       = data(:, 48);
-rZ       = data(:, 49);
-rRoll    = data(:, 50);
-rPitch   = data(:, 51);
-rYaw     = data(:, 52);
 
 % Get absolute states
 aX      = data(:, 4);
@@ -41,58 +31,24 @@ cZ = 0;
 
 % main loop
 for t = tt
-    
-    if mode == 2
         % Get relative motion from absolute motion
+        q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];
+                
+        q1 = q1.*quatnorm(q1);
         
-        % Calculate euler angles from quaternions
-        q1 = [ aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1) ];
-        [ a1Roll a1Pitch a1Yaw ] = quatToEuler(q1);
-    
-        q2 = [ aw(t), aq1(t), aq2(t), aq3(t) ];
-        [ a2Roll a2Pitch a2Yaw ] = quatToEuler(q2);
-    
-        A1  = [ aX(t-1), aY(t-1), aZ(t-1), a1Roll, a1Pitch, a1Yaw ];
-        A2  = [ aX(t), aY(t), aZ(t), a2Roll, a2Pitch, a2Yaw ];
+        q2 = [aw(t), aq1(t), aq2(t), aq3(t)];
+        q2 = q2.*quatnorm(q2);
         
-%         rx = - aX(t-1) + aX(t);
-%         ry = - aY(t-1) + aY(t);
-%         rz = - aZ(t-1) + aZ(t);
-    
-        R   = relativeMotionFromAbsoluteMotion(A1, A2);
-        mX      = R(1);
-        mY      = R(2);
-        mZ      = R(3);
-        mRoll   = R(4);
-        mPitch  = R(5);
-        mYaw    = R(6);
+        % State Vectors (x, y, z, qw, qx, qy, qz)
+        A1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
+        A2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
+           
+        s   = relativeMotionFromAbsoluteMotionQuat(A1, A2);
         
-%         mX      = rx;
-%         mY      = ry;
-%         mZ      = rz;
-%         mRoll   = 0;
-%         mPitch  = 0;
-%         mYaw    = 0;
-    else
-        % Get relative motion from velocity:
-    
-        deltaTnano = data( t, 1 ) - data( t-1, 1 );
-        deltaTsec   = deltaTnano / 1000000000.0;
-     
-        mX      = rX(t) * deltaTsec;
-        mY      = rY(t) * deltaTsec;
-        mZ      = rZ(t) * deltaTsec;
-        mRoll   = rRoll(t)  * deltaTsec;
-        mPitch  = rPitch(t) * deltaTsec;
-        mYaw    = rYaw(t)   * deltaTsec;
-    end
-    
     % I.    transformation
     % measurement update (Odometry)
-    y = [mX, mY, mZ, mRoll, mPitch, mYaw];
-    x = comp(x,y);
+    x = compQuat(x, s);
 
-    
     % II.  save data to plot them afterwards
     cX = [cX x(1)];
     cY = [cY x(2)];

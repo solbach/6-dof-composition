@@ -1,31 +1,23 @@
-% Util program to convert a quaternion to a rotation-matrix
-% quaternion (q) will be formatted as follows:
-% q = [w, x, y, z]
+function [R] = relativeMotionFromAbsoluteMotionQuat(A1, A2)
+%   This function calculates the 3D relative motion between states
+%   from two given 3D absolute state vectors.
+%   Note:   R = opMINUS(A1) opPLUS(A2)
+%           Provide the absolute state as follows:
+%               - [ x, y, z, roll, pitch, yaw ]
+%           Have a look on the pdf in the "doc" subfolder for more details.
 
-function A = quatToMatrix(q)
+    R = compQuat(inversQuat(A1), A2);
+   
+end
 
-    qw = q(1);
-    qx = q(2); 
-    qy = q(3);
-    qz = q(4);
-
-%     Normalize
-%     n = 1.0 / sqrt(qw * qz * qy * qz);
-%     
-%     qw = qw*n;
-%     qx = qx*n;
-%     qy = qy*n;
-%     qz = qz*n;
-
-    A = [   1.0  - 2.0 *qy*qy - 2.0 *qz*qz, 2.0 *qx*qy - 2.0 *qz*qw, ...
-                2.0 *qx*qz + 2.0 *qy*qw, 0.0 ;
-            2.0 *qx*qy + 2.0 *qz*qw, 1.0  - 2.0 *qx*qx - 2.0 *qz*qz, ...
-                2.0 *qy*qz - 2.0 *qx*qw, 0.0 ;
-            2.0 *qx*qz - 2.0 *qy*qw, 2.0 *qy*qz + 2.0 *qx*qw, ...
-                1.0  - 2.0 *qx*qx - 2.0 *qy*qy, 0.0 ;
-            0.0 , 0.0 , 0.0 , 1.0 ];
-        
-        
+%%
+function f()
+%%
+%%
+    syms x_x y_x z_x phi_x theta_x psi_x x_y y_y z_y phi_y theta_y psi_y real
+    x1 = [x_x, y_x, z_x, phi_x, theta_x, psi_x];
+    x2 = [x_y, y_y, z_y, phi_y, theta_y, psi_y];
+    p_r = relativeMotionFromAbsoluteMotionQuat(x1, x2)
 end
 
 % Copyright (c) 2014, Markus Solbach

@@ -1,31 +1,45 @@
-% Util program to convert a quaternion to a rotation-matrix
-% quaternion (q) will be formatted as follows:
-% q = [w, x, y, z]
+function [Xminus Jac1] = inversQuat(X)
+%   This function calculates the 3D inversion using quaternions.
+%   Note:   p is the translation vector (easy as it gets)
+%           n, o and a are the column vector of the 3D Rotation Matrix.
+%           Have a look on the pdf in the "doc" subfolder for more details.
 
-function A = quatToMatrix(q)
+% building translation matrix
+    p = [ X(1); X(2); X(3); 1];
 
-    qw = q(1);
-    qx = q(2); 
-    qy = q(3);
-    qz = q(4);
+% get quaternions from data
+    q = [ X(4), X(5), X(6), X(7) ];
+      
+% building rotation matrix
+    R  = quatToMatrix(q);
 
-%     Normalize
-%     n = 1.0 / sqrt(qw * qz * qy * qz);
-%     
-%     qw = qw*n;
-%     qx = qx*n;
-%     qy = qy*n;
-%     qz = qz*n;
+% inverting
+    qinv = quatInvers(q);
+     
+    n = R(:,1);
+    
+    o = R(:,2);
+      
+    a = R(:,3);
+      
+    Xminus = [ dot(-n, p);
+               dot(-o, p);
+               dot(-a, p);
+               -qinv' ];
+               
+     if nargout > 1
+         
+     end
 
-    A = [   1.0  - 2.0 *qy*qy - 2.0 *qz*qz, 2.0 *qx*qy - 2.0 *qz*qw, ...
-                2.0 *qx*qz + 2.0 *qy*qw, 0.0 ;
-            2.0 *qx*qy + 2.0 *qz*qw, 1.0  - 2.0 *qx*qx - 2.0 *qz*qz, ...
-                2.0 *qy*qz - 2.0 *qx*qw, 0.0 ;
-            2.0 *qx*qz - 2.0 *qy*qw, 2.0 *qy*qz + 2.0 *qx*qw, ...
-                1.0  - 2.0 *qx*qx - 2.0 *qy*qy, 0.0 ;
-            0.0 , 0.0 , 0.0 , 1.0 ];
-        
-        
+end
+
+%%
+function f()
+%%
+    syms x1 y1 z1 q1 q2 q3 q4;
+    x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
+    p_r = inversQuat(x1)
+    Jac1 = jacobian(p_r, x1)
 end
 
 % Copyright (c) 2014, Markus Solbach

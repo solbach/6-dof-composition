@@ -1,22 +1,40 @@
-function result = calcSym(val)
+%   The actual Composition is done here. Including the calculation 
+%   of both Jacobians
 
-%   Rotation around Z
-%     result = [...
-%              [  cos(theta) -sin(theta) 0]
-%              [  sin(theta) cos(theta) 0]
-%              [  0 0 1]];
-     
-%   2D Inversion
-%       result = [...
-%                [  -val(1)*cos(val(3)) - val(2) * sin(val(3)) ]
-%                [  val(1) * sin(val(3)) - val(2) * cos(val(3)) ]
-%                [  -val(3) ]];
+%   Important Notes:
+%       - This is a special version using quaternions
+%       - The states need quaternions and should look like follows:
+%           * X = [X, Y, Z, w, x, y, z], where [w, x, y, z] = q
+function [Xplus Jac1 Jac2] = compQuat(X1, X2)
+    
+% get quaternions from data
+    q1 = [ X1(4), X1(5), X1(6), X1(7) ];
+    q2 = [ X2(4), X2(5), X2(6), X2(7) ];
+      
+% building rotation matrix
+    R  = quatToMatrix(q1);
+    
+% building translaten matrix
+    t1 = [ X1(1); X1(2); X1(3); 1 ];
+    t2 = [ X2(1); X2(2); X2(3); 1 ];
+% composition vector (Part I). Here is where the main information is
+    comVec = R * t2;
+    
+% and rotation: Akkumulation of Rotation ==> quaternion multiplication    
+%     rot    = [ X1(4) + X2(4); X1(5) + X2(5); X1(6) + X2(6); X1(7) + X2(7) ];
+    rot    = quatMult(q1, q2);
 
-%   3D Inversion
+% putting everything together
+    Xplus  = [ t1(1) + comVec(1); ...
+               t1(2) + comVec(2); ...
+               t1(3) + comVec(3); ...
+               rot(1); ...
+               rot(2); ...
+               rot(3); ...
+               rot(4)];
     
      if nargout > 1
          
-
      end
 
 end
@@ -24,11 +42,12 @@ end
 %%
 function f()
 %%
-    syms x y theta
-    x1 = [x, y, theta];
-    p_r = calcSym(x1);
+    syms x1 y1 z1 q1 q2 q3 q4 x2 y2 z2 q5 q6 q7 q8;
+    x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
+    x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
+    p_r = compQuat(x1, x2)
     Jac1 = jacobian(p_r, x1)
-    
+    Jac2 = jacobian(p_r, x2)
 end
 
 % Copyright (c) 2014, Markus Solbach

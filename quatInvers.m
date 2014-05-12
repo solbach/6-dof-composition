@@ -1,31 +1,16 @@
-% Util program to convert a quaternion to a rotation-matrix
-% quaternion (q) will be formatted as follows:
-% q = [w, x, y, z]
+function result = quatInvers(q)
+%   This function inverts a given quaternion
 
-function A = quatToMatrix(q)
-
-    qw = q(1);
-    qx = q(2); 
-    qy = q(3);
-    qz = q(4);
-
-%     Normalize
+%     qw = q(1);
+%     qx = q(2); 
+%     qy = q(3);
+%     qz = q(4);
+% 
+% %     Normalize
 %     n = 1.0 / sqrt(qw * qz * qy * qz);
-%     
-%     qw = qw*n;
-%     qx = qx*n;
-%     qy = qy*n;
-%     qz = qz*n;
 
-    A = [   1.0  - 2.0 *qy*qy - 2.0 *qz*qz, 2.0 *qx*qy - 2.0 *qz*qw, ...
-                2.0 *qx*qz + 2.0 *qy*qw, 0.0 ;
-            2.0 *qx*qy + 2.0 *qz*qw, 1.0  - 2.0 *qx*qx - 2.0 *qz*qz, ...
-                2.0 *qy*qz - 2.0 *qx*qw, 0.0 ;
-            2.0 *qx*qz - 2.0 *qy*qw, 2.0 *qy*qz + 2.0 *qx*qw, ...
-                1.0  - 2.0 *qx*qx - 2.0 *qy*qy, 0.0 ;
-            0.0 , 0.0 , 0.0 , 1.0 ];
-        
-        
+    result = [ q(:,1) -q(:,2:4) ];
+
 end
 
 % Copyright (c) 2014, Markus Solbach

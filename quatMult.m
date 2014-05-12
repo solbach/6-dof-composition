@@ -1,33 +1,21 @@
-% Util program to convert a quaternion to a rotation-matrix
-% quaternion (q) will be formatted as follows:
-% q = [w, x, y, z]
+function result = quatMult(q, r)
+% Calculate vector portion of quaternion product
 
-function A = quatToMatrix(q)
+% vec = s1*v2 + s2*v1 + cross(v1,v2)
+    vec = [q(:,1).*r(:,2) q(:,1).*r(:,3) q(:,1).*r(:,4)] + ...
+          [r(:,1).*q(:,2) r(:,1).*q(:,3) r(:,1).*q(:,4)]+...
+          [ q(:,3).*r(:,4)-q(:,4).*r(:,3) ...
+           q(:,4).*r(:,2)-q(:,2).*r(:,4) ...
+           q(:,2).*r(:,3)-q(:,3).*r(:,2)];
 
-    qw = q(1);
-    qx = q(2); 
-    qy = q(3);
-    qz = q(4);
+% Calculate scalar portion of quaternion product
+% scalar = s1*s2 - dot(v1,v2)
+    scalar = q(:,1).*r(:,1) - q(:,2).*r(:,2) - ...
+             q(:,3).*r(:,3) - q(:,4).*r(:,4);
+    
+    result = [scalar  vec];
 
-%     Normalize
-%     n = 1.0 / sqrt(qw * qz * qy * qz);
-%     
-%     qw = qw*n;
-%     qx = qx*n;
-%     qy = qy*n;
-%     qz = qz*n;
-
-    A = [   1.0  - 2.0 *qy*qy - 2.0 *qz*qz, 2.0 *qx*qy - 2.0 *qz*qw, ...
-                2.0 *qx*qz + 2.0 *qy*qw, 0.0 ;
-            2.0 *qx*qy + 2.0 *qz*qw, 1.0  - 2.0 *qx*qx - 2.0 *qz*qz, ...
-                2.0 *qy*qz - 2.0 *qx*qw, 0.0 ;
-            2.0 *qx*qz - 2.0 *qy*qw, 2.0 *qy*qz + 2.0 *qx*qw, ...
-                1.0  - 2.0 *qx*qx - 2.0 *qy*qy, 0.0 ;
-            0.0 , 0.0 , 0.0 , 1.0 ];
-        
-        
 end
-
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
