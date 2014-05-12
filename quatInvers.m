@@ -1,14 +1,6 @@
 function result = quatInvers(q)
 %   This function inverts a given quaternion
 
-%     qw = q(1);
-%     qx = q(2); 
-%     qy = q(3);
-%     qz = q(4);
-% 
-% %     Normalize
-%     n = 1.0 / sqrt(qw * qz * qy * qz);
-
     result = [ q(:,1) -q(:,2:4) ];
 
 end
