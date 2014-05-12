@@ -7,10 +7,10 @@ function result = calcSym(val)
 %              [  0 0 1]];
      
 %   2D Inversion
-%       result = [...
-%                [  -val(1)*cos(val(3)) - val(2) * sin(val(3)) ]
-%                [  val(1) * sin(val(3)) - val(2) * cos(val(3)) ]
-%                [  -val(3) ]];
+      result = [...
+               [  -val(1)*cos(val(3)) - val(2) * sin(val(3)) ]
+               [  val(1) * sin(val(3)) - val(2) * cos(val(3)) ]
+               [  -val(3) ]];
 
 %   3D Inversion
     

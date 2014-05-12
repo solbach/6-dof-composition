@@ -8,11 +8,11 @@
 function [Xplus Jac1 Jac2] = compQuat(X1, X2)
     
 % get quaternions from data
-    X1(4) = [ X1(4), X1(5), X1(6), X1(7) ];
-    X1(5) = [ X2(4), X2(5), X2(6), X2(7) ];
+    q1 = [ X1(4), X1(5), X1(6), X1(7) ];
+    q2 = [ X2(4), X2(5), X2(6), X2(7) ];
       
 % building rotation matrix
-    R  = quatToMatrix(X1(4));
+    R  = quatToMatrix(q1);
     
 % building translaten matrix
     t1 = [ X1(1); X1(2); X1(3); 1 ];
@@ -22,7 +22,7 @@ function [Xplus Jac1 Jac2] = compQuat(X1, X2)
     
 % and rotation: Akkumulation of Rotation ==> quaternion multiplication    
 %     rot    = [ X1(4) + X2(4); X1(5) + X2(5); X1(6) + X2(6); X1(7) + X2(7) ];
-    rot    = quatMult(X1(4), X1(5));
+    rot    = quatMult(q1, q2);
 
 % putting everything together
     Xplus  = [ t1(1) + comVec(1); ...

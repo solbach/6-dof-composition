@@ -58,7 +58,7 @@ for t = tt
     yo = x(2) - dY(t);
     zo = x(3) - dZ(t);
     
-    tresh = 0.001;
+    tresh = 0.00001;
     if xo > tresh || xo < -tresh || yo > tresh || yo < -tresh || zo > tresh || zo < -tresh
         t
         
