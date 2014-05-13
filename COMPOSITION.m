@@ -1,5 +1,9 @@
 % Full 3D Frame Composition with six degress of freedom
 %
+% This is the Development Branch. 
+% Here you find almost everything what was development within the 
+% last weeks. Including the approach using euler angles.
+% 
 % Do not forget to put the "util" subfolder to your path.
 % 
 % I.    System
