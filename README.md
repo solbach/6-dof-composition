@@ -1,7 +1,9 @@
 composition6DOF
 ===============
 
-* IN PROGRESS
+* This is the Development Branch. 
+* Here you find almost everything what was development within the last weeks. Including the approach using euler angles.
+
 * Full 3D Frame Composition with six degrees of freedom
 * Transformation Composition-Function (Euler and Quaternion)
 * Transformation Inversion-Function (Euler and Quaternion)
