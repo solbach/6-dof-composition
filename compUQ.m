@@ -5,7 +5,7 @@
 %       - This is a special version using quaternions
 %       - The states need quaternions and should look like follows:
 %           * X = [X, Y, Z, w, x, y, z], where [w, x, y, z] = q
-function [Xplus Jac1 Jac2] = compQuat(X1, X2)
+function [Xplus Jac1 Jac2] = compUQ(X1, X2)
     
 % get quaternions from data
     q1 = [ X1(4), X1(5), X1(6), X1(7) ];
@@ -21,7 +21,6 @@ function [Xplus Jac1 Jac2] = compQuat(X1, X2)
     comVec = R * t2;
     
 % and rotation: Akkumulation of Rotation ==> quaternion multiplication    
-%     rot    = [ X1(4) + X2(4); X1(5) + X2(5); X1(6) + X2(6); X1(7) + X2(7) ];
     rot    = quatMult(q1, q2);
 
 % putting everything together
@@ -75,7 +74,7 @@ function f()
     syms x1 y1 z1 q1 q2 q3 q4 x2 y2 z2 q5 q6 q7 q8;
     x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
     x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
-    p_r = compQuat(x1, x2)
+    p_r = compUQ(x1, x2)
     Jac1 = jacobian(p_r, x1)
     Jac2 = jacobian(p_r, x2)
 end

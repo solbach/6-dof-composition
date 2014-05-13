@@ -1,4 +1,4 @@
-function [Xminus Jac1] = inversQuat(X)
+function [Xminus Jac1] = inversUQ(X)
 %   This function calculates the 3D inversion using quaternions.
 %   Note:   p is the translation vector (easy as it gets)
 %           n, o and a are the column vector of the 3D Rotation Matrix.
@@ -59,7 +59,7 @@ function f()
 %%
     syms x1 y1 z1 q1 q2 q3 q4;
     x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
-    p_r = inversQuat(x1)
+    p_r = inversUQ(x1)
     Jac1 = jacobian(p_r, x1)
 end
 

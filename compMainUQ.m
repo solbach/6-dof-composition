@@ -32,22 +32,21 @@ cZ = 0;
 % main loop
 for t = tt
         % Get relative motion from absolute motion
-        q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];
-                
-        q1 = q1.*quatnorm(q1);
+        q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
+        q1 = quatNormal( q1 );
         
         q2 = [aw(t), aq1(t), aq2(t), aq3(t)];
-        q2 = q2.*quatnorm(q2);
+        q2 = quatNormal( q2 );
         
         % State Vectors (x, y, z, qw, qx, qy, qz)
         A1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
         A2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
            
-        s   = relativeMotionFromAbsoluteMotionQuat(A1, A2);
+        s   = relativeMotionFromAbsoluteMotionUQ(A1, A2);
         
     % I.    transformation
     % measurement update (Odometry)
-    x = compQuat(x, s);
+    x = compUQ(x, s);
 
     % II.  save data to plot them afterwards
     cX = [cX x(1)];
@@ -57,25 +56,6 @@ for t = tt
     xo = x(1) - dX(t);
     yo = x(2) - dY(t);
     zo = x(3) - dZ(t);
-    
-    tresh = 0.00001;
-    if xo > tresh || xo < -tresh || yo > tresh || yo < -tresh || zo > tresh || zo < -tresh
-        t
-        
-        xo
-        yo
-        zo
-        
-        x(1)
-        x(2)
-        x(3)
-        
-        dX(t)
-        dY(t)
-        dZ(t)
-        
-%         return;
-    end
     
 end
 

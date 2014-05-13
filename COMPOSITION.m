@@ -1,19 +1,21 @@
 % Full 3D Frame Composition with six degress of freedom
 %
+% Do not forget to put the "util" subfolder to your path.
+% 
 % I.    System
 % 
 %   Xplus   = f ( x, y )
+%   Xminus  = g ( x )
 %
 %   x       : state vector            
 %   y       : measurement vector
 %
 %   Xplus   : Updated state vector 
-%   Jac1    : Jacobian Matrix with respect to x
-%   Jac2    : Jacobian Matrix with respect to y
+%   Xminus  : Invers motion
 %
 % II.   Calculation
 %   
-%   Delivered with this Project as a PDF
+%   Delivered with this Project as a PDF (subfolder doc/)
 %
 % III.  Plot result
 %   
@@ -22,36 +24,35 @@
 %
 % IV.   Usage
 %
-%   Starting point is compMain.m. Here you can define the initial
-%   state vector and the measurement vector and how often the 
-%   measurement vector is applied to the state vector is defined 
-%   with tt (the amount of loop iterations). 
-%   Off course you can alternate the measurement vector for each
-%   composition call. If you edit the loop keep in mind that
-%   with the given approach here the robot 
-%       first:  translates
-%       second: rotates
-%   With other Words: if you want the robot to do it vice versa
-%   you need to play around with the measurement vector y:
-%       first:  rotation angles but no translation (0, 0, 0)
-%       second: translation
-%   As it is right now implented in the loop.
-%   Off course this can be easily solved with calculating the angles
-%   first before applying the matrix (comp.m)
+%   Starting point is compMain.m. Alternatively and 100% working
+%   is the approach using quaternions (all files endign with UQ
+%   using quaternions). compMain.m reads a ROS-Bagfile given
+%   from a visual odometry node. It takes the absolute state,
+%   what means: rows 4, 5, 6, which are providing the position
+%   and rows 7, 8, 9, 10 which are provifing the orientation as
+%   a quaternion.
+%   After this the relative motion is calculated using 
+%   using relativeMotionFromAbsoluteMotion.m.
+%   With the relative motion we are calculating with the composition-
+%   function (comp.m) the absolute motion again.
+%   If both motions fit perfectly we see that the composition- and
+%   inversion-function are work well. 
+%   For more information take a look at the subfolder doc/ for
+%   the documentation and into the code.
 %
 %   Necessary files are:
 %       1.  comp.m
 %       2.  compMain.m
 %       3.  plot_dir3.m
+%       4.  invers.m
+%       5.  quatInvers.m
+%       6.  quatMult.m
+%       7.  quatToMatrix.m
+%       8.  relativeMotionFromAbsoluteMotion.m
+%       9.  rosBagFileReader.m
 %
-%   All other files exist for better understanding.
-
-
-% Example Data:
-%   X, Y, Z:
-%       0.000275892037187, 0.000481960249349, -0.010633903437,
-%   Quaternion:
-%       -0.00633593165818, -0.00695387613718, 0.002822295697, 0.999951765949
+%   All other files exist for better understanding (e.q. to get the 
+%   solution as provided here).
 
 
 % Copyright (c) 2014, Markus Solbach

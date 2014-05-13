@@ -19,4 +19,5 @@ composition6DOF
 	* function to apply a 3D transformation matrix
 * Simple Simulator
 * Written in Matlab (should also work with Octave)
+* More information can be taken from COMPOSITION.m
 

@@ -1,21 +1,25 @@
-function result = quatMult(q, r)
-% Calculate vector portion of quaternion product
+function [R] = relativeMotionFromAbsoluteMotionUQ(A1, A2)
+%   This function calculates the 3D relative motion between states
+%   from two given 3D absolute state vectors.
+%   Note:   R = opMINUS(A1) opPLUS(A2)
+%           Provide the absolute state as follows:
+%               - [ x, y, z, roll, pitch, yaw ]
+%           Have a look on the pdf in the "doc" subfolder for more details.
 
-% vec = s1*v2 + s2*v1 + cross(v1,v2)
-    vec = [q(:,1).*r(:,2) q(:,1).*r(:,3) q(:,1).*r(:,4)] + ...
-          [r(:,1).*q(:,2) r(:,1).*q(:,3) r(:,1).*q(:,4)]+...
-          [ q(:,3).*r(:,4)-q(:,4).*r(:,3) ...
-           q(:,4).*r(:,2)-q(:,2).*r(:,4) ...
-           q(:,2).*r(:,3)-q(:,3).*r(:,2)];
-
-% Calculate scalar portion of quaternion product
-% scalar = s1*s2 - dot(v1,v2)
-    scalar = q(:,1).*r(:,1) - q(:,2).*r(:,2) - ...
-             q(:,3).*r(:,3) - q(:,4).*r(:,4);
-    
-    result = [scalar  vec];
-
+    R = compUQ(inversUQ(A1), A2);
+   
 end
+
+%%
+function f()
+%%
+%%
+    syms x_x y_x z_x phi_x theta_x psi_x x_y y_y z_y phi_y theta_y psi_y real
+    x1 = [x_x, y_x, z_x, phi_x, theta_x, psi_x];
+    x2 = [x_y, y_y, z_y, phi_y, theta_y, psi_y];
+    p_r = relativeMotionFromAbsoluteMotionUQ(x1, x2)
+end
+
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
