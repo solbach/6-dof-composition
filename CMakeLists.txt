@@ -21,7 +21,6 @@ endif()
 
 # Add sub directories
 add_subdirectory (src)
-add_subdirectory (src/util)
 
 # Where CMAKE should look for ...
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
