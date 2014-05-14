@@ -15,4 +15,3 @@ composition6DOF
 * Simple Simulator
 * Written in Matlab (should also work with Octave)
 * More information can be taken from COMPOSITION.m
-
