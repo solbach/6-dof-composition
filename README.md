@@ -6,6 +6,7 @@ composition6DOF
 * Transformation Composition-Function using Quaternions
 * Transformation Inversion-Function using Quaternions
 * Jacobians
+* Covariances
 * A lot of Utilization-Function
 	* relative motion from absolute motion 
  	* rosbag (visualodometry message) reader (really simple --> uses a pre-captured text file)
@@ -15,4 +16,3 @@ composition6DOF
 * Simple Simulator
 * Written in Matlab (should also work with Octave)
 * More information can be taken from COMPOSITION.m
-

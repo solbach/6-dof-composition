@@ -5,7 +5,7 @@
 %       - This is a special version using quaternions
 %       - The states need quaternions and should look like follows:
 %           * X = [X, Y, Z, w, x, y, z], where [w, x, y, z] = q
-function [Xplus Jac1 Jac2] = compUQ(X1, X2)
+function [Xplus Cov] = compUQ(X1, C1, X2, C2)
     
 % get quaternions from data
     q1 = [ X1(4), X1(5), X1(6), X1(7) ];
@@ -64,6 +64,8 @@ function [Xplus Jac1 Jac2] = compUQ(X1, X2)
                 [ 0, 0, 0, X1(5),  X1(4), -X1(7),  X1(6)]
                 [ 0, 0, 0, X1(6),  X1(7),  X1(4), -X1(5)]
                 [ 0, 0, 0, X1(7), -X1(6),  X1(5),  X1(4)]];
+            
+         Cov  = Jac1 * C1 * transpose( Jac1 ) + Jac2 * C2 * transpose( Jac2 );
      end
 
 end

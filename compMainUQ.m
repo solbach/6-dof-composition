@@ -1,6 +1,10 @@
 % Main program ( or example ) to test the composition.
 % initial State [ X, Y, Z, w, q1, q2, q3 ]
-x = [ 0, 0, 0, 0, 0, 0, 1 ];
+x    = [ 0, 0, 0, 0, 0, 0, 1 ];
+
+% initial covariance
+cov1  = eye( 7, 7 );
+cov2  = eye( 7, 7 );
 
 % Get Data
 data = rosBagFileReader;
@@ -42,11 +46,11 @@ for t = tt
         A1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
         A2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
            
-        s   = relativeMotionFromAbsoluteMotionUQ(A1, A2);
+        [s, covR]   = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2, cov2);
         
     % I.    transformation
     % measurement update (Odometry)
-    x = compUQ(x, s);
+    x = compUQ(x, cov1, s, covR);
 
     % II.  save data to plot them afterwards
     cX = [cX x(1)];

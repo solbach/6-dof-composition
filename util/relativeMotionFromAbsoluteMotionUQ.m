@@ -1,4 +1,4 @@
-function [R] = relativeMotionFromAbsoluteMotionUQ(A1, A2)
+function [R, cov] = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2, cov2)
 %   This function calculates the 3D relative motion between states
 %   from two given 3D absolute state vectors.
 %   Note:   R = opMINUS(A1) opPLUS(A2)
@@ -6,7 +6,8 @@ function [R] = relativeMotionFromAbsoluteMotionUQ(A1, A2)
 %               - [ x, y, z, roll, pitch, yaw ]
 %           Have a look on the pdf in the "doc" subfolder for more details.
 
-    R = compUQ(inversUQ(A1), A2);
+    [invA1 covIn] = inversUQ(A1, cov1);
+    [R cov] = compUQ(invA1, covIn, A2, cov2);
    
 end
 
