@@ -5,9 +5,14 @@ x    = [ 0, 0, 0, 0, 0, 0, 1 ];
 hold on;
 
 % initial covariance
+uncer = 0.0001;
 cov1  = eye( 7, 7 );
 [nRows,nCols] = size(cov1);
-cov1(1:(nRows+1):nRows*nCols) = 0.0001;
+cov1(1:(nRows+1):nRows*nCols) = uncer;
+
+cov2  = eye( 7, 7 );
+[nRows,nCols] = size(cov2);
+cov2(1:(nRows+1):nRows*nCols) = uncer;
 
 % Get Data
 data = rosBagFileReader;
@@ -34,8 +39,7 @@ aq3     = data(:, 10);
 dt = 1;
 tt = 2:dt:size(dX);
 
-tt = 2:dt:55;
-
+tt = 2:dt:120;
 cX = 0;
 cY = 0;
 cZ = 0;
