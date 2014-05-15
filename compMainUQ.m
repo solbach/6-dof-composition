@@ -9,6 +9,8 @@ uncer = 0.0001;
 cov1  = eye( 7, 7 );
 [nRows,nCols] = size(cov1);
 cov1(1:(nRows+1):nRows*nCols) = uncer;
+cov1(2,2) = 0.0034;
+cov1(4,4) = 0.0000234;
 
 cov2  = eye( 7, 7 );
 [nRows,nCols] = size(cov2);
