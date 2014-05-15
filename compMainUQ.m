@@ -9,15 +9,19 @@ cov2  = eye( 7, 7 );
 % Get Data
 data = rosBagFileReader;
 
+
+% IMPORTANT: 
+% Due to wrong caputured files we have to change the axis here
+
 % Get groundtruth
-dX   = data(:, 4);
+dX   = data(:, 6);
 dY   = data(:, 5);
-dZ   = data(:, 6);
+dZ   = data(:, 4);
 
 % Get absolute states
-aX      = data(:, 4);
+aX      = data(:, 6);
 aY      = data(:, 5);
-aZ      = data(:, 6);
+aZ      = data(:, 4);
 aw      = data(:, 7);
 aq1     = data(:, 8);
 aq2     = data(:, 9);

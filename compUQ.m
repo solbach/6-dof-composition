@@ -1,12 +1,12 @@
+function [Xplus Cov] = compUQ(X1, C1, X2, C2)
 %   The actual Composition is done here. Including the calculation 
-%   of both Jacobians
+%   of both Jacobians and the resulting covariances
 
 %   Important Notes:
 %       - This is a special version using quaternions
 %       - The states need quaternions and should look like follows:
 %           * X = [X, Y, Z, w, x, y, z], where [w, x, y, z] = q
-function [Xplus Cov] = compUQ(X1, C1, X2, C2)
-    
+
 % get quaternions from data
     q1 = [ X1(4), X1(5), X1(6), X1(7) ];
     q2 = [ X2(4), X2(5), X2(6), X2(7) ];

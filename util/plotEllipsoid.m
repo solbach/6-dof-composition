@@ -1,26 +1,22 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function plotEllipsoid( X, C )
+% Util program to plot an ellipsoid
+%   input:    X --> state [x, y, z, [q]] and C --> covariance ( 7 x 7 )
+%   output:   grapical ellipsoid
 
-function out = rosBagFileReader()
+% Samples
+    N = 30;
+
+% Center
+    c = [ X(1) X(2) X(3) ];
     
-    out     = double( dlmread( 'bag/viso_edit.txt', ',' ) );
+% Calculate semi-axis lengths
+    [U S D] = svd( C );
     
-%     out2 = sym( out );
-%     out(1,1)
-%     size = [590, 88];
-%     out = load('bag/viso.txt', 'uint64');    
-     
-%     fid = fopen('bag/viso.txt');
-%     % read, and transpose so samevals = myvals
-%     out = fread(fid, [88 590], 'uint64')';
-%     fclose(fid);
-     
-%     A = csvread('bag/viso.txt', 0,0);
+% Generate ellipsoid using matlab-function
+    [x, y, z] = ellipsoid( c(1), c(2), c(3), S(1,1), S(2,2), S(3,3), 30 );
+    surf(x, y, z)
+    axis equal
     
-%     x3 = sym('3^(1/3)');
-%     vpa(x3)
-           
 end
 
 
