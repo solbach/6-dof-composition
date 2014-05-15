@@ -24,24 +24,15 @@
 * - Everything
 */
 
-#include <iostream>
-#include <eigen3/Eigen/Core>
+
+#include "rosBagFileReader.cpp"
 
 int main( int argc, const char* argv[] )
 {
 
     std::cout << "Hallo Welt" << std::endl;
 
-
-    Eigen::Vector3d xAB, xBC, xAC;
-    Eigen::Matrix3d J1, J2;
-
-    // x, y, theta
-    xAB << 4, 19, 20;
-    xBC << 10, 10, 20;
-
-    std::cout<< xAB <<std::endl;
-
+    fileRead::read("asd");
 
     return 0;
 }
