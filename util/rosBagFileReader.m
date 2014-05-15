@@ -2,10 +2,13 @@
 %   input:    filename
 %   output:   Vector of Vector
 
-function out = rosBagFileReader()
+function out = rosBagFileReader(c)
     
-    out     = double( dlmread( 'bag/viso_edit.txt', ',' ) );
-    
+    if c == 1
+        out     = double( dlmread( 'bag/viso_edit.txt', ',' ) );
+    else
+        out     = double( dlmread( 'bag/gt_adapted.txt', ',' ) );
+    end
 %     out2 = sym( out );
 %     out(1,1)
 %     size = [590, 88];

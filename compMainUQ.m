@@ -17,16 +17,18 @@ cov2  = eye( 7, 7 );
 cov2(1:(nRows+1):nRows*nCols) = uncer;
 
 % Get Data
-data = rosBagFileReader;
+data = rosBagFileReader(1);
 
+% Get Ground Truth
+gt = rosBagFileReader(2);
 
 % IMPORTANT: 
 % Due to wrong caputured files we have to change the axis here
 
 % Get groundtruth
-dX   = data(:, 6);
-dY   = data(:, 5);
-dZ   = data(:, 4);
+dX   = gt(:, 4);
+dY   = gt(:, 5);
+dZ   = gt(:, 6);
 
 % Get absolute states
 aX      = data(:, 6);
@@ -39,9 +41,9 @@ aq3     = data(:, 10);
 
 % movements repetitions
 dt = 1;
-tt = 2:dt:size(dX);
+tt = 2:dt:size(aX);
 
-tt = 2:dt:120;
+% tt = 2:dt:120;
 cX = 0;
 cY = 0;
 cZ = 0;
