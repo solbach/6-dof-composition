@@ -4,7 +4,10 @@ function plotEllipsoid( X, C )
 %   output:   grapical ellipsoid
 
 % Samples
-    N = 30;
+    N = 15;
+    
+%   Resize-Factor
+    rf = 0.000000000000000001;
 
 % Center
     c = [ X(1) X(2) X(3) ];
@@ -13,7 +16,7 @@ function plotEllipsoid( X, C )
     [U S D] = svd( C );
     
 % Generate ellipsoid using matlab-function
-    [x, y, z] = ellipsoid( c(1), c(2), c(3), S(1,1), S(2,2), S(3,3), 30 );
+    [x, y, z] = ellipsoid( c(1), c(2), c(3), sqrt(S(1,1)).*rf, sqrt(S(2,2)).*rf, sqrt(S(3,3)).*rf, N );
     surf(x, y, z)
     axis equal
     

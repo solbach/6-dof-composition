@@ -2,9 +2,12 @@
 % initial State [ X, Y, Z, w, q1, q2, q3 ]
 x    = [ 0, 0, 0, 0, 0, 0, 1 ];
 
+hold on;
+
 % initial covariance
 cov1  = eye( 7, 7 );
-cov2  = eye( 7, 7 );
+[nRows,nCols] = size(cov1);
+cov1(1:(nRows+1):nRows*nCols) = 0.0001;
 
 % Get Data
 data = rosBagFileReader;
@@ -31,7 +34,7 @@ aq3     = data(:, 10);
 dt = 1;
 tt = 2:dt:size(dX);
 
-% tt = 2:dt:30;
+tt = 2:dt:55;
 
 cX = 0;
 cY = 0;
@@ -54,24 +57,26 @@ for t = tt
         
     % I.    transformation
     % measurement update (Odometry)
-    x = compUQ(x, cov1, s, covR);
-
+    [x cov1] = compUQ(x, cov1, s, covR);
+  
     % II.  save data to plot them afterwards
     cX = [cX x(1)];
     cY = [cY x(2)];
     cZ = [cZ x(3)];
     
-    xo = x(1) - dX(t);
-    yo = x(2) - dY(t);
-    zo = x(3) - dZ(t);
-    
+    covariances = cov1;
+        
+    plotEllipsoid( x, cov1 );
+
 end
 
 % plot 3D with direction
 % plot groundtruth
-hold on;
+
 color = 'r';
 plot_dir3(dX, dY, dZ, color);
+
+
 
 % plot calculated data
 color = 'b';
