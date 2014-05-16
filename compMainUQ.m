@@ -2,35 +2,35 @@
 % initial State [ X, Y, Z, w, q1, q2, q3 ]
 x    = [ 0, 0, 0, 0, 0, 0, 1 ];
 
+% Use all threads (not sure if this code is 100% thread safe)
+% matlabpool open
 hold on;
 
 % how many iterations:
-numIter = 105;
+numIter = 105
 
 % measured displacements
-xdis = -0.04634 / numIter;
-ydis = 0.003 / numIter;
-zdis = -0.0179 / numIter;
+% sigmax = -0.04634 / (2*numIter);
+% sigmay = 0.003 / (2*numIter);
+% sigmaz = -0.0179 / (2*numIter);
 
-xcov = xdis*xdis;
-ycov = ydis*ydis;
-zcov = zdis*zdis;
+sigmax = 0.339 / (2*numIter);
+sigmay = 0.036 / (2*numIter);
+sigmaz = 0.097 / (2*numIter);
+
+xcov = sigmax*sigmax;
+ycov = sigmay*sigmay;
+zcov = sigmaz*sigmaz;
 
 % initial covariance
-uncer = 0.0001;
-cov1  = zeros( 7, 7 );
-[nRows,nCols] = size(cov1);
-cov1(1:(nRows+1):nRows*nCols) = uncer;
-cov1(1,1) = xcov;
-cov1(2,2) = ycov;
-cov1(3,3) = zcov;
+covInit  = zeros( 7, 7 );
+[nRows,nCols] = size(covInit);
 
-cov2  = zeros( 7, 7 );
-[nRows,nCols] = size(cov2);
-cov2(1:(nRows+1):nRows*nCols) = uncer;
-cov2(1,1) = xcov;
-cov2(2,2) = ycov;
-cov2(3,3) = zcov;
+covRela  = zeros( 7, 7 );
+[nRows,nCols] = size(covRela);
+covRela(1,1) = xcov;
+covRela(2,2) = ycov;
+covRela(3,3) = zcov;
 
 % Get Data
 data = rosBagFileReader(1);
@@ -59,10 +59,13 @@ aq3     = data(:, 10);
 dt = 1;
 tt = 2:dt:size(aX);
 
-% tt = 2:dt:10;
+% tt = 2:dt:205;
 cX = 0;
 cY = 0;
 cZ = 0;
+
+% error ellipsoid samplerate
+ellipSamp = 80;
 
 % main loop
 for t = tt
@@ -77,23 +80,28 @@ for t = tt
         A1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
         A2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
            
-        [s, covR]   = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2, cov2);
+        s   = relativeMotionFromAbsoluteMotionUQ(A1, covInit, A2, covInit);
         
     % I.    transformation
     % measurement update (Odometry)
-    [x cov1] = compUQ(x, cov1, s, covR);
+    [x covInit] = compUQ(x, covInit, s, covRela);
   
     % II.  save data to plot them afterwards
     cX = [cX x(1)];
     cY = [cY x(2)];
     cZ = [cZ x(3)];
         
-    % III. plot error ellipsoid    
-    mean = [x(1) x(2) x(3)];
-    error_ellipse( cov1(1:3,1:3), mean );
-    xlabel('x')
-    ylabel('y')
-    zlabel('z')
+   
+    if mod(t,ellipSamp) == 0
+        t
+%       III. plot error ellipsoid    
+        mean = [x(1) x(2) x(3)];
+        error_ellipse( covInit(1:3,1:3), mean );
+%       plotEllipsoid( covInit(1:3,1:3), mean )
+        xlabel('x');
+        ylabel('y');
+        zlabel('z');
+    end
 end
 
 % plot 3D with direction
@@ -105,8 +113,9 @@ plot_dir3(dX, dY, dZ, color);
 color = 'b';
 plot_dir3(cX, cY, cZ, color);
 
-legend('groundtruth', '' , 'calculated');
+% legend('groundtruth', '' , 'calculated');
 
+% matlabpool close
 hold off;
 
 % Copyright (c) 2014, Markus Solbach
