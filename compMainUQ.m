@@ -22,10 +22,11 @@ xcov = sigmax*sigmax;
 ycov = sigmay*sigmay;
 zcov = sigmaz*sigmaz;
 
-% initial covariance
-covInit  = zeros( 7, 7 );
-[nRows,nCols] = size(covInit);
+% set initial covariance
+cov  = zeros( 7, 7 );
+[nRows,nCols] = size(cov);
 
+% relative measurement covariance
 covRela  = zeros( 7, 7 );
 [nRows,nCols] = size(covRela);
 covRela(1,1) = xcov;
@@ -37,9 +38,6 @@ data = rosBagFileReader(1);
 
 % Get Ground Truth
 gt = rosBagFileReader(2);
-
-% IMPORTANT: 
-% Due to wrong caputured files we have to change the axis here
 
 % Get groundtruth
 dX   = gt(:, 2);
@@ -69,24 +67,24 @@ ellipSamp = 80;
 
 % main loop
 for t = tt
-        % Get relative motion from absolute motion
-        q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
-        q1 = quatNormal( q1 );
+%     Get relative motion from absolute motion
+    q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
+    q1 = quatNormal( q1 );
         
-        q2 = [aw(t), aq1(t), aq2(t), aq3(t)];
-        q2 = quatNormal( q2 );
+    q2 = [aw(t), aq1(t), aq2(t), aq3(t)];
+    q2 = quatNormal( q2 );
         
-        % State Vectors (x, y, z, qw, qx, qy, qz)
-        A1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
-        A2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
+%     State Vectors (x, y, z, qw, qx, qy, qz)
+    A1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
+    A2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
            
-        s   = relativeMotionFromAbsoluteMotionUQ(A1, covInit, A2, covInit);
+    s   = relativeMotionFromAbsoluteMotionUQ(A1, cov, A2, cov);
         
-    % I.    transformation
-    % measurement update (Odometry)
-    [x covInit] = compUQ(x, covInit, s, covRela);
+%     I.    transformation
+%     measurement update (Odometry)
+    [x cov] = compUQ(x, cov, s, covRela);
   
-    % II.  save data to plot them afterwards
+%     II.  save data to plot them afterwards
     cX = [cX x(1)];
     cY = [cY x(2)];
     cZ = [cZ x(3)];
@@ -96,7 +94,7 @@ for t = tt
         t
 %       III. plot error ellipsoid    
         mean = [x(1) x(2) x(3)];
-        error_ellipse( covInit(1:3,1:3), mean );
+        error_ellipse( cov(1:3,1:3), mean );
 %       plotEllipsoid( covInit(1:3,1:3), mean )
         xlabel('x');
         ylabel('y');
