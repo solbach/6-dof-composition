@@ -7,7 +7,7 @@ x    = [ 0, 0, 0, 0, 0, 0, 1 ];
 hold on;
 
 % how many iterations:
-numIter = 105
+numIter = 105;
 
 % measured displacements
 % sigmax = -0.04634 / (2*numIter);
@@ -24,11 +24,9 @@ zcov = sigmaz*sigmaz;
 
 % set initial covariance
 cov  = zeros( 7, 7 );
-[nRows,nCols] = size(cov);
 
 % relative measurement covariance
 covRela  = zeros( 7, 7 );
-[nRows,nCols] = size(covRela);
 covRela(1,1) = xcov;
 covRela(2,2) = ycov;
 covRela(3,3) = zcov;
