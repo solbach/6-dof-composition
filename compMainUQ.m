@@ -4,17 +4,33 @@ x    = [ 0, 0, 0, 0, 0, 0, 1 ];
 
 hold on;
 
+% how many iterations:
+numIter = 105;
+
+% measured displacements
+xdis = -0.04634 / numIter;
+ydis = 0.003 / numIter;
+zdis = -0.0179 / numIter;
+
+xcov = xdis*xdis;
+ycov = ydis*ydis;
+zcov = zdis*zdis;
+
 % initial covariance
 uncer = 0.0001;
-cov1  = eye( 7, 7 );
+cov1  = zeros( 7, 7 );
 [nRows,nCols] = size(cov1);
 cov1(1:(nRows+1):nRows*nCols) = uncer;
-cov1(2,2) = 0.0034;
-cov1(4,4) = 0.0000234;
+cov1(1,1) = xcov;
+cov1(2,2) = ycov;
+cov1(3,3) = zcov;
 
-cov2  = eye( 7, 7 );
+cov2  = zeros( 7, 7 );
 [nRows,nCols] = size(cov2);
 cov2(1:(nRows+1):nRows*nCols) = uncer;
+cov2(1,1) = xcov;
+cov2(2,2) = ycov;
+cov2(3,3) = zcov;
 
 % Get Data
 data = rosBagFileReader(1);
@@ -26,14 +42,14 @@ gt = rosBagFileReader(2);
 % Due to wrong caputured files we have to change the axis here
 
 % Get groundtruth
-dX   = gt(:, 4);
-dY   = gt(:, 5);
-dZ   = gt(:, 6);
+dX   = gt(:, 2);
+dY   = gt(:, 3);
+dZ   = gt(:, 4);
 
 % Get absolute states
-aX      = data(:, 6);
+aX      = data(:, 4);
 aY      = data(:, 5);
-aZ      = data(:, 4);
+aZ      = data(:, 6);
 aw      = data(:, 7);
 aq1     = data(:, 8);
 aq2     = data(:, 9);
@@ -43,7 +59,7 @@ aq3     = data(:, 10);
 dt = 1;
 tt = 2:dt:size(aX);
 
-% tt = 2:dt:120;
+% tt = 2:dt:10;
 cX = 0;
 cY = 0;
 cZ = 0;
@@ -71,24 +87,25 @@ for t = tt
     cX = [cX x(1)];
     cY = [cY x(2)];
     cZ = [cZ x(3)];
-    
-    covariances = cov1;
         
-    plotEllipsoid( x, cov1 );
-
+    % III. plot error ellipsoid    
+    mean = [x(1) x(2) x(3)];
+    error_ellipse( cov1(1:3,1:3), mean );
+    xlabel('x')
+    ylabel('y')
+    zlabel('z')
 end
 
 % plot 3D with direction
 % plot groundtruth
-
 color = 'r';
 plot_dir3(dX, dY, dZ, color);
-
-
 
 % plot calculated data
 color = 'b';
 plot_dir3(cX, cY, cZ, color);
+
+legend('groundtruth', '' , 'calculated');
 
 hold off;
 

@@ -5,9 +5,9 @@
 function out = rosBagFileReader(c)
     
     if c == 1
-        out     = double( dlmread( 'bag/viso_edit.txt', ',' ) );
+        out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
     else
-        out     = double( dlmread( 'bag/gt_adapted.txt', ',' ) );
+        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
     end
 %     out2 = sym( out );
 %     out(1,1)

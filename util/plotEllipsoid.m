@@ -1,4 +1,4 @@
-function plotEllipsoid( X, C )
+function plotEllipsoid( C, X )
 % Util program to plot an ellipsoid
 %   input:    X --> state [x, y, z, [q]] and C --> covariance ( 7 x 7 )
 %   output:   grapical ellipsoid
@@ -6,17 +6,22 @@ function plotEllipsoid( X, C )
 % Samples
     N = 15;
     
+% Take the uper-left 3x3 Matrix
+% --> We are interested in the x, y, z covariances.
+    cov = C(1:3, 1:3);
+    
 %   Resize-Factor
-    rf = 0.000000000000000001;
+    rf = 1;
 
 % Center
     c = [ X(1) X(2) X(3) ];
     
 % Calculate semi-axis lengths
-    [U S D] = svd( C );
+    [U S D] = svd( cov );
     
 % Generate ellipsoid using matlab-function
-    [x, y, z] = ellipsoid( c(1), c(2), c(3), sqrt(S(1,1)).*rf, sqrt(S(2,2)).*rf, sqrt(S(3,3)).*rf, N );
+    [x, y, z] = ellipsoid( c(1), c(2), c(3), sqrt(S(1,1)).*rf, ...
+                            sqrt(S(2,2)).*rf, sqrt(S(3,3)).*rf, N );
     surf(x, y, z)
     axis equal
     
