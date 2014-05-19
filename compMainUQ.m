@@ -10,26 +10,42 @@ hold on;
 numIter = 105;
 
 % measured displacements
-% sigmax = -0.04634 / (2*numIter);
-% sigmay = 0.003 / (2*numIter);
-% sigmaz = -0.0179 / (2*numIter);
+% sigmax = 0.04634425 / (2*numIter);
+% sigmay = 0.000849 / (2*numIter);
+% sigmaz = 0.017705 / (2*numIter);
+% sigmaqw = 0.00655719331 / (2*numIter);
+% sigmaqx = 0.042345473 / (2*numIter);
+% sigmaqy = 0.03535431 / (2*numIter);
+% sigmaqz = 0.010389277 / (2*numIter);
 
 sigmax = 0.339 / (2*numIter);
 sigmay = 0.036 / (2*numIter);
 sigmaz = 0.097 / (2*numIter);
+sigmaqw = 0.0655719331 / (2*numIter);
+sigmaqx = 0.42345473 / (2*numIter);
+sigmaqy = 0.3535431 / (2*numIter);
+sigmaqz = 0.10389277 / (2*numIter);
 
 xcov = sigmax*sigmax;
 ycov = sigmay*sigmay;
 zcov = sigmaz*sigmaz;
+qwcov = sigmaqw*sigmaqw;
+qxcov = sigmaqx*sigmaqx;
+qycov = sigmaqy*sigmaqy;
+qzcov = sigmaqz*sigmaqz;
 
 % set initial covariance
 cov  = zeros( 7, 7 );
 
 % relative measurement covariance
-covRela  = zeros( 7, 7 );
+covRela      = zeros( 7, 7 );
 covRela(1,1) = xcov;
 covRela(2,2) = ycov;
 covRela(3,3) = zcov;
+covRela(4,4) = qwcov;
+covRela(5,5) = qxcov;
+covRela(6,6) = qycov;
+covRela(7,7) = qzcov;
 
 % Get Data
 data = rosBagFileReader(1);
@@ -61,7 +77,7 @@ cY = 0;
 cZ = 0;
 
 % error ellipsoid samplerate
-ellipSamp = 80;
+ellipSamp = 105;
 
 % main loop
 for t = tt
@@ -93,7 +109,7 @@ for t = tt
 %       III. plot error ellipsoid    
         mean = [x(1) x(2) x(3)];
         error_ellipse( cov(1:3,1:3), mean );
-%       plotEllipsoid( covInit(1:3,1:3), mean )
+%       plotEllipsoid( cov(1:3,1:3), mean )
         xlabel('x');
         ylabel('y');
         zlabel('z');
