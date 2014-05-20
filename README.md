@@ -17,6 +17,18 @@ composition6DOF
 * Written in Matlab (should also work with Octave)
 * More information can be taken from COMPOSITION.m
 
+## Prerequisite
+* OpenCV (>=2.4.0)
+* mexopencv [1]
+
 ## Install
 * add util subfolder to matlab pathes
 * run compMainUQ.m
+
+## My Setup
+* Ubuntu 12.04
+* Matlab R2013a
+* OpenCV 2.4.9
+* MEXOpenCV
+
+[1] https://github.com/kyamagu/mexopencv
