@@ -66,6 +66,7 @@ function stereoMatching
     disparityMap = disparity(I1, I2, 'BlockSize', 15,'DisparityRange', ...
                                 [-6 10], 'Method','SemiGlobal');
                             
-     figure; imshow(disparityMap)
+    figure; imshow(disparityMap)
+    cv.
 
 end
