@@ -1,5 +1,9 @@
 function P3 = projectDisparityTo3d( left, disparity )
-%     Camera Parameter
+%   This function projects a 2D Point into 3D using the disparity given
+%   from a stereo vision system and Q, the Reprojection matrix of this
+%   system, which is hard coded in stereoCameraReproject
+
+%   Camera Parameter
     intrinsic1 = [749.642742046463, 0.0, 539.67454188334; ...
                     0.0, 718.738253774844, 410.819033898981; 0.0, 0.0, 1.0];
     radial1     = [-0.305727818014552, 0.125105811097608, 0.0021235435545915]; 
