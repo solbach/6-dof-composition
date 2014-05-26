@@ -13,13 +13,18 @@ function [rvec, tvec, q] = objectPose3D2D(ObjP, ImgP)
     rvec = cv.Rodrigues(rvec);
     q = dcm2quat(rvec);
     
+%     center = [539.67454188334, 410.819033898981];
+%     focalLength = 747.473744648049;
+%     [rvec, tvec] = modernPosit(ImgP, ObjP, focalLength, center)
+
+    
 %   In the quaternion representation of this work w is in the beginning
 %   and not at the end.
     w = q(1);
     q(1) = q(4);
     q(4) = w;
     
- end
+end
 
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
