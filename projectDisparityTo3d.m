@@ -21,7 +21,7 @@ function P3 = projectDisparityTo3d( left, disparity )
     Q = stereoCameraReproject;
     
     point3 = [ left(1) + Q(1,4), left(2) + Q(2,4), Q(3,4)];
-    w      = Q(4,3)*disparity + Q(4,4);
-    P3     = point3 * (1.0/w);
+    w      = Q(4,3) .* disparity + Q(4,4);
+    P3     = point3 .* (1.0/w);
     
 end
