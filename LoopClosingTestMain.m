@@ -9,8 +9,8 @@ P3 = stereoMatching(I1, I2);
 I3 = I1;
 angle = 33;
 I3 = imrotate(I3, angle);
-% tform = maketform('affine',[1 0 0; 0 1 0; 2 3 1]);
-% I3 = imtransform(I3, tform);
+% % tform = maketform('affine',[1 0 0; 0 1 0; 2 3 1]);
+% % I3 = imtransform(I3, tform);
 [f1, vpts1] = findFeature(I3);
 
 % III. Build Correspondencies between left Stereo Image and Loop-Closing
