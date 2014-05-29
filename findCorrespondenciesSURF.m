@@ -1,19 +1,24 @@
-function [f, vpts] = findFeature(I)
-% This function finds SURF Feature in a given Image
-% SURF Features. It also filters outliers and calculates the
+function [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondenciesSURF(SURFFeature1, SURFFeature2)
+% This function finds the correspondencies between given features
+% It also filters outliers and calculates the
 % Rototranslation between this images. 
-% INPUT : 1 Image
-% RETURN: feature set of this Image
+% INPUT : 2 Feature sets (from a stereo vision system)
+% RETURN: feature sets of the left and right image in corresponding order
+   
+     
+%     Exclude the outliers, and compute the transformation matrix.
+    [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
+      estimateGeometricTransform(SURFFeature1, SURFFeature2, 'similarity');
 
-%     convert the image to grayscale
-    Ig = rgb2gray(I);
+%     Debug output:
 
-%     find surf feature
-    points = detectSURFFeatures(Ig, 'MetricThreshold', 400);
+%     figure; showMatchedFeatures(I1g,I2g,matchedPoints1,matchedPoints2);
+%     legend('matched points 1','matched points 2');
     
-%     extract features
-    [f, vpts] = extractFeatures(Ig, points);   
-        
+%     figure; showMatchedFeatures(I1g,I2g,inlierPtsLeft, ...
+%                                inlierPtsRight);
+%     title('Matched inlier points');
+    
 end
  
 % Copyright (c) 2014, Markus Solbach

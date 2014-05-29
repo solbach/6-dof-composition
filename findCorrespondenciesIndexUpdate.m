@@ -1,4 +1,4 @@
-function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findCorrespondencies(f1, vpts1, f2, vpts2)
+function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findCorrespondenciesIndexUpdate(f1, vpts1, f2, vpts2)
 % This function finds the correspondencies between given features
 % It also filters outliers and calculates the
 % Rototranslation between this images. 
@@ -15,6 +15,25 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findC
     [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
     estimateGeometricTransform(matchedPoints1,matchedPoints2,'similarity');
 
+%     Update Indexlist
+    index = -1;
+    for i = 1:matchedPoints1.Count
+        InL = matchedPoints1(i).Location;
+        for j = 1:inlierPtsLeft.Count
+            MaP = inlierPtsLeft(j).Location;
+            if InL == MaP
+                if index(1) == -1
+                    index(1) = i;
+                else
+                    index = [index i];
+                end
+                break;
+            end
+        end    
+    end
+
+    fT = f1Red(index, :);
+    
 %     Debug output:
 
 %     figure; showMatchedFeatures(I1g,I2g,matchedPoints1,matchedPoints2);

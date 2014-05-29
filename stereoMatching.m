@@ -1,4 +1,4 @@
-function [P3 inlierPtsLeft] = stereoMatching(I1, I2)
+function [P3 inlierPtsLeft f1Red matchedPoints1] = stereoMatching(I1, I2)
 %     find correspondencies between images and calculate 3D Points
 
 %     I. Find Feature (SURF)
@@ -7,8 +7,8 @@ function [P3 inlierPtsLeft] = stereoMatching(I1, I2)
     
 %     II. Find Correspondencies (with outlier elimination)
 
-    [inlierPtsLeft, inlierPtsRight] = findCorrespondencies(f1, vpts1, f2, vpts2);
-   
+    [inlierPtsLeft, inlierPtsRight, Rt, status, f1Red, matchedPoints1] = findCorrespondenciesIndexUpdate(f1, vpts1, f2, vpts2);
+    
 %     III. Calculate 3D Point for each Correspondency    
     P3 = zeros(inlierPtsLeft.Count, 3);
     
