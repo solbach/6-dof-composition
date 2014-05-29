@@ -6,8 +6,27 @@ function P3 = stereoMatching(I1, I2)
     [f2, vpts2] = findFeature(I2);
     
 %     II. Find Correspondencies (with outlier elimination)
+
     [inlierPtsLeft, inlierPtsRight] = findCorrespondencies(f1, vpts1, f2, vpts2);
 
+    P2L = zeros(inlierPtsLeft.Count, 2);
+    P2R = zeros(inlierPtsRight.Count, 2);
+    
+    for i = 1:inlierPtsLeft.Count
+        PLTemp = inlierPtsLeft(i).Location;
+        P2L(i,1) = PLTemp(1);
+        P2L(i,2) = PLTemp(2);
+        
+        
+        PRTemp = inlierPtsRight(i).Location;
+        P2R(i,1) = i;
+        P2R(i,2) =inlierPtsLeft.Count - i;
+    end
+    
+    figure; showMatchedFeatures(I1,I2,P2L, ...
+                               P2R);
+    title('Matched inlier points');
+    
 %     III. Calculate 3D Point for each Correspondency    
     P3 = zeros(inlierPtsLeft.Count, 3);
     
