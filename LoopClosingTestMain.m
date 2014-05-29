@@ -3,12 +3,12 @@ I1 = imread('bag/left_images_color/left-image1330526257588048935.png');
 I2 = imread('bag/right_images_color/right-image1330526257588048935.png');
 
 % I. Find 3D Points
-P3 = stereoMatching(I1, I2);
+[P3 inlierOriginalLeft] = stereoMatching(I1, I2);
 
 % II. Find Feature of possible Loop Closing canditate
 I3 = I1;
 angle = 33;
-I3 = imrotate(I3, angle);
+% I3 = imrotate(I3, angle);
 % % tform = maketform('affine',[1 0 0; 0 1 0; 2 3 1]);
 % % I3 = imtransform(I3, tform);
 [f1, vpts1] = findFeature(I3);
@@ -24,6 +24,19 @@ while(status ~= 0)
    [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondencies(f1, vpts1, f2, vpts2) ;
 end
 
+% IV. Compare inlier Points. They have to be the same for 3D and 2D
+
+for i = 1:inlierOriginalLeft.Count
+    surfOrig = inlierOriginalLeft(i);
+    
+    for j = 1:inlierPtsLeft.Count
+            surfNew  = inlierPtsLeft(j);
+        if surfOrig == surfNew
+            ja = 1
+        end
+    end
+end
+
 P2 = zeros(inlierPtsLeft.Count, 2);
 for i = 1:inlierPtsLeft.Count
     ImgP = inlierPtsLeft(i).Location;
@@ -31,7 +44,7 @@ for i = 1:inlierPtsLeft.Count
     P2(i,2) = ImgP(2);
 end
 
-% III. Find object pose from 3D-2D point correspondences using the RANSAC scheme
+% V. Find object pose from 3D-2D point correspondences using the RANSAC scheme
 [rvec, tvec, q] = objectPose3D2D(P3, P2)
 
 

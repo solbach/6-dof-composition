@@ -9,7 +9,7 @@ function [f, vpts] = findFeature(I)
     Ig = rgb2gray(I);
 
 %     find surf feature
-    points = detectSURFFeatures(Ig);
+    points = detectSURFFeatures(Ig, 'MetricThreshold', 50);
     
 %     extract features
     [f, vpts] = extractFeatures(Ig, points);   
