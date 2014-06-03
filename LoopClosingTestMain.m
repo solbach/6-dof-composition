@@ -3,7 +3,7 @@ I1 = imread('bag/left_images_color/left-image1330526257588048935.png');
 I2 = imread('bag/right_images_color/right-image1330526257588048935.png');
 
 % I. Find 3D Points
-[P3 inlierOriginalLeft descLeft] = stereoMatching(I1, I2);
+[P3 inlierOriginalLeft inlierOriginalRight descLeft] = stereoMatching(I1, I2);
 
 % II. Find Feature of possible Loop Closing canditate
 I3 = I1;
@@ -17,12 +17,32 @@ I3 = imrotate(I3, angle);
 % Candidate
 
  indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true);
+%  Update both sides of stereo image!
+ inlierOriginalRight = inlierOriginalRight(indexPairs(:, 1));
  inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
  matchedPoints2 = SIFT3(indexPairs(:, 2));
 
  [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
     estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');
- 
+
+% Tricky part again: Update index list and discard Feature from right
+% Stereo Image...
+index = zeros(inlierPtsLeft.Count, 1);
+for i = 1:inlierPtsLeft.Count
+    InL = inlierPtsLeft(i).Location;
+    for j = 1:inlierOriginalLeft.Count
+        MaP = inlierOriginalLeft(j).Location;
+        if InL == MaP
+            index(i) = j;
+            break;
+        end
+    end    
+end
+%  Index list of all discarded Feature of the left stereo image feature set
+%  Update right stereo image feature set
+   inlierOriginalRight = inlierOriginalRight(index);
+
+
  figure; showMatchedFeatures(I1,I3,inlierOriginalLeft,matchedPoints2);
  legend('matched points 1','matched points2');
  
