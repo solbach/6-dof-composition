@@ -20,22 +20,18 @@ I3 = imrotate(I3, angle);
  inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
  matchedPoints2 = SIFT3(indexPairs(:, 2));
 
+ [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
+    estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');
+ 
  figure; showMatchedFeatures(I1,I3,inlierOriginalLeft,matchedPoints2);
  legend('matched points 1','matched points2');
  
-status = 1;
-while(status ~= 0)
-%     status is bad, because no correspondencies have been found
-%     If so, take the next image
-%    [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondenciesSURF(matchedPoints1, matchedPoints2) ;
-   [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondencies(descLeft, inlierOriginalLeft, desc3, SIFT3) ;
-end
-
+ 
 % IV. Compare inlier Points. They have to be the same for 3D and 2D
 
-P2 = zeros(inlierPtsLeft.Count, 2);
-for i = 1:inlierPtsLeft.Count
-    ImgP = inlierPtsLeft(i).Location;
+P2 = zeros(inlierPtsRight.Count, 2);
+for i = 1:inlierPtsRight.Count
+    ImgP = inlierPtsRight(i).Location;
     P2(i,1) = ImgP(1);
     P2(i,2) = ImgP(2);
 end
