@@ -1,4 +1,4 @@
-function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findCorrespondenciesIndexUpdate(f1, vpts1, f2, vpts2)
+function [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorrespondenciesIndexUpdate(f1, vpts1, f2, vpts2)
 % This function finds the correspondencies between given features
 % It also filters outliers and calculates the
 % Rototranslation between this images. 
@@ -29,14 +29,15 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findC
         g(d, 2) = dat(2);
     end
        
-%     Update Indexlist
+%     Update Indexlist of Descriptor, this is not done in
+%     estimateGeometricTransform() - Function by matlab
     index = zeros(inlierPtsLeft.Count, 1);
     for i = 1:inlierPtsLeft.Count
         InL = inlierPtsLeft(i).Location;
         for j = 1:matchedPoints1.Count
             MaP = matchedPoints1(j).Location;
             if InL == MaP
-                index(i) = i;
+                index(i) = j;
                 break;
             end
         end    
@@ -45,10 +46,8 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findC
     dlmwrite('matched.txt',f)
     dlmwrite('inlier.txt',g)
     dlmwrite('index.txt',index)
-    
-    
-    fT = f1Red(index, :);
-    
+        
+    descLeft = f1Red(index, :);    
 %     Debug output:
 
 %     figure; showMatchedFeatures(I1g,I2g,matchedPoints1,matchedPoints2);

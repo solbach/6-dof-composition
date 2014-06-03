@@ -3,24 +3,24 @@ I1 = imread('bag/left_images_color/left-image1330526257588048935.png');
 I2 = imread('bag/right_images_color/right-image1330526257588048935.png');
 
 % I. Find 3D Points
-[P3 inlierOriginalLeft fT matchedPoints1] = stereoMatching(I1, I2);
+[P3 inlierOriginalLeft descLeft] = stereoMatching(I1, I2);
 
 % II. Find Feature of possible Loop Closing canditate
 I3 = I1;
-angle = 10;
+angle = 30;
 I3 = imrotate(I3, angle);
 % % tform = maketform('affine',[1 0 0; 0 1 0; 2 3 1]);
 % % I3 = imtransform(I3, tform);
-[f3, vpts3] = findFeature(I3);
+[desc3, SIFT3] = findFeature(I3);
 
 % III. Build Correspondencies between left Stereo Image and Loop-Closing
 % Candidate
 
- indexPairs = matchFeatures(fT, f3, 'Prenormalized', true);
- matchedPoints1 = matchedPoints1(indexPairs(:, 1));
- matchedPoints2 = vpts3(indexPairs(:, 2));
+ indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true);
+ inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
+ matchedPoints2 = SIFT3(indexPairs(:, 2));
 
- figure; showMatchedFeatures(I1,I3,matchedPoints1,matchedPoints2);
+ figure; showMatchedFeatures(I1,I3,inlierOriginalLeft,matchedPoints2);
  legend('matched points 1','matched points2');
  
 status = 1;
@@ -28,7 +28,7 @@ while(status ~= 0)
 %     status is bad, because no correspondencies have been found
 %     If so, take the next image
 %    [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondenciesSURF(matchedPoints1, matchedPoints2) ;
-   [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondencies(fT, matchedPoints1, f3, vpts3) ;
+   [inlierPtsLeft, inlierPtsRight, Rt, status] = findCorrespondencies(descLeft, inlierOriginalLeft, desc3, SIFT3) ;
 end
 
 % IV. Compare inlier Points. They have to be the same for 3D and 2D
