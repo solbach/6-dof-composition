@@ -7,7 +7,7 @@ I2 = imread('bag/right_images_color/right-image1330526257588048935.png');
 
 % II. Find Feature of possible Loop Closing canditate
 I3 = I1;
-angle = 30;
+angle = 75;
 I3 = imrotate(I3, angle);
 % % tform = maketform('affine',[1 0 0; 0 1 0; 2 3 1]);
 % % I3 = imtransform(I3, tform);
@@ -40,13 +40,26 @@ for i = 1:inlierPtsLeft.Count
 end
 %  Index list of all discarded Feature of the left stereo image feature set
 %  Update right stereo image feature set
-   inlierOriginalRight = inlierOriginalRight(index);
+inlierOriginalRight = inlierOriginalRight(index);
 
 
- figure; showMatchedFeatures(I1,I3,inlierOriginalLeft,matchedPoints2);
- legend('matched points 1','matched points2');
+figure; showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight);
+legend('matched points 1','matched points2');
  
- 
+
+% Calculate 3D Points
+
+P3 = zeros(inlierPtsLeft.Count, 3);
+    
+for i = 1:inlierPtsLeft.Count
+    pTemp = calculate3DPoint(inlierPtsLeft(i).Location, ...
+                               inlierOriginalRight(i).Location);
+    P3(i,1) = pTemp(1);
+    P3(i,2) = pTemp(2);
+    P3(i,3) = pTemp(3);
+end
+
+
 % IV. Compare inlier Points. They have to be the same for 3D and 2D
 
 P2 = zeros(inlierPtsRight.Count, 2);
@@ -61,6 +74,8 @@ end
 
 
 A = quatToMatrix(q)
+
+stop = 0;
 
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
