@@ -13,25 +13,40 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, fT, matchedPoints1] = findC
       
 %     Exclude the outliers, and compute the transformation matrix.
     [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
-    estimateGeometricTransform(matchedPoints1,matchedPoints2,'similarity');
-
+        estimateGeometricTransform(matchedPoints1,matchedPoints2,'similarity');
+    
+    f = zeros(matchedPoints1.Count, 2);
+    for d = 1:matchedPoints1.Count
+        dat = matchedPoints1(d).Location;
+        f(d, 1) = dat(1);
+        f(d, 2) = dat(2);
+    end
+    
+    g = zeros(inlierPtsLeft.Count, 2);
+    for d = 1:inlierPtsLeft.Count
+        dat = inlierPtsLeft(d).Location;
+        g(d, 1) = dat(1);
+        g(d, 2) = dat(2);
+    end
+       
 %     Update Indexlist
-    index = -1;
-    for i = 1:matchedPoints1.Count
-        InL = matchedPoints1(i).Location;
-        for j = 1:inlierPtsLeft.Count
-            MaP = inlierPtsLeft(j).Location;
+    index = zeros(inlierPtsLeft.Count, 1);
+    for i = 1:inlierPtsLeft.Count
+        InL = inlierPtsLeft(i).Location;
+        for j = 1:matchedPoints1.Count
+            MaP = matchedPoints1(j).Location;
             if InL == MaP
-                if index(1) == -1
-                    index(1) = i;
-                else
-                    index = [index i];
-                end
+                index(i) = i;
                 break;
             end
         end    
     end
 
+    dlmwrite('matched.txt',f)
+    dlmwrite('inlier.txt',g)
+    dlmwrite('index.txt',index)
+    
+    
     fT = f1Red(index, :);
     
 %     Debug output:

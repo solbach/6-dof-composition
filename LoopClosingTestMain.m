@@ -21,7 +21,7 @@ I3 = imrotate(I3, angle);
  matchedPoints2 = vpts3(indexPairs(:, 2));
 
  figure; showMatchedFeatures(I1,I3,matchedPoints1,matchedPoints2);
- legend('matched points 1','matched points 2');
+ legend('matched points 1','matched points2');
  
 status = 1;
 while(status ~= 0)
