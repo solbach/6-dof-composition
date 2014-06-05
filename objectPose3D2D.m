@@ -1,7 +1,10 @@
-function [rvec, tvec, q] = objectPose3D2D(ObjP, ImgP)
+function [rvec, tvec, q, numInliers] = objectPose3D2D(ObjP, ImgP)
 % Find the object pose from 3D-2D point correspondences using the RANSAC scheme
-% INPUT : Object Points in 3D ( Nx3 ) and Image Points in 2D ( Nx2 )
-% OUTPUT: rotation matrix, translation vector and rotation as quaternion
+% IN : Object Points in 3D ( Nx3 ) and Image Points in 2D ( Nx2 )
+% OUT: rotation matrix 
+%      translation vector 
+%      rotation as quaternion
+%      numInliers Number of inliers used to solve the algorithm
 
 % Camera Matrix
     K = [749.642742046463 * 0.5, 0.0, 539.67454188334 * 0.5; 0.0, 718.738253774844 * 0.5, 410.819033898981 * 0.5; 0.0, 0.0, 1.0];
@@ -11,21 +14,10 @@ function [rvec, tvec, q] = objectPose3D2D(ObjP, ImgP)
 % (http://www.cfar.umd.edu/~daniel/Site_2/Code.html)
     [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, K, disCoeff, 'IterationsCount', 999);
 %     [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, K);
-    numInliers = size(inliers)
+    numInliers = size(inliers);
     rvec = cv.Rodrigues(rvec);
     q = dcm2quat(rvec);
-    
-%     center = [539.67454188334, 410.819033898981];
-%     focalLength = 747.473744648049;
-%     [rvec, tvec] = modernPosit(ImgP, ObjP, focalLength, center)
 
-    
-%   In the quaternion representation of this work w is in the beginning
-%   and not at the end.
-%     w = q(1);
-%     q(1) = q(4);
-%     q(4) = w;
-%     
 end
 
 % Copyright (c) 2014, Markus Solbach

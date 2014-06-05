@@ -1,4 +1,4 @@
-function [inlierPtsLeft inlierPtsRight descLeft] = stereoMatching(I1, I2)
+function [inlierPtsLeft inlierPtsRight descLeft status] = stereoMatching(I1, I2)
 %   find correspondencies between images
 %   IN :    I1, I2 (both Images of a stereo image system)
 %   OUT:    inlierPtsLeft inliers of the left image in corresponding order
@@ -6,6 +6,9 @@ function [inlierPtsLeft inlierPtsRight descLeft] = stereoMatching(I1, I2)
 %           inlierPtsRight inliers of the right image in corresponding order as
 %           SURFPoints
 %           descLeft descriptors of SURFPoints of the left image
+%           satus tells us if correspondencies have been found (0 = no error,
+%               1 = input does not contain enough points, 2 = Not enough inliers
+%               have been found)
 
 %     I. Find Feature (SURF)
     [f1, vpts1] = findFeature(I1);
@@ -14,7 +17,7 @@ function [inlierPtsLeft inlierPtsRight descLeft] = stereoMatching(I1, I2)
 %     II. Find Correspondencies (with outlier elimination)
 
     [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorrespondenciesIndex(f1, vpts1, f2, vpts2);
-   
+
 end
 
 % Copyright (c) 2014, Markus Solbach
