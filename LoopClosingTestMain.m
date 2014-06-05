@@ -3,9 +3,10 @@ I1 = imread('bag/left_images_color/left-image1330526257588048935.png');
 I2 = imread('bag/right_images_color/right-image1330526257588048935.png');
 
 % I. Find 3D Points
-[P3 inlierOriginalLeft inlierOriginalRight descLeft] = stereoMatching(I1, I2);
+[inlierOriginalLeft inlierOriginalRight descLeft] = stereoMatching(I1, I2);
 
 % II. Find Feature of possible Loop Closing canditate
+
 I3 = I1;
 angle = 60;
 I3 = imrotate(I3, angle);
@@ -15,36 +16,11 @@ I3 = imrotate(I3, angle);
 
 % III. Build Correspondencies between left Stereo Image and Loop-Closing
 % Candidate
-
- indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true);
-%  Update both sides of stereo image!
- inlierOriginalRight = inlierOriginalRight(indexPairs(:, 1));
- inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
- matchedPoints2 = SIFT3(indexPairs(:, 2));
-
- [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
-    estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');
-
-% Tricky part again: Update index list and discard Feature from right
-% Stereo Image...
-index = zeros(inlierPtsLeft.Count, 1);
-for i = 1:inlierPtsLeft.Count
-    InL = inlierPtsLeft(i).Location;
-    for j = 1:inlierOriginalLeft.Count
-        MaP = inlierOriginalLeft(j).Location;
-        if InL == MaP
-            index(i) = j;
-            break;
-        end
-    end    
-end
-%  Index list of all discarded Feature of the left stereo image feature set
-%  Update right stereo image feature set
-inlierOriginalRight = inlierOriginalRight(index);
+[inlierPtsLeft, inlierPtsRight, inlierOriginalRight, status] = findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
 
 figure; showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight);
 legend('matched points 1','matched points2');
- 
+
 
 % Calculate 3D Points
 
