@@ -5,11 +5,13 @@ function [rvec, tvec, q] = objectPose3D2D(ObjP, ImgP)
 
 % Camera Matrix
     K = [749.642742046463 * 0.5, 0.0, 539.67454188334 * 0.5; 0.0, 718.738253774844 * 0.5, 410.819033898981 * 0.5; 0.0, 0.0, 1.0];
-
+    disCoeff = [];
 % object pose from 3D-2D point correspondences 
 % using MexOpenCV an alternative could be POSIT
 % (http://www.cfar.umd.edu/~daniel/Site_2/Code.html)
-    [rvec, tvec] = cv.solvePnPRansac(ObjP, ImgP, K);
+    [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, K, disCoeff, 'IterationsCount', 999);
+%     [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, K);
+    numInliers = size(inliers)
     rvec = cv.Rodrigues(rvec);
     q = dcm2quat(rvec);
     
@@ -20,10 +22,10 @@ function [rvec, tvec, q] = objectPose3D2D(ObjP, ImgP)
     
 %   In the quaternion representation of this work w is in the beginning
 %   and not at the end.
-    w = q(1);
-    q(1) = q(4);
-    q(4) = w;
-    
+%     w = q(1);
+%     q(1) = q(4);
+%     q(4) = w;
+%     
 end
 
 % Copyright (c) 2014, Markus Solbach

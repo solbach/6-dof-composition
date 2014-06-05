@@ -7,7 +7,7 @@ I2 = imread('bag/right_images_color/right-image1330526257588048935.png');
 
 % II. Find Feature of possible Loop Closing canditate
 I3 = I1;
-angle = 75;
+angle = 60;
 I3 = imrotate(I3, angle);
 % % tform = maketform('affine',[1 0 0; 0 1 0; 2 3 1]);
 % % I3 = imtransform(I3, tform);
@@ -42,7 +42,6 @@ end
 %  Update right stereo image feature set
 inlierOriginalRight = inlierOriginalRight(index);
 
-
 figure; showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight);
 legend('matched points 1','matched points2');
  
@@ -72,10 +71,7 @@ end
 % V. Find object pose from 3D-2D point correspondences using the RANSAC scheme
 [rvec, tvec, q] = objectPose3D2D(P3, P2)
 
-
-A = quatToMatrix(q)
-
-stop = 0;
+A = quat2dcm(q)
 
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
@@ -101,17 +97,3 @@ stop = 0;
 % CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
-
-% r =
-% 
-%    -2.6359
-% 
-% 
-% p =
-% 
-%     0.7095
-% 
-% 
-% y =
-% 
-%    -0.1069

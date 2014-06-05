@@ -6,7 +6,7 @@ function Q = stereoCameraReproject()
 %      K = [ 0  Fy Cy   0   ]
 %          [ 0  0  1    0   ]
 
-%          [fx'  0  cx' Tx]
+%          [fx'  0  cx' Fx*Tx]
 %      P = [ 0  fy' cy' Ty]
 %          [ 0   0   1   0]  
 
@@ -16,24 +16,28 @@ function Q = stereoCameraReproject()
 %          [ 0  0 -1/Tx  0  ]
 %      parameters are from the left camera.
 
+%          [ 1 0   0      -Cx      ]
+%      Q = [ 0 1   0      -Cy      ]
+%          [ 0 0   0       Fx      ]
+%          [ 0 0 -1/Tx (Cx-Cx')/Tx ]
+
 %     Cx = 553.634304046631;
 %     Cy = 411.5126953125;
 %     Fx = 670.44838436561;
-%     Tx = -79.090353246545;
-
+    
+    Tx = ( -79.090353246545 * 0.5 ) / ( 670.44838436561 * 0.5 );
     Cx = 553.634304046631 * 0.5;
     Cy = 411.5126953125 * 0.5;
     Fx = 670.44838436561 * 0.5;
-    Tx = -79.090353246545 * 0.5;
-    
+        
     Q      = zeros(4,4);
     Q(1,1) = 1;
     Q(2,2) = 1;
     Q(1,4) = -Cx;
     Q(2,4) = -Cy;
     Q(3,4) = Fx;
-    Q(4,3) = 1.0 / Tx;
-    
+    Q(4,3) = -1/Tx;
+        
 end
 
 % %   Camera Parameter

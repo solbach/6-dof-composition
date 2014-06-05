@@ -14,21 +14,7 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorresponde
 %     Exclude the outliers, and compute the transformation matrix.
     [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
         estimateGeometricTransform(matchedPoints1,matchedPoints2,'similarity');
-    
-    f = zeros(matchedPoints1.Count, 2);
-    for d = 1:matchedPoints1.Count
-        dat = matchedPoints1(d).Location;
-        f(d, 1) = dat(1);
-        f(d, 2) = dat(2);
-    end
-    
-    g = zeros(inlierPtsLeft.Count, 2);
-    for d = 1:inlierPtsLeft.Count
-        dat = inlierPtsLeft(d).Location;
-        g(d, 1) = dat(1);
-        g(d, 2) = dat(2);
-    end
-       
+         
 %     Update Indexlist of Descriptor, this is not done in
 %     estimateGeometricTransform() - Function by matlab
     index = zeros(inlierPtsLeft.Count, 1);
@@ -42,13 +28,28 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorresponde
             end
         end    
     end
-
-    dlmwrite('matched.txt',f)
-    dlmwrite('inlier.txt',g)
-    dlmwrite('index.txt',index)
-        
+       
     descLeft = f1Red(index, :);    
+
 %     Debug output:
+
+%     f = zeros(matchedPoints1.Count, 2);
+%     for d = 1:matchedPoints1.Count
+%         dat = matchedPoints1(d).Location;
+%         f(d, 1) = dat(1);
+%         f(d, 2) = dat(2);
+%     end
+%     
+%     g = zeros(inlierPtsLeft.Count, 2);
+%     for d = 1:inlierPtsLeft.Count
+%         dat = inlierPtsLeft(d).Location;
+%         g(d, 1) = dat(1);
+%         g(d, 2) = dat(2);
+%     end
+    
+%     dlmwrite('matched.txt',f)
+%     dlmwrite('inlier.txt',g)
+%     dlmwrite('index.txt',index)
 
 %     figure; showMatchedFeatures(I1g,I2g,matchedPoints1,matchedPoints2);
 %     legend('matched points 1','matched points 2');
