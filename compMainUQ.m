@@ -105,7 +105,6 @@ for t = tt
         
    
     if mod(t,ellipSamp) == 0
-        t
 %       III. plot error ellipsoid    
         mean = [x(1) x(2) x(3)];
         error_ellipse( cov(1:3,1:3), mean );

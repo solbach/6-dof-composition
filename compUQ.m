@@ -11,7 +11,7 @@ function [Xplus Cov] = compUQ(X1, C1, X2, C2)
     q1 = [ X1(4), X1(5), X1(6), X1(7) ];
     q2 = [ X2(4), X2(5), X2(6), X2(7) ];
       
-% building rotation matrix
+% building rotation matrix from quaternion
     R  = quatToMatrix(q1);
     
 % building translaten matrix
