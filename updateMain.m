@@ -12,7 +12,6 @@ rvec = quat2dcm(q)
 figure(1);
 imshowpair(ILeft, ILoopClosing);
 
-
 figure(2);
 imshow(ILeft);
 
