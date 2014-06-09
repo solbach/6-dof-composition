@@ -61,7 +61,8 @@ function f()
 %%
     syms x1 y1 z1 q1 q2 q3 q4;
     x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
-    p_r = inversUQ(x1)
+    cov = zeros( 7,7 );
+    [p_r cov] = inversUQ(x1, cov)
     Jac = jacobian(p_r, x1)
 end
 

@@ -1,24 +1,74 @@
-function [R, cov] = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2, cov2)
+function [R, cov, Jac1, Jac2] = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2, cov2)
 %   This function calculates the 3D relative motion between states
 %   from two given 3D absolute state vectors.
 %   Note:   R = opMINUS(A1) opPLUS(A2)
 %           Provide the absolute state as follows:
-%               - [ x, y, z, roll, pitch, yaw ]
+%               - [ x, y, z, A1(4), A1(5), A1(6), A1(7) ]
+%               - where q_n defines a quaternion
 %           Have a look on the pdf in the "doc" subfolder for more details.
 
     [invA1 covIn] = inversUQ(A1, cov1);
     [R cov] = compUQ(invA1, covIn, A2, cov2);
-   
+       
+     if nargout > 2
+         
+         Jac1 = [ ...
+                [ 2*A1(6)^2 + 2*A1(7)^2 - 1, - 2*A1(4)*A1(7) - ... 
+                    2*A1(5)*A1(6), 2*A1(4)*A1(6) - 2*A1(5)*A1(7), ...
+                    2*y2*A1(7) - 2*A1(2)*A1(7) + 2*A1(3)*A1(6) - 2*z2*A1(6), ...
+                    2*y2*A1(6) - 2*A1(2)*A1(6) - 2*A1(3)*A1(7) + 2*z2*A1(7), ...
+                    4*A1(1)*A1(6) - 4*x2*A1(6) - 2*A1(2)*A1(5) + 2*y2*A1(5) + ...
+                    2*A1(3)*A1(4) - 2*z2*A1(4), 4*A1(1)*A1(7) - 4*x2*A1(7) - ...
+                    2*A1(2)*A1(4) + 2*y2*A1(4) - 2*A1(3)*A1(5) + 2*z2*A1(5)]
+                [ 2*A1(4)*A1(7) - 2*A1(5)*A1(6), 2*A1(5)^2 + 2*A1(7)^2 - 1, ...
+                    - 2*A1(4)*A1(5) - 2*A1(6)*A1(7), 2*A1(1)*A1(7) - ...
+                    2*x2*A1(7) - 2*A1(3)*A1(5) + 2*z2*A1(5), 2*x2*A1(6) - ...
+                    2*A1(1)*A1(6) + 4*A1(2)*A1(5) - 4*y2*A1(5) - 2*A1(3)*A1(4) + ...
+                    2*z2*A1(4), 2*x2*A1(5) - 2*A1(1)*A1(5) - 2*A1(3)*A1(7) + ...
+                    2*z2*A1(7), 2*A1(1)*A1(4) - 2*x2*A1(4) + 4*A1(2)*A1(7) - ...
+                    4*y2*A1(7) - 2*A1(3)*A1(6) + 2*z2*A1(6)]
+                [ - 2*A1(4)*A1(6) - 2*A1(5)*A1(7), 2*A1(4)*A1(5) - 2*A1(6)*A1(7), ...
+                    2*A1(5)^2 + 2*A1(6)^2 - 1, 2*x2*A1(6) - 2*A1(1)*A1(6) + ...
+                    2*A1(2)*A1(5) - 2*y2*A1(5), 2*x2*A1(7) - 2*A1(1)*A1(7) + ...
+                    2*A1(2)*A1(4) - 2*y2*A1(4) + 4*A1(3)*A1(5) - 4*z2*A1(5), ...
+                    2*x2*A1(4) - 2*A1(1)*A1(4) - 2*A1(2)*A1(7) + 2*y2*A1(7) + ...
+                    4*A1(3)*A1(6) - 4*z2*A1(6), ...
+                    2*x2*A1(5) - 2*A1(1)*A1(5) - 2*A1(2)*A1(6) + 2*y2*A1(6)]
+                [ 0, 0, 0, -A2(4), -A2(5), -A2(6), -A2(7)]
+                [ 0, 0, 0, -A2(5), A2(4), A2(7), -A2(6)]
+                [ 0, 0, 0, -A2(6), -A2(7), A2(4), A2(5)]
+                [ 0, 0, 0, -A2(7), A2(6), -A2(5), A2(4)]
+                ];
+ 
+         Jac2 = [ ...
+                [ 1 - 2*A1(7)^2 - 2*A1(6)^2, 2*A1(4)*A1(7) + 2*A1(5)*A1(6), ...
+                    2*A1(5)*A1(7) - 2*A1(4)*A1(6), 0, 0, 0, 0]
+                [ 2*A1(5)*A1(6) - 2*A1(4)*A1(7), 1 - 2*A1(7)^2 - 2*A1(5)^2, ...
+                    2*A1(4)*A1(5) + 2*A1(6)*A1(7), 0, 0, 0, 0]
+                [ 2*A1(4)*A1(6) + 2*A1(5)*A1(7), 2*A1(6)*A1(7) - 2*A1(4)*A1(5), ...
+                    1 - 2*A1(6)^2 - 2*A1(5)^2, 0, 0, 0, 0]
+                [ 0, 0, 0, -A1(4), -A1(5), -A1(6), -A1(7)]
+                [ 0, 0, 0,  A1(5), -A1(4), -A1(7),  A1(6)]
+                [ 0, 0, 0,  A1(6),  A1(7), -A1(4), -A1(5)]
+                [ 0, 0, 0,  A1(7), -A1(6),  A1(5), -A1(4)]
+                ];
+     end
+    
+    
+    
 end
 
 %%
 function f()
 %%
-%%
-    syms x_x y_x z_x phi_x theta_x psi_x x_y y_y z_y phi_y theta_y psi_y real
-    x1 = [x_x, y_x, z_x, phi_x, theta_x, psi_x];
-    x2 = [x_y, y_y, z_y, phi_y, theta_y, psi_y];
-    p_r = relativeMotionFromAbsoluteMotionUQ(x1, x2)
+    syms x1 y1 z1 q1 q2 q3 q4 x2 y2 z2 q5 q6 q7 q8;
+    x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
+    x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
+    cov1  = zeros( 7, 7 );
+    cov2  = zeros( 7, 7 );
+    [p_r cov] = relativeMotionFromAbsoluteMotionUQ(x1, cov1, x2, cov2)
+    Jac1 = jacobian(p_r, x1)
+    Jac2 = jacobian(p_r, x2)
 end
 
 % Copyright (c) 2014, Markus Solbach

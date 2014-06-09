@@ -1,7 +1,7 @@
 composition6DOF
 ===============
 
-* IN PROGRESS
+* IN PROGRESS (not completed yet, project clean up is really needed)
 * Full 3D Frame Composition with six degrees of freedom
 * Transformation Composition-Function using Quaternions
 * Transformation Inversion-Function using Quaternions
@@ -22,7 +22,7 @@ composition6DOF
 * mexopencv [1]
 
 ## Install
-* add util subfolder to matlab pathes
+* add util subfolder to matlab paths
 * run compMainUQ.m
 
 ## My Setup
