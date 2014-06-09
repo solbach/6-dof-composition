@@ -1,4 +1,4 @@
-function [Xplus Cov] = compUQ(X1, C1, X2, C2)
+function [Xplus Cov] = composition(X1, C1, X2, C2)
 %   The actual Composition is done here. Including the calculation 
 %   of both Jacobians and the resulting covariances
 
@@ -78,7 +78,7 @@ function f()
     x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
     cov1  = zeros( 7, 7 );
     cov2  = zeros( 7, 7 );
-    [p_r cov] = compUQ(x1, cov1, x2, cov2)
+    [p_r cov] = composition(x1, cov1, x2, cov2)
     Jac1 = jacobian(p_r, x1)
     Jac2 = jacobian(p_r, x2)
 end

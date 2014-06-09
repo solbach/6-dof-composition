@@ -21,7 +21,6 @@ function [tvec, q, status, numInliers] = update(I1, I2, I3)
 
 % II. Build Correspondencies between left Stereo Image and Loop-Closing
 % Candidate
-% Not finished now...
     for i = 1 : length(I3)
         [inlierPtsLeft, inlierPtsRight, inlierOriginalRight, status] = findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
         if (status == 0 && inlierPtsLeft.Count >= 8)

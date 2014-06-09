@@ -7,8 +7,8 @@ function [R, cov, Jac1, Jac2] = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2,
 %               - where q_n defines a quaternion
 %           Have a look on the pdf in the "doc" subfolder for more details.
 
-    [invA1 covIn] = inversUQ(A1, cov1);
-    [R cov] = compUQ(invA1, covIn, A2, cov2);
+    [invA1 covIn] = inversion(A1, cov1);
+    [R cov] = composition(invA1, covIn, A2, cov2);
        
      if nargout > 2
          
