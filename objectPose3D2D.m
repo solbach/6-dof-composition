@@ -1,4 +1,4 @@
-function [rvec, tvec, q, numInliers] = objectPose3D2D(ObjP, ImgP)
+function [tvec, q, rvec, numInliers] = objectPose3D2D(ObjP, ImgP)
 % Find the object pose from 3D-2D point correspondences using the RANSAC scheme
 % IN : Object Points in 3D ( Nx3 ) and Image Points in 2D ( Nx2 )
 % OUT: rotation matrix 

@@ -1,16 +1,20 @@
-function [tvec, q, status, numInliers] = update(I1, I2, I3)
+function [resultVector timestamps] = update( I1, I2, fCurrentLoop, pathLoop )
 % This function implements the whoel update step for 3D EKF-SLAM
 % IN:  I1 Left Stereo Image 
 %      I2 Right Stereo Image 
-%      I3 Loop Closing candidates
-% OUT: tvec translation vector to translate from model coordinate system to the
-%        camera coordinate system 
-%      q quaternion to express the rotation from model coordinate system to the
-%        camera coordinate system 
-%      status it's set to 0 if everything is fine, otherwise no loop
-%       closing could have been found
-%      numInliers the number of inliers that have been used to calculate
-%       the translation and rotation
+%      fCurrentLoop contains all filenames of already observed images
+%      pathLoop contains the path which is leading to the filenames
+% OUT: resultVector contains all transformation from the current 3D
+%         Position, observed by the sereo images to all found loop closings
+%      timestamps contains the timestampts of all found loop closings
+%         in same order
+
+% resultVector looks as follows: 
+%      [transVec1, q1, transVec2, q2, ... , transVecn, qn]' 
+
+% PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
+%           testing. The more the better
+    numLoopClosings = 5;
 
 % I. Find Correspondencies between Images
     [inlierOriginalLeft inlierOriginalRight descLeft status] = stereoMatching(I1, I2);
@@ -19,41 +23,67 @@ function [tvec, q, status, numInliers] = update(I1, I2, I3)
         error('update:Stereo', 'Stereo Images does not fit to each other')
     end
 
+%     counting the number of found loop closings
+    count = 0;
 % II. Build Correspondencies between left Stereo Image and Loop-Closing
-% Candidate
-    for i = 1 : length(I3)
-        [inlierPtsLeft, inlierPtsRight, inlierOriginalRight, status] = findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
+% Candidates
+    for i = 1 : length(fCurrentLoop)
+       
+        I3 = imread([pathLoop '/' fCurrentLoop{i}]);
+        [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
+        
         if (status == 0 && inlierPtsLeft.Count >= 8)
+%       status: 0 = no error, 1 = input does not contain enough points, 
+%               2 = Not enough inliers have been found.
+% III. Perform backprojection
+
+% III.a) Calculate 3D Points
+            P3 = zeros(inlierPtsLeft.Count, 3);
+            for m = 1:inlierPtsLeft.Count
+                pTemp = calculate3DPoint(inlierPtsLeft(m).Location, ...
+                                 inlierOriginalRightRed(m).Location);
+                P3(m,1) = pTemp(1);
+                P3(m,2) = pTemp(2);
+                P3(m,3) = pTemp(3);
+            end
+%        Translate Feature to the internaly used format
+            P2 = zeros(inlierPtsRight.Count, 2);
+            for n = 1:inlierPtsRight.Count
+                ImgP = inlierPtsRight(n).Location;
+                P2(n,1) = ImgP(1);
+                P2(n,2) = ImgP(2);
+            end
+% III.b) Find object Pose (Transformation: Stereo -> Loop Closing)
+            [tvec, q, rvec, numInliers] = objectPose3D2D(P3, P2);
+
+% IV. Safe transformation to resultVector
+%           If result uses less than 8 inliers discard it
+            if( numInliers(1) >= 8 )
+%                 Otherwise add it to the resultVector
+%                 Get timestamps from filename
+
+% remove 'left_image' at the beginning and '.png' at the end
+% result: timestamp
+                tim = fCurrentLoop{ i };
+                tim = tim( 11:end-4 );
+                if count == 0
+                    resultVector = tvec;
+                    resultVector = [ resultVector; q' ];
+                    timestamps   = tim;
+                else
+                    resultVector = [ resultVector; tvec ];
+                    resultVector = [ resultVector; q' ];
+                    timestamps   = [ timestamps; tim ];
+                end
+                count = count + 1;
+            end
+        end
+        
+%         If we have reached the maximum of Loop Closings: return
+        if (count == numLoopClosings)
             break;
         end
-%         To be deleted if we are dealing with more than one loop closing
-%         candidate
-        if (status ~= 0 || inlierPtsLeft.Count < 8)
-            error('update:LoopClosing', 'No Loop-Closing candidate could be found')
-        end
     end
-    
-% III. Calculate 3D Points
-    P3 = zeros(inlierPtsLeft.Count, 3);
-    for i = 1:inlierPtsLeft.Count
-        pTemp = calculate3DPoint(inlierPtsLeft(i).Location, ...
-                                 inlierOriginalRight(i).Location);
-        P3(i,1) = pTemp(1);
-        P3(i,2) = pTemp(2);
-        P3(i,3) = pTemp(3);
-    end
-
-% IV. Compare inlier Points. They have to be the same for 3D and 2D
-    P2 = zeros(inlierPtsRight.Count, 2);
-    for i = 1:inlierPtsRight.Count
-        ImgP = inlierPtsRight(i).Location;
-        P2(i,1) = ImgP(1);
-        P2(i,2) = ImgP(2);
-    end
-
-% V. Find object pose from 3D-2D point correspondences using the RANSAC scheme
-    [rvec, tvec, q, numInliers] = objectPose3D2D(P3, P2);
-
 end
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.

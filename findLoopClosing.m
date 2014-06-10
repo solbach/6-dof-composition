@@ -17,28 +17,34 @@ function [inlierPtsLeft, inlierPtsRight, inlierOriginalRightUp, status] = findLo
     [desc3, SIFT3] = findFeature(I3);
     indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true);
     
-    %  Update both sides of stereo image!
+    %  Update both sides of stereo images!
     inlierOriginalRight = inlierOriginalRight(indexPairs(:, 1));
     inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
     matchedPoints2 = SIFT3(indexPairs(:, 2));
 
-    [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
-      estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');
-
-    % Tricky part again: Update index list and discard Feature from right
-    % Stereo Image...
-    index = zeros(inlierPtsLeft.Count, 1);
-    for i = 1:inlierPtsLeft.Count
-     InL = inlierPtsLeft(i).Location;
-     for j = 1:inlierOriginalLeft.Count
-            MaP = inlierOriginalLeft(j).Location;
-           if InL == MaP
-              index(i) = j;
-              break;
-           end
-     end    
-    end
+%     This function will fail if we have one inlier
+    if(inlierOriginalLeft.Count > 1)
+        [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
+            estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');
+        % Update index list
+        index = zeros(inlierPtsLeft.Count, 1);
+        for i = 1:inlierPtsLeft.Count
+            InL = inlierPtsLeft(i).Location;
+            for j = 1:inlierOriginalLeft.Count
+                MaP = inlierOriginalLeft(j).Location;
+                if InL == MaP
+                    index(i) = j;
+                    break;
+                end
+            end    
+        end
     %  Index list of all discarded Feature of the left stereo image feature set
     %  Update right stereo image feature set
     inlierOriginalRightUp = inlierOriginalRight(index);
+    else
+        status = 2;
+        inlierPtsLeft = 0;
+        inlierPtsRight = 0;
+        inlierOriginalRightUp = 0;
+    end
 end

@@ -1,27 +1,42 @@
-% Images of Stereo Vision System
-ILeft = imread('bag/left_images_color/left-image1330526257588048935.png');
-IRight = imread('bag/right_images_color/right-image1330526257588048935.png');
+% PARAM:
+% loopSample -> only search every 20 Images if we can find a loop closing
+loopSample = 20;
 
-% Loop Closing Candidate
-ILoopClosing = imread('bag/left_images_color/left-image1330526265188024998.png');
+% Load all Images of the stereo vision system (left and right)
+pathLeft    = 'bag/left_images_color';
+pathRight   = 'bag/right_images_color';
 
-pathLeft = 'bag/left_images_color';
-fLeft = imageLoader(pathLeft);
+fLeft       = imageLoader(pathLeft);
+fRight      = imageLoader(pathRight);
 
-pathRight = 'bag/right_images_color';
-fRight = imageLoader(pathRight);
+% Load images to detect loop closing 
+%  (Just to be generic: normally we would use the left images of the 
+%   stereo vision system)
+pathLoop    = 'bag/left_images_color';
+fLoop       = imageLoader(pathLoop);
 
-for c=1:length(fLeft)
-    
-    figure(1);
-    ILeft=imread([pathLeft '/' fLeft{c}]);
-    imshow(ILeft)
-    
-    figure(2);
-    IRight=imread([pathRight '/' fRight{c}]);       
-    imshow(IRight)
-    
-    pause(0.01)
+for i=1:length(fLeft)
+        
+%     Try to find Loop closing candidate with a certain sampling rate
+    if mod(i,loopSample) == 0  
+
+%     Load Stereo Images from Database
+        ILeft  = imread([pathLeft '/' fLeft{i}]);  
+        IRight = imread([pathRight '/' fRight{i}]);  
+        
+%    Pass already observed Images to update function
+        fCurrentLoop = fLoop(1:i-10);
+
+        [loopClosings timestamps] = update( ILeft, IRight, fCurrentLoop, pathLoop );
+        if( length( loopClosings ) >= 1 )
+%             If we have at least one loop closing
+%             Don't forget to safe the timestamp of the reference Image
+%             (left image) at the end of the timestamp vector
+            tim = fLeft{ i };
+            tim = tim( 11:end-4 ); 
+            timestamps = [ timestamps; tim ];
+        end
+    end        
 end
 
 
