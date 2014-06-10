@@ -15,6 +15,9 @@ fRight      = imageLoader(pathRight);
 pathLoop    = 'bag/left_images_color';
 fLoop       = imageLoader(pathLoop);
 
+% Actually this should be done starting by the odometry
+% and look after every Nth odometry for a fitting stereo image pair
+% with loop closing
 for i=1:length(fLeft)
         
 %     Try to find Loop closing candidate with a certain sampling rate
