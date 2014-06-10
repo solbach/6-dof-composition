@@ -1,3 +1,4 @@
+% INITIALISATION
 hold on;
 % state vector X
 X   = [0; 0; 0; 0; 0; 0; 1];
@@ -22,11 +23,13 @@ aq1     = data(:, 8);
 aq2     = data(:, 9);
 aq3     = data(:, 10);
 
+% Get timestamps
+tMeasure= data(:, 1);
+
 dt = 1;
 tt = 2:dt:size(aX);
 
 % MAIN LOOP
-
 for t = tt
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
@@ -75,6 +78,7 @@ color = 'r';
 plot_dir3(dX, dY, dZ, color);
 
 hold off;
+
 % Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
