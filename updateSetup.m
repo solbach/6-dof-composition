@@ -1,50 +1,16 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% INITIALISATION
+%% Update Setup
+% Load all Images of the stereo vision system (left and right)
+pathLeft    = 'bag/left_images_color';
+pathRight   = 'bag/right_images_color';
 
-hold on;
-predictionSetup;
-updateSetup;
+fLeft       = imageLoader(pathLeft);
+fRight      = imageLoader(pathRight);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% MAIN LOOP
-for t = tt
-% xa1 is the first absolute Pose provided by libViso
-% xa2 the second
-    q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
-    q1 = quatNormal( q1 );
-        
-    q2 = [aw(t), aq1(t), aq2(t), aq3(t)];
-    q2 = quatNormal( q2 );
-        
-%     State Vectors (x, y, z, qw, qx, qy, qz)
-    xa1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
-    xa2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
-    
-    xLast = X( ((t-2)*7)+1: (t-1)*7 );
-    cLast = C( ((t-2)*7)+1: (t-1)*7, : );
-    
-    
-    [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CRel );
-
-% Build the state- and covariance-Vector
-    X = [ X;  Xnew ];
-    C = [ C;  Cnew ];
-
-% OPTIONAL: PLOT THE ELIPSOID
-    if mod(t,ellipSamp) == 0  
-        mean = [Xnew(1) Xnew(2) Xnew(3)];
-        error_ellipse( Cnew(1:3,1:3), mean );
-    end
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% PLOTTING
-plotEKF;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% SHUTTING DOWN MATLAB
-clearMATLAB;
-
+% Load images to detect loop closing 
+%  (Just to be generic: normally we would use the left images of the 
+%   stereo vision system)
+pathLoop    = 'bag/left_images_color';
+fLoop       = imageLoader(pathLoop);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

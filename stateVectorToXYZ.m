@@ -7,7 +7,9 @@ function [X Y Z] = stateVectorToXYZ(XState)
     Z = XState(3 : 7 : end);
 
 end
-% Copyright (c) 2014, Markus Solbach
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without

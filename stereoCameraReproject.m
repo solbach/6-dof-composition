@@ -51,7 +51,8 @@ end
 %     radial2     = [-0.312470781595577, 0.140416928438558, 0.00187045432179417]; 
 %     tangential2 = [-0.000772438457736498, 0.0];  
 
-% Copyright (c) 2014, Markus Solbach
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without
