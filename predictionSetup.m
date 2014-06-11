@@ -14,13 +14,13 @@ ellipSamp = 200;
 data = rosBagFileReader(1);
 
 % Get absolute states
-aX      = data(:, 4);
-aY      = data(:, 5);
-aZ      = data(:, 6);
-aw      = data(:, 7);
-aq1     = data(:, 8);
-aq2     = data(:, 9);
-aq3     = data(:, 10);
+aX      = data( :, 4 );
+aY      = data( :, 5 );
+aZ      = data( :, 6 );
+aw      = data( :, 7 );
+aq1     = data( :, 8 );
+aq2     = data( :, 9 );
+aq3     = data( :, 10 );
 
 % Get timestamps
 tMeasureOdo= data(:, 1);

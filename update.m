@@ -63,8 +63,8 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
             [tvec, q, rvec, numInliers] = objectPose3D2D(P3, P2);
 
 % IV. Safe transformation to resultVector
-%           If result uses less than 8 inliers discard it
-            if( numInliers(1) >= 8 )
+%           If result uses less than 11 inliers discard it
+            if( numInliers(1) >= 11 )
 %                 Otherwise add it to the resultVector
 %                 Get timestamps from filename
 
