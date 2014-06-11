@@ -2,7 +2,7 @@
 
 % PARAM:
 % loopSample -> only search every 20 Images if we can find a loop closing
-loopSample = 200;
+loopSample = 100;
 
 % Load all Images of the stereo vision system (left and right)
 pathLeft    = 'bag/left_images_color';

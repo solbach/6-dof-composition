@@ -7,6 +7,7 @@ C   = zeros( 7, 7 );
 
 % Get information about the covariance
 CovRel = getCov;
+
 % Sample Rate of plotting the ellipsoids
 ellipSamp = 200;
 
@@ -23,7 +24,7 @@ aq2     = data( :, 9 );
 aq3     = data( :, 10 );
 
 % Get timestamps
-tMeasureOdo= data(:, 1);
+tMeasureOdo = data(:, 1);
 
 dt = 1;
 tt = 2:dt:size(aX);

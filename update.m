@@ -5,7 +5,8 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %      fCurrentLoop contains all filenames of already observed images
 %      pathLoop contains the path which is leading to the filenames
 % OUT: resultVector contains all transformation from the current 3D
-%         Position, observed by the sereo images to all found loop closings
+%         Position, observed by the sereo images to all found loop
+%         closings. In terms of EKF this is Zk.
 %      timestamps contains the timestampts of all found loop closings
 %         in same order
 
@@ -14,7 +15,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 
 % PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
 %           testing. The more the better
-    numLoopClosings = 5;
+    numLoopClosings = 20;
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
     resultVector = 0;
@@ -38,7 +39,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
         [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = ...
             findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
         
-        if (status == 0 && inlierPtsLeft.Count >= 8)
+        if (status == 0 && inlierPtsLeft.Count >= 5)
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
 % III. Perform backprojection
@@ -64,7 +65,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 
 % IV. Safe transformation to resultVector
 %           If result uses less than 11 inliers discard it
-            if( numInliers(1) >= 11 )
+            if( numInliers(1) >= 5 )
 %                 Otherwise add it to the resultVector
 %                 Get timestamps from filename
 

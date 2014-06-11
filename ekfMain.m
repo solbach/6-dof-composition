@@ -27,7 +27,7 @@ for t = tt
     
     [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CovRel );
 
-% Let the state- and covariance-Vector grow
+% Let the state-, covariance and timestamp-Vector grow
     X = [ X;  Xnew ];
     C = [ C;  Cnew ];
 
@@ -50,7 +50,7 @@ for t = tt
 %           Pass already observed Images to update function
             fCurrentLoop = fLoop(1:t-10);
 
-            [loopClosings timestampsLC status] = update( ILeft, IRight, ...
+            [zk timestampsLC status] = update( ILeft, IRight, ...
                                                   fCurrentLoop, pathLoop );
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
@@ -58,6 +58,12 @@ for t = tt
 %             (left image) at the end of the timestamp vector
                 timeRef = str2double( fNameLeft( 11:end-4 ) );
                 timestampsLC = [ timestampsLC; timeRef];
+                
+%             Calculate h1 - hn: these are the realtive motions of states
+%             taken from the state-vector (state estimations) corresponding
+%             to the detected loop closing. In terms of EKF this is hk.
+                [hk H] = calculateHandhk( X, tMeasureOdo, timestampsLC );
+                
             end
         end
     end   
