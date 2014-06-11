@@ -1,32 +1,28 @@
-%% Prediction Setup
-% state vector X
-X   = [0; 0; 0; 0; 0; 0; 1];
+function [fNameLeft fNameRight status] = getImageByTimestamp( timeStampOdo, ...
+                                                        fLeft, fRight )
+% This function return the stereo image pair corresponding to a certain
+% timestamp. 
+% INPUT:  timeStampOdo the timestamp provdided by odometry
+%         fLeft set of all filenames of the left images
+%         fRight set of all filenames of the right images
+% OUTPUR: fNameLeft filename of the left image
+%         fNameRight filename of the right image
+%         status If no image pair has been found status will contain 0
+%                otherwise 1
 
-% covariance matrix C
-C   = zeros( 7, 7 );
-
-% Get information about the covariance
-CovRel = getCov;
-% Sample Rate of plotting the ellipsoids
-ellipSamp = 200;
-
-% Get Data
-data = rosBagFileReader(1);
-
-% Get absolute states
-aX      = data(:, 4);
-aY      = data(:, 5);
-aZ      = data(:, 6);
-aw      = data(:, 7);
-aq1     = data(:, 8);
-aq2     = data(:, 9);
-aq3     = data(:, 10);
-
-% Get timestamps
-tMeasureOdo= data(:, 1);
-
-dt = 1;
-tt = 2:dt:size(aX);
+    status = 0;
+    for i=1:length( fLeft )
+        timeStampImage = fLeft{ i };
+        timeStampImage = str2double( timeStampImage( 11:end-4 ) ); 
+        if( timeStampOdo == timeStampImage )
+            status = 1;
+            fNameLeft  = fLeft{ i };
+            fNameRight = fRight{ i };
+            break;
+        end
+    end
+                                                
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

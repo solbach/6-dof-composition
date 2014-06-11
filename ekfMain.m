@@ -8,6 +8,7 @@ updateSetup;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN LOOP
 for t = tt
+%%     PREDICTION STEP
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
     q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
@@ -24,17 +25,42 @@ for t = tt
     cLast = C( ((t-2)*7)+1: (t-1)*7, : );
     
     
-    [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CRel );
+    [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CovRel );
 
-% Build the state- and covariance-Vector
+% Let the state- and covariance-Vector grow
     X = [ X;  Xnew ];
     C = [ C;  Cnew ];
 
-% OPTIONAL: PLOT THE ELIPSOID
-    if mod(t,ellipSamp) == 0  
-        mean = [Xnew(1) Xnew(2) Xnew(3)];
-        error_ellipse( Cnew(1:3,1:3), mean );
-    end
+%%      UPDATE STEP
+%     Try to find Loop closing candidate with a certain sampling rate
+    if mod(t,loopSample) == 0  
+%     Load Stereo Images from Database 
+%       ( --> corresponding to the current timestamp of the odometry)
+        [fNameLeft fNameRight status]= getImageByTimestamp(tMeasureOdo(t), ...
+                                                    fLeft, fRight);
+        if ( status == 0 )
+%           if status == 0 no corresponding stereo image pair has been
+%           found: skip this
+        else
+%           if status == 1 corresponding stereo image pair has been
+%           found: look for loop closing
+            ILeft  = imread([pathLeft '/' fNameLeft]);  
+            IRight = imread([pathRight '/' fNameRight]);  
+        
+%           Pass already observed Images to update function
+            fCurrentLoop = fLoop(1:t-10);
+
+            [loopClosings timestampsLC status] = update( ILeft, IRight, ...
+                                                  fCurrentLoop, pathLoop );
+            if( status == 1 )
+%             If status is equal to 1 we have at least one loop closing
+%             Don't forget to safe the timestamp of the reference Image
+%             (left image) at the end of the timestamp vector
+                timeRef = str2double( fNameLeft( 11:end-4 ) );
+                timestampsLC = [ timestampsLC; timeRef];
+            end
+        end
+    end   
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

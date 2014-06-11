@@ -1,4 +1,4 @@
-function [resultVector timestamps] = update( I1, I2, fCurrentLoop, pathLoop )
+function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, pathLoop )
 % This function implements the whoel update step for 3D EKF-SLAM
 % IN:  I1 Left Stereo Image 
 %      I2 Right Stereo Image 
@@ -15,7 +15,11 @@ function [resultVector timestamps] = update( I1, I2, fCurrentLoop, pathLoop )
 % PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
 %           testing. The more the better
     numLoopClosings = 5;
-
+% In the case that no loop closing has been found we need to asign some
+% values to the return parameters, otherwise MATLAB will strike
+    resultVector = 0;
+    timestamps   = 0;
+    
 % I. Find Correspondencies between Images
     [inlierOriginalLeft inlierOriginalRight descLeft status] = stereoMatching(I1, I2);
     
@@ -24,13 +28,15 @@ function [resultVector timestamps] = update( I1, I2, fCurrentLoop, pathLoop )
     end
 
 %     counting the number of found loop closings
-    count = 0;
+    count    = 0;
+    statusRe = 0;
 % II. Build Correspondencies between left Stereo Image and Loop-Closing
 % Candidates
     for i = 1 : length(fCurrentLoop)
        
         I3 = imread([pathLoop '/' fCurrentLoop{i}]);
-        [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
+        [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = ...
+            findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
         
         if (status == 0 && inlierPtsLeft.Count >= 8)
 %       status: 0 = no error, 1 = input does not contain enough points, 
@@ -64,16 +70,17 @@ function [resultVector timestamps] = update( I1, I2, fCurrentLoop, pathLoop )
 
 % remove 'left_image' at the beginning and '.png' at the end
 % result: timestamp
-                tim = fCurrentLoop{ i };
-                tim = tim( 11:end-4 );
+                tim  = fCurrentLoop{ i };
+                timD = str2double( tim( 11:end-4 ) );
                 if count == 0
+                    statusRe     = 1;
                     resultVector = tvec;
                     resultVector = [ resultVector; q' ];
-                    timestamps   = tim;
+                    timestamps   = timD;
                 else
                     resultVector = [ resultVector; tvec ];
                     resultVector = [ resultVector; q' ];
-                    timestamps   = [ timestamps; tim ];
+                    timestamps   = [ timestamps; timD ];
                 end
                 count = count + 1;
             end

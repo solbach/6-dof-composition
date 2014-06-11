@@ -1,8 +1,8 @@
 %% Clear Matlab
 
-% close all
-clear variables
-hold off
+% close all;
+clear variables;
+hold off;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

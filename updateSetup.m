@@ -1,4 +1,9 @@
 %% Update Setup
+
+% PARAM:
+% loopSample -> only search every 20 Images if we can find a loop closing
+loopSample = 20;
+
 % Load all Images of the stereo vision system (left and right)
 pathLeft    = 'bag/left_images_color';
 pathRight   = 'bag/right_images_color';
@@ -11,6 +16,9 @@ fRight      = imageLoader(pathRight);
 %   stereo vision system)
 pathLoop    = 'bag/left_images_color';
 fLoop       = imageLoader(pathLoop);
+
+% Vector to store all timestamps of one update step
+timestampsLC = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
