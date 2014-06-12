@@ -58,14 +58,12 @@ function [hk H zk status] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
                 zk = zk( (i-disc)*7+1:end );
                 disc = disc + 1;
             else
-                zk = zk([1:(i-disc)*7-6, (i-disc)*7+1:end]);
+                zk = zk([1:(i-1-disc)*7, (i-disc)*7+1:end]);
                 disc = disc + 1;
             end
         end
-
     end
 end
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
