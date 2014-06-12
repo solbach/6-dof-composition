@@ -65,8 +65,18 @@ for t = tt
 %             parameter zk is important to update zk inside this function.
 %             In case we have not to eacht loop closing a corresponding
 %             odometry or vice versa.
-                [hk H zk status] = calculateHandhk( X, tMeasureOdo, ...
-                                                    timestampsLC, zk );                
+                [hk H zk numLC] = calculateHandhk( X, tMeasureOdo, ...
+                                                    timestampsLC, zk );  
+                                                
+%             If number of loop closings is equal to 0 no hk had been 
+%             calculated so cancel all update procedures
+              if ( numLC ~= 0 )
+%             perform update for all found loop closings
+                  for c = 1:numLC
+%             I. calculate innovation: yk = zk - hk
+                      yk = innovation( zk( c*7-6:c*7 ), hk( c*7-6:c*7 ) );
+                  end
+              end
             end
         end
     end   
@@ -79,7 +89,6 @@ plotEKF;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB
 clearMATLAB;
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

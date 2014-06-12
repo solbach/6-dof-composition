@@ -1,4 +1,4 @@
-function [hk H zk status] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
+function [hk H zk numLC] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
 % This function calculates the relative estimated motion from with respect
 % to the observed landmarks.
 % INPUT  : X state vector containing all current states 
@@ -6,11 +6,11 @@ function [hk H zk status] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
 %          timestampsLC vector with the timestamps of the loop closings
 % OUTPUT : hk is the akkumulated estimation
 %          H is the H Matrix as known from EKF
-%          status tells us how many elements finallz have been used for the
+%          numLC tells us how many elements finally have been used for the
 %           loop closing. In case not to each Image exists an Odometry or
 %           vice versa.
 
-    status = 0;
+    numLC = 0;
 %     because in this case the covariance doesn't matter we just set it to
 %     a zero matrix
     cov  = zeros( 7, 7 );
@@ -38,7 +38,7 @@ function [hk H zk status] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
         pos = find( tMeasureOdo == timestampsLC( i ) );
         
         if( pos ~= 0 )
-            status = status + 1;
+            numLC = numLC + 1;
             x1  = X( (pos*7-6):(pos*7) );
         
 %           calculate relative motion. 
@@ -46,11 +46,11 @@ function [hk H zk status] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
                                                              xRef, cov);
         
 %           push the both Jacobians to H-Matrix
-            H( status*7-6:status*7 , (posRef*7-6):(posRef*7)) = Jac1;
-            H( status*7-6:status*7 , (pos*7-6):(pos*7))       = Jac2;
+            H( numLC*7-6:numLC*7 , (posRef*7-6):(posRef*7)) = Jac1;
+            H( numLC*7-6:numLC*7 , (pos*7-6):(pos*7))       = Jac2;
         
 %           push relative motions to hk vector
-            hk( status*7-6:status*7 ) = h;
+            hk( numLC*7-6:numLC*7 ) = h;
         else
 %           If no odometry could be found corresponding to the loop closing
 %           we need to discard this loop closing from the zk vector.
@@ -63,6 +63,7 @@ function [hk H zk status] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
             end
         end
     end
+    hk = hk';
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

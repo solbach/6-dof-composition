@@ -1,17 +1,27 @@
-function result = quatMult(q, r)
-% Calculate the multiplication of two quaternions
+function yk = innovation( zk, hk )
+% this function calculates the innovation by calculating the difference
+% between the measurement (loop closing) and the estimation (odometry)
+% INPUT  : zk measurement (loop closing)
+%          hk estimation (odometry)
+% OUTPUT : yk innovation --> difference between zk and hk ( yk = zk - hk )
 
-    vec = [q(:,1).*r(:,2) q(:,1).*r(:,3) q(:,1).*r(:,4)] + ...
-          [r(:,1).*q(:,2) r(:,1).*q(:,3) r(:,1).*q(:,4)]+...
-          [ q(:,3).*r(:,4)-q(:,4).*r(:,3) ...
-           q(:,4).*r(:,2)-q(:,2).*r(:,4) ...
-           q(:,2).*r(:,3)-q(:,3).*r(:,2)];
-
-    scalar = q(:,1).*r(:,1) - q(:,2).*r(:,2) - ...
-             q(:,3).*r(:,3) - q(:,4).*r(:,4);
+% difference of translation (simple substraction)
+    transMeas = zk( 1:3 ); 
+    transEsti = hk( 1:3 );
     
-    result = [scalar  vec];
-
+    diffTrans = transMeas - transEsti;
+    
+% difference of rotation ( represented as quaternions )
+% diffQuat(q1, q2) = q1 * -q2
+    rotMeas = zk( 4:7 );
+    rotEsti = zk( 4:7 );
+    
+    diffRot = quatmultiply(rotMeas, quatinv(rotEsti) );
+    
+% Put everything together
+    yk(1:3) = diffTrans;
+    yk(4:7) = diffRot;
+    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
