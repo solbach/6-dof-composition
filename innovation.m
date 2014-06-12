@@ -2,7 +2,7 @@ function yk = innovation( zk, hk )
 % this function calculates the innovation by calculating the difference
 % between the measurement (loop closing) and the estimation (odometry)
 % INPUT  : zk measurement (loop closing)
-%          hk estimation (odometry)
+%          hk estimation  (odometry)
 % OUTPUT : yk innovation --> difference between zk and hk ( yk = zk - hk )
 
 % difference of translation (simple substraction)
@@ -16,11 +16,14 @@ function yk = innovation( zk, hk )
     rotMeas = zk( 4:7 );
     rotEsti = hk( 4:7 );
     
-    diffRot = quatmultiply(rotMeas', quatinv(rotEsti') );
+    diffRot = quatMult( quatInvers( rotEsti' ), rotMeas' );
+    
+    A = quat2dcm( diffRot )
     
 % Put everything together
+    yk      = zeros( 7:1 );
     yk(1:3) = diffTrans;
-    yk      = [yk diffRot];
+    yk(4:7) = diffRot;
     yk      = yk';
     
 end

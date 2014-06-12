@@ -63,7 +63,13 @@ function [hk H zk numLC] = calculateHandhk( X, tMeasureOdo, timestampsLC, zk )
             end
         end
     end
-    hk = hk';
+    
+    if( numLC ~= 0 )
+        hk = hk';
+    else
+        hk = 0;
+        H  = 0;
+    end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
