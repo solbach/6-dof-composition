@@ -14,13 +14,14 @@ function yk = innovation( zk, hk )
 % difference of rotation ( represented as quaternions )
 % diffQuat(q1, q2) = q1 * -q2
     rotMeas = zk( 4:7 );
-    rotEsti = zk( 4:7 );
+    rotEsti = hk( 4:7 );
     
-    diffRot = quatmultiply(rotMeas, quatinv(rotEsti) );
+    diffRot = quatmultiply(rotMeas', quatinv(rotEsti') );
     
 % Put everything together
     yk(1:3) = diffTrans;
-    yk(4:7) = diffRot;
+    yk      = [yk diffRot];
+    yk      = yk';
     
 end
 

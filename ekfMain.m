@@ -77,7 +77,7 @@ for t = tt
                       yk = innovation( zk( c*7-6:c*7 ), hk( c*7-6:c*7 ) );
                   end
               end
-            end
+           end
         end
     end   
 end
