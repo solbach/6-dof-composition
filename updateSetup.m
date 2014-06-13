@@ -5,8 +5,10 @@
 loopSample = 100;
 
 % Load all Images of the stereo vision system (left and right)
-pathLeft    = 'bag/left_images_color';
-pathRight   = 'bag/right_images_color';
+% pathLeft    = 'bag/left_images_color';
+% pathRight   = 'bag/right_images_color';
+pathLeft    = 'bag/testSet/left_images_color';
+pathRight   = 'bag/testSet/right_images_color';
 
 fLeft       = imageLoader(pathLeft);
 fRight      = imageLoader(pathRight);
@@ -14,7 +16,8 @@ fRight      = imageLoader(pathRight);
 % Load images to detect loop closing 
 %  (Just to be generic: normally we would use the left images of the 
 %   stereo vision system)
-pathLoop    = 'bag/left_images_color';
+% pathLoop    = 'bag/left_images_color';
+pathLoop    = 'bag/testSet/left_images_color';
 fLoop       = imageLoader(pathLoop);
 
 % Vector to store all timestamps of one update step
