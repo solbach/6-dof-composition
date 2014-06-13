@@ -1,7 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALISATION
 
-hold on;
 predictionSetup;
 updateSetup;
 
@@ -70,7 +69,7 @@ for t = tt
 %             parameter zk is important to update zk inside this function.
 %             In case we have not to eacht loop closing a corresponding
 %             odometry or vice versa.
-                [hk H zk numLC] = calculateHandhk( X, tMeasureOdo, ...
+                [hk H zk numLC] = calculateHhk( X, tMeasureOdo, ...
                                                     timestampsLC, zk );  
                                                 
 %             If number of loop closings is equal to 0 no hk had been 
@@ -85,7 +84,6 @@ for t = tt
                   Sk = H * C * H';
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
-                  rt = inv( Sk )
                   K  = C * H' * inv( Sk );
                   
 %             IV.  update state estimate: X = X + K*yk
@@ -96,11 +94,15 @@ for t = tt
               end
            end
         end
-    end   
+    end 
+%     Plot the new state vector
+    plotX;
+    pause(0.2);
+    hold off;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% PLOTTING
+%% PLOT EVERYTHING
 plotEKF;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

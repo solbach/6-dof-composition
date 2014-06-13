@@ -2,6 +2,8 @@
 % It's old Code and probably it has to be change in the near future to
 % get a more dynamic experience.
 
+hold on;
+
 % Plot state-vector
 [cX cY cZ] = stateVectorToXYZ(X);
 color = 'b';
