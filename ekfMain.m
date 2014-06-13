@@ -78,11 +78,16 @@ for t = tt
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
 
-%             I.  innovation: yk = zk - hk
+%             I.   Innovation: yk = zk - hk
                   yk = innovation( zk, hk );
-%             II. innovation covariance: Sk = Hk * Pk * Hk^T + Rk 
-%                 Sk = innovationCov(  )
 
+%             II.  Innovation covariance: Sk = H * C * H^T + Rk 
+                  Sk = H * C * H';
+
+%             III. Kalman gain: K = C * H^T * Sk^-1
+                  K  = C * H' * inv( Sk );
+                  
+%             IV.  update state estimate:       
               end
            end
         end
