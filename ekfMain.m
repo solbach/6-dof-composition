@@ -90,6 +90,9 @@ for t = tt
                   
 %             IV.  update state estimate: X = X + K*yk
                   X  = X + K * yk;
+                  
+%             V.   update covariance estimate: C = ( 1-K*H ) * C
+                  C  = ( 1-K*H ) * C;
               end
            end
         end
