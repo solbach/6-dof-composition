@@ -25,14 +25,14 @@ for t = tt
     xa2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
     
     xLast = X( ((t-2)*7)+1: (t-1)*7 );
-    cLast = C( ((t-2)*7)+1: (t-1)*7, : );
+    cLast = C( (t-1)*7-6:(t-1)*7, (t-1)*7-6:(t-1)*7 );
     
     
     [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CovRel );
 
 % Let the state-, covariance and timestamp-Vector grow
     X = [ X;  Xnew ];
-    C = [ C;  Cnew ];
+    C( t*7-6:t*7, t*7-6:t*7 ) = Cnew;
 
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
@@ -74,10 +74,12 @@ for t = tt
 %             If number of loop closings is equal to 0 no hk had been 
 %             calculated so cancel all update procedures
               if ( numLC ~= 0 )
-%             perform update for all found loop closings
+%             perform UPDATE for all found loop closings
                   for c = 1:numLC
-%             I. calculate innovation: yk = zk - hk
+%             I.  innovation: yk = zk - hk
                       yk = innovation( zk( c*7-6:c*7 ), hk( c*7-6:c*7 ) );
+%             II. innovation covariance: Sk = Hk * Pk * Hk^T + Rk 
+%                       Sk = innovationCov(  )
                   end
               end
            end
