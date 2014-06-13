@@ -9,7 +9,9 @@ updateSetup;
 %% MAIN LOOP
 for t = tt
 %%     PREDICTION STEP
-% (TODO?!)
+% Not necessary now. No uncertainties are added during prediciton, so
+% everything is unchanged and we can just continue with the 
+% state augmentation step
     
 %%     STATE AUGMENTATION STEP
 % xa1 is the first absolute Pose provided by libViso
@@ -30,8 +32,8 @@ for t = tt
     
     [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CovRel );
 
-% Let the state-, covariance and timestamp-Vector grow
-    X = [ X;  Xnew ];
+%     Let the state-, covariance and timestamp-Vector grow
+    X                         = [ X;  Xnew ];
     C( t*7-6:t*7, t*7-6:t*7 ) = Cnew;
 
 %%      UPDATE STEP
@@ -75,12 +77,12 @@ for t = tt
 %             calculated so cancel all update procedures
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
-                  for c = 1:numLC
+
 %             I.  innovation: yk = zk - hk
-                      yk = innovation( zk( c*7-6:c*7 ), hk( c*7-6:c*7 ) );
+                  yk = innovation( zk, hk );
 %             II. innovation covariance: Sk = Hk * Pk * Hk^T + Rk 
-%                       Sk = innovationCov(  )
-                  end
+%                 Sk = innovationCov(  )
+
               end
            end
         end

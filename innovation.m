@@ -5,27 +5,26 @@ function yk = innovation( zk, hk )
 %          hk estimation  (odometry)
 % OUTPUT : yk innovation --> difference between zk and hk ( yk = zk - hk )
 
-% difference of translation (simple substraction)
-    transMeas = zk( 1:3 ); 
-    transEsti = hk( 1:3 );
-    
-    diffTrans = transMeas - transEsti;
-    
-% difference of rotation ( represented as quaternions )
-% diffQuat(q1, q2) = q1 * -q2
-    rotMeas = zk( 4:7 );
-    rotEsti = hk( 4:7 );
-    
-    diffRot = quatMult( quatInvers( rotEsti' ), rotMeas' );
-    
-    A = quat2dcm( diffRot )
-    
-% Put everything together
-    yk      = zeros( 7:1 );
-    yk(1:3) = diffTrans;
-    yk(4:7) = diffRot;
-    yk      = yk';
-    
+    for i=1:( length(zk)/7 )
+
+    % difference of translation (simple substraction)
+        transMeas = zk( 7*i-6:7*i-4 ); 
+        transEsti = hk( 7*i-6:7*i-4 );
+
+        diffTrans = transMeas - transEsti;
+
+    % difference of rotation ( represented as quaternions )
+    % diffQuat(q1, q2) = q1 * -q2
+        rotMeas = zk( 7*i-3:7*i );
+        rotEsti = hk( 7*i-3:7*i );
+
+        diffRot = quatMult( quatInvers( rotEsti' ), rotMeas' );
+
+    % Put everything together
+        yk(7*i-6:7*i-4) = diffTrans;
+        yk(7*i-3:7*i)   = diffRot;
+    end
+    yk              = yk';    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
