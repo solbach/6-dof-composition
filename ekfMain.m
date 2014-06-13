@@ -84,7 +84,8 @@ for t = tt
                   Sk = H * C * H';
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
-                  K  = C * H' * inv( Sk );
+%                   K  = C * H' * inv( Sk );  
+                  K  = (C * H') / Sk;
                   
 %             IV.  update state estimate: X = X + K*yk
                   X  = X + K * yk;
@@ -92,12 +93,13 @@ for t = tt
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   C  = ( 1-K*H ) * C;
               end
+              numLC
            end
         end
     end 
 %     Plot the new state vector
-    plotX;
-    pause(0.2);
+    plotStateV;
+    pause(0.07);
     hold off;
 end
 
