@@ -9,6 +9,9 @@ updateSetup;
 %% MAIN LOOP
 for t = tt
 %%     PREDICTION STEP
+% (TODO?!)
+    
+%%     STATE AUGMENTATION STEP
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
     q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
