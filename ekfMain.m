@@ -85,9 +85,11 @@ for t = tt
                   Sk = H * C * H';
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
+                  rt = inv( Sk )
                   K  = C * H' * inv( Sk );
                   
-%             IV.  update state estimate:       
+%             IV.  update state estimate: X = X + K*yk
+                  X  = X + K * yk;
               end
            end
         end
