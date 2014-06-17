@@ -15,7 +15,8 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 
 % PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
 %           testing. The more the better
-    numLoopClosings = 20;
+numLoopClosings = 500;
+
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
     resultVector = 0;

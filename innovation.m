@@ -24,7 +24,7 @@ function yk = innovation( zk, hk )
         yk(7*i-6:7*i-4) = diffTrans;
         yk(7*i-3:7*i)   = diffRot;
     end
-    yk              = yk';    
+    yk = yk';    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

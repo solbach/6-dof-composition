@@ -11,6 +11,9 @@ function [fNameLeft fNameRight status] = getImageByTimestamp( timeStampOdo, ...
 %                otherwise 1
 
     status = 0;
+    fNameLeft  = 'no image';
+    fNameRight = 'no image';
+
     for i=1:length( fLeft )
         timeStampImage = fLeft{ i };
         timeStampImage = str2double( timeStampImage( 11:end-4 ) ); 
@@ -20,8 +23,7 @@ function [fNameLeft fNameRight status] = getImageByTimestamp( timeStampOdo, ...
             fNameRight = fRight{ i };
             break;
         end
-    end
-                                                
+    end                                                
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

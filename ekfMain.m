@@ -29,7 +29,7 @@ for t = tt
     cLast = C( (t-1)*7-6:(t-1)*7, (t-1)*7-6:(t-1)*7 );
     
     
-    [Xnew Cnew] = prediction(xLast, cLast, xa1, xa2, CovRel );
+    [Xnew Cnew] = prediction( xLast, cLast, xa1, xa2, CovRel );
 
 %     Let the state-, covariance and timestamp-Vector grow
     X                         = [ X;  Xnew ];
@@ -99,13 +99,13 @@ for t = tt
     end 
 %     Plot the new state vector
     plotStateV;
-    pause(0.07);
+%     pause(0.03);
     hold off;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PLOT EVERYTHING
-plotEKF;
+% plotEKF;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB
