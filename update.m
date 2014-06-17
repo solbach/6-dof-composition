@@ -15,7 +15,9 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 
 % PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
 %           testing. The more the better
-numLoopClosings = 500;
+%        numInliers      -> defines the minimum number of inliers
+    numLoopClosings = 3;
+    numInliersMin   = 20;
 
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
@@ -40,7 +42,7 @@ numLoopClosings = 500;
         [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = ...
             findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
         
-        if (status == 0 && inlierPtsLeft.Count >= 5)
+        if (status == 0 && inlierPtsLeft.Count >= numInliersMin)
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
 % III. Perform backprojection
@@ -65,11 +67,17 @@ numLoopClosings = 500;
             [tvec, q, rvec, numInliers] = objectPose3D2D(P3, P2);
 
 % IV. Safe transformation to resultVector
-%           If result uses less than 11 inliers discard it
-            if( numInliers(1) >= 5 )
+%           If result uses less than n inliers discard it
+            if( numInliers(1) >= numInliersMin )
 %                 Otherwise add it to the resultVector
 %                 Get timestamps from filename
-
+%                 figure(3);
+%                 J = imrotate(I3, acos(rvec(1,1)) ,'bilinear');
+%                 imshow(J);
+%                 
+%                 figure(4);
+%                 
+                
 % remove 'left_image' at the beginning and '.png' at the end
 % result: timestamp
                 tim  = fCurrentLoop{ i };

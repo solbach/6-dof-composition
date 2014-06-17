@@ -66,8 +66,8 @@ for t = tt
 %             Calculate h1 - hn: these are the realtive motions of states
 %             taken from the state-vector (state estimations) corresponding
 %             to the detected loop closing. In terms of EKF this is hk. the
-%             parameter zk is important to update zk inside this function.
-%             In case we have not to eacht loop closing a corresponding
+%             parameter zk is important to update it inside this function.
+%             In case we have not to every loop closing a corresponding
 %             odometry or vice versa.
                 [hk H zk numLC] = calculateHhk( X, tMeasureOdo, ...
                                                     timestampsLC, zk );  
@@ -99,6 +99,7 @@ for t = tt
     end 
 %     Plot the new state vector
     plotStateV;
+    plotGroundTr;
 %     pause(0.03);
     hold off;
 end

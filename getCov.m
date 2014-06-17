@@ -2,6 +2,7 @@ function COV = getCov()
 % This function provides the covariance measured by hand of the used
 % dataset
 
+%     numIter = 105;
     numIter = 105;
 
     sigmax = 0.339 / (2*numIter);

@@ -71,6 +71,7 @@ function [hk H zk numLC] = calculateHhk( X, tMeasureOdo, timestampsLC, zk )
         H  = 0;
     end
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
