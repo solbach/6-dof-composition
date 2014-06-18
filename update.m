@@ -17,7 +17,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %           testing. The more the better
 %        numInliers      -> defines the minimum number of inliers
     numLoopClosings = 3;
-    numInliersMin   = 20;
+    numInliersMin   = 12;
 
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
@@ -65,18 +65,18 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
             end
 % III.b) Find object Pose (Transformation: Stereo -> Loop Closing)
             [tvec, q, rvec, numInliers] = objectPose3D2D(P3, P2);
-
+                
 % IV. Safe transformation to resultVector
 %           If result uses less than n inliers discard it
             if( numInliers(1) >= numInliersMin )
 %                 Otherwise add it to the resultVector
 %                 Get timestamps from filename
-%                 figure(3);
-%                 J = imrotate(I3, acos(rvec(1,1)) ,'bilinear');
-%                 imshow(J);
-%                 
-%                 figure(4);
-%                 
+                figure(3);
+                angle = 2 * acos( q(1) );
+                angle = angle * (180/pi);
+                J = imrotate(I1, -angle,'bilinear');
+%                 J = imtranslate(J,[15, 25]);
+                imshowpair(I3, J);                  
                 
 % remove 'left_image' at the beginning and '.png' at the end
 % result: timestamp
@@ -102,7 +102,9 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
         end
     end
 end
-% Copyright (c) 2014, Markus Solbach
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without

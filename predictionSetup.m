@@ -1,6 +1,6 @@
 %% Prediction Setup
 % state vector X
-X   = [0; 0; 0; 0; 0; 0; 1];
+X   = [0; 0; 0; 1; 0; 0; 0];
 
 % covariance matrix C
 C   = zeros( 7, 7 );
@@ -18,10 +18,10 @@ data = rosBagFileReader(1);
 aX      = data( :, 4 );
 aY      = data( :, 5 );
 aZ      = data( :, 6 );
-aw      = data( :, 7 );
-aq1     = data( :, 8 );
-aq2     = data( :, 9 );
-aq3     = data( :, 10 );
+aq1     = data( :, 7 );
+aq2     = data( :, 8 );
+aq3     = data( :, 9 );
+aqw     = data( :, 10 );
 
 % Get timestamps
 tMeasureOdo = data(:, 1);

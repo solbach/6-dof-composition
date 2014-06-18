@@ -1,5 +1,6 @@
 function result = quatInvers(q)
 %   This function inverts a given quaternion
+% Remember quaternion representation is as follows: q = [ qw q2 q3 q4]
 
     result = [ q(:,1) -q(:,2:4) ];
 

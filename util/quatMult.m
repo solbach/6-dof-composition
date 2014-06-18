@@ -1,5 +1,6 @@
 function result = quatMult(q, r)
 % Calculate the multiplication of two quaternions
+% Remember quaternion representation is as follows: q = [ qw q2 q3 q4]
 
     vec = [q(:,1).*r(:,2) q(:,1).*r(:,3) q(:,1).*r(:,4)] + ...
           [r(:,1).*q(:,2) r(:,1).*q(:,3) r(:,1).*q(:,4)]+...

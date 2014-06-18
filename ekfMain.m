@@ -15,10 +15,10 @@ for t = tt
 %%     STATE AUGMENTATION STEP
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
-    q1 = [aw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
+    q1 = [aqw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
     q1 = quatNormal( q1 );
         
-    q2 = [aw(t), aq1(t), aq2(t), aq3(t)];
+    q2 = [aqw(t), aq1(t), aq2(t), aq3(t)];
     q2 = quatNormal( q2 );
         
 %     State Vectors (x, y, z, qw, qx, qy, qz)
@@ -99,7 +99,7 @@ for t = tt
     end 
 %     Plot the new state vector
     plotStateV;
-    plotGroundTr;
+%     plotGroundTr;
 %     pause(0.03);
     hold off;
 end

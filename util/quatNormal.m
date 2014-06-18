@@ -1,5 +1,6 @@
 function qNormal = quatNormal(q)
 % quatNormal normalizes a quaternion
+% Remember quaternion representation is as follows: q = [ qw q2 q3 q4]
 
     norm = sqrt(q(1)*q(1) + q(2)*q(2) + q(3)*q(3) + q(4)*q(4));
     
@@ -10,7 +11,8 @@ function qNormal = quatNormal(q)
     qNormal = q ./ norm;
 end
 
-% Copyright (c) 2014, Markus Solbach
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without

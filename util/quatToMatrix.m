@@ -1,6 +1,5 @@
 % Util program to convert a quaternion to a rotation-matrix
-% quaternion (q) will be formatted as follows:
-% q = [w, x, y, z]
+% Remember quaternion representation is as follows: q = [ qw q2 q3 q4]
 
 function A = quatToMatrix(q)
 
@@ -18,7 +17,8 @@ function A = quatToMatrix(q)
             0.0 , 0.0 , 0.0 , 1.0 ];   
 end
 
-% Copyright (c) 2014, Markus Solbach
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without
