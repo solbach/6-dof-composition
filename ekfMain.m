@@ -92,6 +92,7 @@ for t = tt
                   
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   C  = ( 1-K*H ) * C;
+                  t
               end
               numLC
            end

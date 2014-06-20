@@ -71,7 +71,8 @@ function f()
     Jac2 = jacobian(p_r, A2(1))
 end
 
-% Copyright (c) 2014, Markus Solbach
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without

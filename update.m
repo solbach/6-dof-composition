@@ -16,8 +16,8 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 % PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
 %           testing. The more the better
 %        numInliers      -> defines the minimum number of inliers
-    numLoopClosings = 3;
-    numInliersMin   = 12;
+    numLoopClosings = 5;
+    numInliersMin   = 17;
 
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
@@ -46,7 +46,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
 % III. Perform backprojection
-
+            inlierPtsLeft.Count
 % III.a) Calculate 3D Points
             P3 = zeros(inlierPtsLeft.Count, 3);
             for m = 1:inlierPtsLeft.Count

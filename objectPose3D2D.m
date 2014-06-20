@@ -22,17 +22,8 @@ function [tvec, q, rvec, numInliers] = objectPose3D2D(ObjP, ImgP)
     numInliers = size(inliers);
     rvec       = cv.Rodrigues(rvec);
     q          = dcm2quat(rvec);
-%     matlabs representation of quaternions is as follows: 
-%       q = [ qx, qy, qz, qw ]
-%     the representation used in this work is as follows:
-%       q = [ qw, qx, qy, qz ]
 
-    qw   = q(4);
-    q(4) = q(3);
-    q(3) = q(2);
-    q(2) = q(1);
-    q(1) = qw;
-    
+%     just to be sure --> normalization.
     q = quatNormal( q );
 
 end
