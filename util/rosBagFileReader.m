@@ -7,7 +7,8 @@ function out = rosBagFileReader(c)
     if c == 1
 %         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
 %         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-        out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
+%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
+        out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
     else
         out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
     end

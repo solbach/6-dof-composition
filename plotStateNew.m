@@ -1,33 +1,14 @@
-function yk = innovation( zk, hk )
-% this function calculates the innovation by calculating the difference
-% between the measurement (loop closing) and the estimation (odometry)
-% INPUT  : zk measurement (loop closing)
-%          hk estimation  (odometry)
-% OUTPUT : yk innovation --> difference between zk and hk ( yk = zk - hk )
+%% Plotting state vector
+% After each loop of the algorithm plot the new trajectory
 
-%     for i=1:( length(zk)/7 )
-% %     % difference of translation (simple substraction)
-% %         transMeas = zk( 7*i-6:7*i-4 ); 
-% %         transEsti = hk( 7*i-6:7*i-4 );
-% % 
-% %         diffTrans = transMeas - transEsti;
-% 
-% %     % difference of rotation ( represented as quaternions )
-% %     % diffQuat(q1, q2) = q1 * -q2
-% %         rotMeas = zk( 7*i-3:7*i );
-% %         rotEsti = hk( 7*i-3:7*i );
-% % 
-% %         diffRot = quatMult( quatInvers( rotEsti' ), rotMeas' );
-% 
-% %     % Put everything together
-% %         yk(7*i-6:7*i-4) = diffTrans;
-% %         yk(7*i-3:7*i)   = diffRot;
-%     end
-%     yk = yk'; 
+% Plot state-vector
+figure(1);
+[cX cY cZ] = stateVectorToXYZ(X);
 
-%       Due to EKF perform a pure substraction
-      yk = zk - hk;
-end
+plot3(cX, cY, cZ, '-');
+
+% color = 'b';
+% plot_dir3(cX', cY', cZ', color);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

@@ -46,8 +46,8 @@ function [hk H zk numLC] = calculateHhk( X, tMeasureOdo, timestampsLC, zk )
                                                              xRef, cov);
         
 %           push the both Jacobians to H-Matrix
-            H( numLC*7-6:numLC*7 , (posRef*7-6):(posRef*7)) = Jac1;
-            H( numLC*7-6:numLC*7 , (pos*7-6):(pos*7))       = Jac2;
+            H( numLC*7-6:numLC*7 , (pos*7-6):(pos*7))       = Jac1;
+            H( numLC*7-6:numLC*7 , (posRef*7-6):(posRef*7)) = Jac2;
         
 %           push relative motions to hk vector
             hk( numLC*7-6:numLC*7 ) = h;

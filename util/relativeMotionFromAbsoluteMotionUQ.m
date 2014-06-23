@@ -63,12 +63,12 @@ function f()
 %%
     syms x1 y1 z1 q1 q2 q3 q4 x2 y2 z2 q5 q6 q7 q8;
     x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
-    A2(1) = [ A2(1), A2(2), A2(3), q5, q6, q7, q8 ];
+    x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
     cov1  = zeros( 7, 7 );
     cov2  = zeros( 7, 7 );
-    [p_r cov] = relativeMotionFromAbsoluteMotionUQ(x1, cov1, A2(1), cov2)
+    [p_r cov] = relativeMotionFromAbsoluteMotionUQ(x1, cov1, x2, cov2)
     Jac1 = jacobian(p_r, x1)
-    Jac2 = jacobian(p_r, A2(1))
+    Jac2 = jacobian(p_r, x2)
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

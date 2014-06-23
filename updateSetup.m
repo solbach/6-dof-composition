@@ -2,13 +2,15 @@
 
 % PARAM:
 % loopSample -> only search every n Images whether we can find a loop closing
-loopSample = 20;
+loopSample = 50;
 
 % Load all Images of the stereo vision system (left and right)
-pathLeft    = 'bag/left_images_color';
-pathRight   = 'bag/right_images_color';
+% pathLeft    = 'bag/left_images_color';
+% pathRight   = 'bag/right_images_color';
 % pathLeft    = 'bag/testSet/left_images_small';
 % pathRight   = 'bag/testSet/right_images_small';
+pathLeft    = 'bag/new/small/left_images_color';
+pathRight   = 'bag/new/small/right_images_color';
 
 fLeft       = imageLoader(pathLeft);
 fRight      = imageLoader(pathRight);
@@ -16,8 +18,8 @@ fRight      = imageLoader(pathRight);
 % Load images to detect loop closing 
 %  (Just to be generic: normally we would use the left images of the 
 %   stereo vision system)
-pathLoop    = 'bag/left_images_color';
-% pathLoop    = 'bag/testSet/left_images_small';
+% pathLoop    = 'bag/testSet/pathLoopleft_images_small';
+pathLoop    = 'bag/new/small/left_images_color';
 fLoop       = imageLoader(pathLoop);
 
 % Vector to store all timestamps of one update step

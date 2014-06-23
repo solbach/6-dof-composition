@@ -8,8 +8,10 @@ dX   = gt(1:t, 2);
 dY   = gt(1:t, 3);
 dZ   = gt(1:t, 4);
 
-color = 'r';
-plot_dir3(dX, dY, dZ, color);
+plot3(dX, dY, dZ);
+
+% color = 'r';
+% plot_dir3(dX, dY, dZ, color);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

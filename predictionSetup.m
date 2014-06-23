@@ -1,5 +1,5 @@
 %% Prediction Setup
-% state vector X
+% state vector X = [ X Y Z qw qx qy qz ]
 X   = [0; 0; 0; 1; 0; 0; 0];
 
 % covariance matrix C

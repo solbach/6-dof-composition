@@ -52,7 +52,7 @@ for t = tt
             IRight = imread([pathRight '/' fNameRight]);  
         
 %           Pass already observed Images to update function
-            fCurrentLoop = fLoop(1:t-10);
+            fCurrentLoop = fLoop(1:t-1);
 
             [zk timestampsLC status] = update( ILeft, IRight, ...
                                                   fCurrentLoop, pathLoop );
@@ -62,7 +62,9 @@ for t = tt
 %             (left image) at the end of the timestamp vector
                 timeRef = str2double( fNameLeft( 11:end-4 ) );
                 timestampsLC = [ timestampsLC; timeRef];
-                
+
+%             Applying the Kalman-Equations
+
 %             Calculate h1 - hn: these are the realtive motions of states
 %             taken from the state-vector (state estimations) corresponding
 %             to the detected loop closing. In terms of EKF this is hk. the
@@ -99,9 +101,10 @@ for t = tt
         end
     end 
 %     Plot the new state vector
-    plotStateV;
+%     plotStateV;
+    plotStateNew;
 %     plotGroundTr;
-%     pause(0.03);
+    pause(0.03);
     hold off;
 end
 
