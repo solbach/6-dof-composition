@@ -1,4 +1,4 @@
-function [fNameLeft fNameRight status] = getImageByTimestamp( timeStampOdo, ...
+function [fNameLeft fNameRight pos status] = getImageByTimestamp( timeStampOdo, ...
                                                         fLeft, fRight )
 % This function return the stereo image pair corresponding to a certain
 % timestamp. 
@@ -9,7 +9,7 @@ function [fNameLeft fNameRight status] = getImageByTimestamp( timeStampOdo, ...
 %         fNameRight filename of the right image
 %         status If no image pair has been found status will contain 0
 %                otherwise 1
-
+    pos = 0;
     status = 0;
     fNameLeft  = 'no image';
     fNameRight = 'no image';
@@ -21,9 +21,10 @@ function [fNameLeft fNameRight status] = getImageByTimestamp( timeStampOdo, ...
             status = 1;
             fNameLeft  = fLeft{ i };
             fNameRight = fRight{ i };
+            pos = i;
             break;
         end
-    end                                                
+    end 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

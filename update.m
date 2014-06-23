@@ -16,8 +16,8 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 % PARAM: numLoopClosings -> defines the maximum of LoopClosings (mainly for
 %           testing. The more the better
 %        numInliers      -> defines the minimum number of inliers
-    numLoopClosings = 5;
-    numInliersMin   = 17;
+    numLoopClosings = 9;
+    numInliersMin   = 16;
 
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
@@ -37,19 +37,22 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 % II. Build Correspondencies between left Stereo Image and Loop-Closing
 % Candidates
     for i = 1 : length(fCurrentLoop)
-       
         I3 = imread([pathLoop '/' fCurrentLoop{i}]);
         [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = ...
             findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
         
-        if (status == 0 && inlierPtsLeft.Count >= numInliersMin)
+        if(length(inlierPtsLeft) > 2)
+            figure(9); showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight,'montage');
+        end
+            figure(7); imshow(I3);
+        if (status == 0 && length( inlierPtsLeft ) >= numInliersMin)
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
 % III. Perform backprojection
-            inlierPtsLeft.Count
+            length(inlierPtsLeft)
 % III.a) Calculate 3D Points
-            P3 = zeros(inlierPtsLeft.Count, 3);
-            for m = 1:inlierPtsLeft.Count
+            P3 = zeros(length( inlierPtsLeft ), 3);
+            for m = 1:length( inlierPtsLeft )
                 pTemp = calculate3DPoint(inlierPtsLeft(m).Location, ...
                                  inlierOriginalRightRed(m).Location);
                 P3(m,1) = pTemp(1);
@@ -57,8 +60,8 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                 P3(m,3) = pTemp(3);
             end
 %        Translate Feature to the internaly used format
-            P2 = zeros(inlierPtsRight.Count, 2);
-            for n = 1:inlierPtsRight.Count
+            P2 = zeros(length(inlierPtsRight), 2);
+            for n = 1:length(inlierPtsRight)
                 ImgP = inlierPtsRight(n).Location;
                 P2(n,1) = ImgP(1);
                 P2(n,2) = ImgP(2);

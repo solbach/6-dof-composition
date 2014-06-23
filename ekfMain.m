@@ -27,8 +27,7 @@ for t = tt
     
     xLast = X( ((t-2)*7)+1: (t-1)*7 );
     cLast = C( (t-1)*7-6:(t-1)*7, (t-1)*7-6:(t-1)*7 );
-    
-    
+        
     [Xnew Cnew Jac1 Jac2] = prediction( xLast, cLast, xa1, xa2, CovRel );
 
 %     Let the state-, covariance and timestamp-Vector grow
@@ -38,9 +37,11 @@ for t = tt
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
     if mod(t,loopSample) == 0  
+        plotStateNew;
 %     Load Stereo Images from Database 
 %       ( --> corresponding to the current timestamp of the odometry)
-        [fNameLeft fNameRight status]= getImageByTimestamp(tMeasureOdo(t), ...
+        [fNameLeft fNameRight pos status]= getImageByTimestamp(...
+                                                    tMeasureOdo(t), ...
                                                     fLeft, fRight);
         if ( status == 0 )
 %           if status == 0 no corresponding stereo image pair has been
@@ -52,7 +53,7 @@ for t = tt
             IRight = imread([pathRight '/' fNameRight]);  
         
 %           Pass already observed Images to update function
-            fCurrentLoop = fLoop(1:t-1);
+            fCurrentLoop = fLoop(1:pos-10);
 
             [zk timestampsLC status] = update( ILeft, IRight, ...
                                                   fCurrentLoop, pathLoop );
@@ -61,7 +62,7 @@ for t = tt
 %             Don't forget to safe the timestamp of the reference Image
 %             (left image) at the end of the timestamp vector
                 timeRef = str2double( fNameLeft( 11:end-4 ) );
-                timestampsLC = [ timestampsLC; timeRef];
+                timestampsLC = [ timestampsLC; timeRef ];
 
 %             Applying the Kalman-Equations
 
@@ -93,19 +94,25 @@ for t = tt
                   X  = X + K * yk;
                   
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
-                  C  = ( 1-K*H ) * C;
+                  prodKH = K*H;
+                  C  = ( eye( size( prodKH ) ) - prodKH ) * C;
                   t
+                  C2 = C;
+                  C2 = C2 / max( max( C2 ) );
+                  figure(5);
+                  imshow( C2 );
               end
               numLC
            end
         end
-    end 
 %     Plot the new state vector
 %     plotStateV;
-    plotStateNew;
+    plotUpdate;
 %     plotGroundTr;
     pause(0.03);
     hold off;
+    end 
+    pause(0.03);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

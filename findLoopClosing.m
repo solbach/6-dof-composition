@@ -16,21 +16,21 @@ function [inlierPtsLeft, inlierPtsRight, inlierOriginalRightUp, status] = findLo
 
     [desc3, SIFT3] = findFeature(I3);
     indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true);
-    
+
     %  Update both sides of stereo images!
     inlierOriginalRight = inlierOriginalRight(indexPairs(:, 1));
     inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
     matchedPoints2 = SIFT3(indexPairs(:, 2));
 
 %     This function will fail if we have one inlier
-    if(inlierOriginalLeft.Count > 1)
+    if(length(inlierOriginalLeft) > 1)
         [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
             estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');
         % Update index list
-        index = zeros(inlierPtsLeft.Count, 1);
-        for i = 1:inlierPtsLeft.Count
+        index = zeros(length( inlierPtsLeft ), 1);
+        for i = 1:length( inlierPtsLeft )
             InL = inlierPtsLeft(i).Location;
-            for j = 1:inlierOriginalLeft.Count
+            for j = 1:length( inlierOriginalLeft )
                 MaP = inlierOriginalLeft(j).Location;
                 if InL == MaP
                     index(i) = j;

@@ -17,7 +17,9 @@ function [inlierPtsLeft inlierPtsRight descLeft status] = stereoMatching(I1, I2)
 %     II. Find Correspondencies (with outlier elimination)
 
     [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorrespondenciesIndex(f1, vpts1, f2, vpts2);
-
+    if(length(inlierPtsLeft) > 2)
+        figure(8); showMatchedFeatures(I1,I2,inlierPtsLeft,inlierPtsRight,'montage');
+    end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
