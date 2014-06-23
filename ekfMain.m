@@ -29,11 +29,11 @@ for t = tt
     cLast = C( (t-1)*7-6:(t-1)*7, (t-1)*7-6:(t-1)*7 );
     
     
-    [Xnew Cnew] = prediction( xLast, cLast, xa1, xa2, CovRel );
+    [Xnew Cnew Jac1 Jac2] = prediction( xLast, cLast, xa1, xa2, CovRel );
 
 %     Let the state-, covariance and timestamp-Vector grow
-    X                         = [ X;  Xnew ];
-    C( t*7-6:t*7, t*7-6:t*7 ) = Cnew;
+    X = [ X;  Xnew ];
+    C = calcCov( C, Cnew, Jac1, Jac2 );
 
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate

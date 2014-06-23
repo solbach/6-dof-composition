@@ -1,4 +1,4 @@
-function [Xplus Cov] = composition(X1, C1, X2, C2)
+function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2)
 %   The actual Composition is done here. Including the calculation 
 %   of both Jacobians and the resulting covariances
 
@@ -83,7 +83,8 @@ function f()
     Jac2 = jacobian(p_r, x2)
 end
 
-% Copyright (c) 2014, Markus Solbach
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
 
 % Redistribution and use in source and binary forms, with or without

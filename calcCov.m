@@ -1,15 +1,35 @@
-function [x cov Jac1 Jac2] = prediction( x, cov, ax1, ax2, cRel )
+function C = calcCov(  C, Cnew, Jac1, Jac2 )
+% This function builds the big covariance used in EKF
+% INPUT:  C is the covariance Matrix from the previous iteration
+%         Cnew is the covariance from the current state augmentation
+%         Jac1 Jacobian of the composition with respect to the last item of
+%              the state vector
+%         Jac2 Jacobian of the composition with respect to the odometry
+% Output: C the new covariance matrix
 
-% INPUT:    x is the current absolute pose
-%           xa1 is the first absolute pose provided by libViso
-%           xa2 is the second
-           
-    s   = relativeMotionFromAbsoluteMotionUQ(ax1, cov, ax2, cov);
+% C will be build as follows:
+% C = | C(1,1)      C(1,2)      ... C(1,n)      C(1,n)*Jac1' |
+%     | C(2,1)      C(2,2)      ... C(2,n)      C(2,n)*Jac1' |
+%     |                         ...                          |
+%     | C(m,1)      C(m,2)      ... C(m,n)      C(m,n)*Jac1' |
+%     | Jac1*C(m,1) Jac1*C(m,2) ... Jac1*C(m,n) Cnew         |
 
-    [x cov Jac1 Jac2] = composition(x, cov, s, cRel);    
+sizeC = length(C)/7;
+
+% Pushing the new covariance to C
+    C( (sizeC+1)*7-6:(sizeC+1)*7, (sizeC+1)*7-6:(sizeC+1)*7 ) = Cnew;
+
+% Put information to the last column and row of C
+    for i=1:sizeC
+%     column --> C(i,n+1) = C(i,n)*Jac1'
+        C( i*7-6:i*7, (sizeC+1)*7-6:(sizeC+1)*7 ) = C( i*7-6:i*7, sizeC*7-6:sizeC*7 ) * Jac1';
+
+%     row -----> C(m+1,i) = Jac1*C(m,1)
+        C( (sizeC+1)*7-6:(sizeC+1)*7, i*7-6:i*7 ) = Jac1 * C( sizeC*7-6:sizeC*7, i*7-6:i*7);
+    end
     
-end
-
+end    
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.
