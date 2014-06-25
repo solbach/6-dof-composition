@@ -9,15 +9,16 @@ function [fNameLeft fNameRight pos status] = getImageByTimestamp( timeStampOdo, 
 %         fNameRight filename of the right image
 %         status If no image pair has been found status will contain 0
 %                otherwise 1
+    
     pos = 0;
     status = 0;
     fNameLeft  = 'no image';
     fNameRight = 'no image';
-
+    
     for i=1:length( fLeft )
         timeStampImage = fLeft{ i };
         timeStampImage = str2double( timeStampImage( 11:end-4 ) ); 
-        if( timeStampOdo == timeStampImage )
+        if( abs( timeStampOdo - timeStampImage ) < 100000000)
             status = 1;
             fNameLeft  = fLeft{ i };
             fNameRight = fRight{ i };
