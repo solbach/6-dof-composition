@@ -40,10 +40,11 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
         I3 = imread([pathLoop '/' fCurrentLoop{i}]);
         [inlierPtsLeft, inlierPtsRight, inlierOriginalRightRed, status] = ...
             findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
-
+    
         if (status == 0 && length( inlierPtsLeft ) >= numInliersMin)
-            figure(7); imshow(I3);
+            figure(7); imshow(I3);   
             figure(9); showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight,'montage');
+        
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
 % III. Perform backprojection
@@ -78,6 +79,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                 J = imrotate(I1, -angle,'bilinear');
 %                 J = imtranslate(J,[15, 25]);
                 imshowpair(I3, J); 
+                pause(0.05);
 %                 [pitch roll yaw] = quat2angle(q, 'YXZ');
 %                 qnew = angle2quat( pitch, roll, -yaw, 'YXZ' );
 %                 q = qnew; 

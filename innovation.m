@@ -26,7 +26,8 @@ function yk = innovation( zk, hk )
 %     yk = yk'; 
 
 %       Due to EKF perform a pure substraction
-    yk = abs(zk)  - abs(hk);
+%     yk = abs(zk)  - abs(hk);
+    yk = zk - hk;
       
 %       Smooth innovation (Due to probably wrong loop closings)
 %       If the sum of the innovation of one Loop Closing 
@@ -35,7 +36,8 @@ function yk = innovation( zk, hk )
         in = yk(i*7-6:i*7);
         s = sum( abs( in ) );
         if( s > 1 )
-            yk(i*7-6:i*7) = 0;
+%             yk(i*7-6:i*7) = 0;
+            la = 0;
         end
     end
       

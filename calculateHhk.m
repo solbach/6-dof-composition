@@ -1,8 +1,8 @@
-function [hk H zk numLC] = calculateHhk( X, tMeasureOdo, timestampsLC, zk )
+function [hk H zk numLC] = calculateHhk( X, tStateOdo, timestampsLC, zk )
 % This function calculates the relative estimated motion from with respect
 % to the observed landmarks.
 % INPUT  : X state vector containing all current states 
-%          tMeasureOdo vector with corresponding timestamps 
+%          tStateOdo vector with corresponding (to state vector) timestamps 
 %          timestampsLC vector with the timestamps of the loop closings
 % OUTPUT : hk is the akkumulated estimation
 %          H is the H Matrix as known from EKF
@@ -27,27 +27,27 @@ function [hk H zk numLC] = calculateHhk( X, tMeasureOdo, timestampsLC, zk )
 %     load reference state
     timeRef = timestampsLC( end );
     
-    posRef = find( tMeasureOdo == timeRef );
+    posRef = find( abs( tStateOdo - timeRef ) < 100000000 );
 
-    xRef = X( (posRef*7-6):(posRef*7) );
+    xRef = X( (posRef(1)*7-6):(posRef(1)*7) );
 
 %     safe the number of discarded elements
     disc = 0;
     
     for i=1:(length(timestampsLC) - 1)
-        pos = find( tMeasureOdo == timestampsLC( i ) );
+        pos = find( abs( tStateOdo - timestampsLC( i ) ) < 100000000 );
         
-        if( pos ~= 0 )
+        if( pos(1) ~= 0 )
             numLC = numLC + 1;
-            x1  = X( (pos*7-6):(pos*7) );
+            x1  = X( (pos(1)*7-6):(pos(1)*7) );
         
 %           calculate relative motion. 
             [ h cov Jac1 Jac2 ] = relativeMotionFromAbsoluteMotionUQ(xRef, cov, ...
                                                              x1, cov);
         
 %           push the both Jacobians to H-Matrix
-            H( numLC*7-6:numLC*7 , (pos*7-6):(pos*7))       = Jac1;
-            H( numLC*7-6:numLC*7 , (posRef*7-6):(posRef*7)) = Jac2;
+            H( numLC*7-6:numLC*7 , (pos(1)*7-6):(pos(1)*7))       = Jac1;
+            H( numLC*7-6:numLC*7 , (posRef(1)*7-6):(posRef(1)*7)) = Jac2;
         
 %           push relative motion to hk vector
             hk( numLC*7-6:numLC*7 ) = h;

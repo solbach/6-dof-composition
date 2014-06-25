@@ -2,13 +2,20 @@
 % state vector X = [ X Y Z qw qx qy qz ]
 X   = [0; 0; 0; 1; 0; 0; 0];
 
+% sampling rate of the whole algorithm
+samplingRateSLAM = 20;
+
+% how many images should be discarded for the update to not perform a loop
+% closing with yourself? discards the n-th last images of the set of images
+imageDiscard = 1;
+
 % covariance matrix C
 C   = zeros( 7, 7 );
 
 % Get information about the covariance
 CovRel = getCov;
 
-% Sample Rate of plotting the ellipsoids
+% sampling rate of plotting the ellipsoids
 ellipSamp = 200;
 
 % Get Data
@@ -26,8 +33,11 @@ aqw     = data( :, 10 );
 % Get timestamps
 tMeasureOdo = data(:, 1);
 
+% Timestamps corresponding to elements in the state vector
+tStateOdo = 0;
+
 dt = 1;
-tt = 2:dt:size(aX);
+tt = 2:dt:600;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

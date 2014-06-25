@@ -4,18 +4,16 @@
 predictionSetup;
 updateSetup;
 
-percent = 0;
-XOdom   = [0; 0; 0; 1; 0; 0; 0];
-XTemp   = [0; 0; 0; 1; 0; 0; 0];
+percent  = 0;
+XOdom    = [0; 0; 0; 1; 0; 0; 0];
+xTemp    = [0; 0; 0; 1; 0; 0; 0];
+cPlcHldr = zeros( 7, 7 );
+tStateOdo = tMeasureOdo(1);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN LOOP
 for t = tt
 %%     PREDICTION STEP
-% Not necessary now. No uncertainties are added during prediciton, so
-% everything is unchanged and we can just continue with the 
-% state augmentation step
-    
-%%     STATE AUGMENTATION STEP
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
     q1 = [aqw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
@@ -28,30 +26,49 @@ for t = tt
     xa1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
     xa2  = [ aX(t), aY(t), aZ(t), q2(1), q2(2), q2(3), q2(4) ];
     
-    xLast = X( ((t-2)*7)+1: (t-1)*7 );
-    cLast = C( (t-1)*7-6:(t-1)*7, (t-1)*7-6:(t-1)*7 );
+    predictionCounter = length( xTemp ) / 7 + 1;
+    xTempLast = xTemp( ((predictionCounter-2)*7)+1: (predictionCounter-1)*7 );
+    
+    xTempNew = prediction( xTempLast, cPlcHldr, xa1, xa2, cPlcHldr );
+    xTemp = [xTemp;  xTempNew];
+       
+%     Only perform state augmentation and update every n Iterations.
+    if mod(t, samplingRateSLAM) == 0
         
-    [Xnew Cnew Jac1 Jac2] = prediction( xLast, cLast, xa1, xa2, CovRel );
+%%     STATE AUGMENTATION STEP
+        updateCounter = length( X ) / 7 + 1;
+        xTempLast = xTemp( ((predictionCounter-1)*7)+1: predictionCounter*7 );
+        xLast     = X( ((updateCounter-2)*7)+1: (updateCounter-1)*7 );
+        cLast     = C( (updateCounter-1)*7-6:(updateCounter-1)*7, (updateCounter-1)*7-6:(updateCounter-1)*7 );
+
+        [Xnew, Cnew, Jac1, Jac2] = composition(xLast, cLast, xTempLast, CovRel); 
 
 %     Let the state-, covariance and timestamp-Vector grow
-    X = [ X;  Xnew ];
-    C = calcCov( C, Cnew, Jac1, Jac2 );
-    
-    XOdom = [XOdom, Xnew];
-    
-    if mod(t, 20) == 0
-        percent = percent + 1
-    end
+        X = [ X;  Xnew ];
+        C = calcCov( C, Cnew, Jac1, Jac2 );  
+%     safe timestamps of the odometry corresponding to each state
+        tStateOdo = [ tStateOdo; tMeasureOdo(t) ];
+
+%     safe the odometry for later debugging  
+        xOdomLast     = XOdom( ((updateCounter-2)*7)+1: (updateCounter-1)*7 );
+        [Xnew, Cnew, Jac1, Jac2] = composition(xOdomLast, cLast, xTempLast, CovRel); 
+        XOdom = [XOdom, Xnew];
+        
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
     if mod(t,loopSample) == 0  
-%        plotStateNew;
+%     Reset temporal state variable of the prediction step
+        xTemp = [0; 0; 0; 1; 0; 0; 0];
 %     Load Stereo Images from Database 
 %       ( --> corresponding to the current timestamp of the odometry)
-        [fNameLeft fNameRight pos status]= getImageByTimestamp(...
+        [fNameLeft, fNameRight, pos, status]= getStereoImageByTimestamp(...
                                                     tMeasureOdo(t), ...
                                                     fLeft, fRight);
-        if ( status == 0 )
+                                                
+%     safe fNameLeft as already observed image in a new vector
+        fLoop{ end+1 } =  fNameLeft;
+        
+        if ( ( status == 0 ) || ( updateCounter <= imageDiscard ) )
 %           if status == 0 no corresponding stereo image pair has been
 %           found: skip this
         else
@@ -60,11 +77,12 @@ for t = tt
             ILeft  = imread([pathLeft '/' fNameLeft]);  
             IRight = imread([pathRight '/' fNameRight]);  
         
-%           Pass already observed Images to update function
-            fCurrentLoop = fLoop(1:pos-10);
+%           Pass already observed Images to update function (discard the
+%           last n (--> pos - n) )
+            fCurrentLoop = fLoop(1:end-imageDiscard);
 
             [zk timestampsLC status] = update( ILeft, IRight, ...
-                                                  fCurrentLoop, pathLoop );
+                                                  fCurrentLoop, pathLeft );
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
@@ -80,7 +98,7 @@ for t = tt
 %             parameter zk is important to update it inside this function.
 %             In case we have not to every loop closing a corresponding
 %             odometry or vice versa.
-                [hk H zk numLC] = calculateHhk( X, tMeasureOdo, ...
+                [hk H zk numLC] = calculateHhk( X, tStateOdo, ...
                                                     timestampsLC, zk );  
                                                 
 %             If number of loop closings is equal to 0 no hk had been 
@@ -111,16 +129,12 @@ for t = tt
                   imshow( C2 );
               end
               numLC
-           end
-        end
-%     Plot the new state vector
-%     plotUpdate;
-%     plotGroundTr;  
-%     plotStateV;    
-%       pause(0.03);
-%       hold off;
-    end 
-%     pause(0.03);
+              plotEKF;
+              pause(0.3);
+             end
+          end
+       end 
+    end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

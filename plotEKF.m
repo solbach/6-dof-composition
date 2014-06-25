@@ -3,16 +3,16 @@
 % get a more dynamic experience.
 
 
-figure(6)
+figure(6);
 hold on;
 % Plot pure odometry
 [oX oY oZ] = stateVectorToXYZ(XOdom);
-type = '-k';
+type = '-b';
 plot3(oX', oY', oZ', type);
 
 % Plot updated state-vector
 [cX cY cZ] = stateVectorToXYZ(X);
-type = '-b';
+type = '-k';
 plot3(cX', cY', cZ', type);
 
 % Plot groundtruth
