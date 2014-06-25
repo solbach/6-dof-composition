@@ -2,12 +2,18 @@
 % It's old Code and probably it has to be change in the near future to
 % get a more dynamic experience.
 
-hold on;
 
-% Plot state-vector
+figure(6)
+hold on;
+% Plot pure odometry
+[oX oY oZ] = stateVectorToXYZ(XOdom);
+type = '-k';
+plot3(oX', oY', oZ', type);
+
+% Plot updated state-vector
 [cX cY cZ] = stateVectorToXYZ(X);
-color = 'b';
-plot_dir3(cX', cY', cZ', color);
+type = '-b';
+plot3(cX', cY', cZ', type);
 
 % Plot groundtruth
 % Get groundtruth
@@ -16,9 +22,9 @@ dX   = gt(:, 2);
 dY   = gt(:, 3);
 dZ   = gt(:, 4);
 
-color = 'r';
-plot_dir3(dX, dY, dZ, color);
-
+type = '-r';
+plot3(dX, dY, dZ, type);
+hold off;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.

@@ -5,7 +5,7 @@
 figure(4);
 [cX cY cZ] = stateVectorToXYZ(X);
 
-plot3(cX, cY, cZ, '-');
+plot3(cX, cY, cZ, '-k');
 
 % color = 'b';
 % plot_dir3(cX', cY', cZ', color);

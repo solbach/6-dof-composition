@@ -4,6 +4,8 @@
 predictionSetup;
 updateSetup;
 
+percent = 0;
+XOdom   = [0; 0; 0; 1; 0; 0; 0];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN LOOP
 for t = tt
@@ -33,11 +35,16 @@ for t = tt
 %     Let the state-, covariance and timestamp-Vector grow
     X = [ X;  Xnew ];
     C = calcCov( C, Cnew, Jac1, Jac2 );
-
+    
+    XOdom = [XOdom, Xnew];
+    
+    if mod(t, 20) == 0
+        percent = percent + 1
+    end
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
     if mod(t,loopSample) == 0  
-        plotStateNew;
+%        plotStateNew;
 %     Load Stereo Images from Database 
 %       ( --> corresponding to the current timestamp of the odometry)
         [fNameLeft fNameRight pos status]= getImageByTimestamp(...
@@ -106,22 +113,22 @@ for t = tt
            end
         end
 %     Plot the new state vector
-%     plotStateV;
-    plotUpdate;
-%     plotGroundTr;
-    pause(0.03);
-    hold off;
+%     plotUpdate;
+%     plotGroundTr;  
+%     plotStateV;    
+%       pause(0.03);
+%       hold off;
     end 
-    pause(0.03);
+%     pause(0.03);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PLOT EVERYTHING
-% plotEKF;
+plotEKF;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB
-clearMATLAB;
+% clearMATLAB;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

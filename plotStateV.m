@@ -4,8 +4,11 @@
 % Plot state-vector
 figure(1);
 [cX cY cZ] = stateVectorToXYZ(X);
-color = 'b';
-plot_dir3(cX', cY', cZ', color);
+
+plot3(cX', cY', cZ', '-b');
+
+% color = 'b';
+% plot_dir3(cX', cY', cZ', color);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

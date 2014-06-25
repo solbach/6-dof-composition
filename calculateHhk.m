@@ -42,14 +42,14 @@ function [hk H zk numLC] = calculateHhk( X, tMeasureOdo, timestampsLC, zk )
             x1  = X( (pos*7-6):(pos*7) );
         
 %           calculate relative motion. 
-            [ h cov Jac1 Jac2 ] = relativeMotionFromAbsoluteMotionUQ(x1, cov, ...
-                                                             xRef, cov);
+            [ h cov Jac1 Jac2 ] = relativeMotionFromAbsoluteMotionUQ(xRef, cov, ...
+                                                             x1, cov);
         
 %           push the both Jacobians to H-Matrix
             H( numLC*7-6:numLC*7 , (pos*7-6):(pos*7))       = Jac1;
             H( numLC*7-6:numLC*7 , (posRef*7-6):(posRef*7)) = Jac2;
         
-%           push relative motions to hk vector
+%           push relative motion to hk vector
             hk( numLC*7-6:numLC*7 ) = h;
         else
 %           If no odometry could be found corresponding to the loop closing
