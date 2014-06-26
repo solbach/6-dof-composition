@@ -12,11 +12,12 @@ imageDiscard = 1;
 % covariance matrix C
 C   = zeros( 7, 7 );
 
-% Get information about the covariance
-CovRel = getCov;
+% Get information about the odometry- and measurement covariance
+CovRel  = getCov(samplingRateSLAM);
+CovMeas = CovRel;
 
 % sampling rate of plotting the ellipsoids
-ellipSamp = 200;
+ellipSamp = 30;
 
 % Get Data
 data = rosBagFileReader(1);
@@ -37,7 +38,7 @@ tMeasureOdo = data(:, 1);
 tStateOdo = 0;
 
 dt = 1;
-tt = 2:dt:600;
+tt = 2:dt:length( aX );
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

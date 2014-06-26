@@ -2,13 +2,39 @@
 % It's old Code and probably it has to be change in the near future to
 % get a more dynamic experience.
 
-
 figure(6);
+clf;
 hold on;
+
+numLC = length( LCH ) / 7;
+
+for i = 1:numLC
+
+    type = '*r';
+    plot3([XREF(1) LCH(i*7-6)], [XREF(1) LCH(i*7-5)], [XREF(1) LCH(i*7-4)], type);
+    type = '-r';
+    plot3([XREF(1) LCH(i*7-6)], [XREF(1) LCH(i*7-5)], [XREF(1) LCH(i*7-4)], type);
+    
+    type = '+g';
+    plot3([XREF(1) LCZ(i*7-6)], [XREF(1) LCZ(i*7-5)], [XREF(1) LCZ(i*7-4)], type);
+    type = '-g';
+    plot3([XREF(1) LCZ(i*7-6)], [XREF(1) LCZ(i*7-5)], [XREF(1) LCZ(i*7-4)], type);
+
+end
+
+% Plot Covariance
+% III. plot error ellipsoid
+mean = [XOdom(end-6) XOdom(end-5) XOdom(end-4)];
+% error_ellipse( Cnew(1:3,1:3), mean );
+% plotEllipsoid( cov(1:3,1:3), mean )
+xlabel('x');
+ylabel('y');
+zlabel('z');
+
 % Plot pure odometry
-[oX oY oZ] = stateVectorToXYZ(XOdom);
-type = '-b';
-plot3(oX', oY', oZ', type);
+% [oX oY oZ] = stateVectorToXYZ(XOdom);
+% type = '-b';
+% plot3(oX', oY', oZ', type);
 
 % Plot updated state-vector
 [cX cY cZ] = stateVectorToXYZ(X);
@@ -18,12 +44,12 @@ plot3(cX', cY', cZ', type);
 % Plot groundtruth
 % Get groundtruth
 gt = rosBagFileReader(2);
-dX   = gt(:, 2);
-dY   = gt(:, 3);
-dZ   = gt(:, 4);
+dX   = gt( :, 2 );
+dY   = gt( :, 3 );
+dZ   = gt( :, 4 );
 
 type = '-r';
-plot3(dX, dY, dZ, type);
+% plot3(dX, dY, dZ, type);
 hold off;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

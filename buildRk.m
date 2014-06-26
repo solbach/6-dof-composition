@@ -1,33 +1,18 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function Rk = buildRk( CovMeas, numLC)
+%     This function builds the covariance Matrix of the Measurement
+%     depending on the number of Loop Closings
+% IN  : CovMeas The covariance of pne Measurement. In this case the
+%               covariance of solvePNPRansac (by OpenCV)
+%       numLC number of Loop Closings detected during this update step
+% OUT : Rk The resulting covariance after adding as many CovMeas on the
+%          diagonal as numLC tells us.
 
-function out = rosBagFileReader(c)
+    Rk = CovMeas;
     
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-        out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%           out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
+    for i = 2:numLC
+        Rk( (numLC)*7-6:(numLC)*7, (numLC)*7-6:(numLC)*7 ) = CovMeas;
     end
-%     out2 = sym( out );
-%     out(1,1)
-%     size = [590, 88];
-%     out = load('bag/viso.txt', 'uint64');    
-     
-%     fid = fopen('bag/viso.txt');
-%     % read, and transpose so samevals = myvals
-%     out = fread(fid, [88 590], 'uint64')';
-%     fclose(fid);
-     
-%     A = csvread('bag/viso.txt', 0,0);
     
-%     x3 = sym('3^(1/3)');
-%     vpa(x3)
-           
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

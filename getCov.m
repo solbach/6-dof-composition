@@ -1,17 +1,25 @@
-function COV = getCov()
+function COV = getCov(samplingRateSLAM)
 % This function provides the covariance measured by hand of the used
 % dataset
 
 %     numIter = 105;
-    numIter = 105;
+      numIter = 160;
 
-    sigmax = 0.339 / (2*numIter);
-    sigmay = 0.036 / (2*numIter);
-    sigmaz = 0.097 / (2*numIter);
-    sigmaqw = 0.0655719331 / (2*numIter);
-    sigmaqx = 0.42345473 / (2*numIter);
-    sigmaqy = 0.3535431 / (2*numIter);
-    sigmaqz = 0.10389277 / (2*numIter);
+%     sigmax = ( 0.339 / (2*numIter) ) * samplingRateSLAM;
+%     sigmay = ( 0.036 / (2*numIter) ) * samplingRateSLAM;
+%     sigmaz = ( 0.097 / (2*numIter) ) * samplingRateSLAM;
+%     sigmaqw = ( 0.0655719331 / (2*numIter) ) * samplingRateSLAM;
+%     sigmaqx = ( 0.42345473 / (2*numIter) ) * samplingRateSLAM;
+%     sigmaqy = ( 0.3535431 / (2*numIter) ) * samplingRateSLAM;
+%     sigmaqz = ( 0.10389277 / (2*numIter) ) * samplingRateSLAM;
+
+    sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
+    sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
+    sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
+    sigmaqw = ( 1.880284430914108 / (numIter) ) * samplingRateSLAM;
+    sigmaqx = ( 0.012862493640703 / (numIter) ) * samplingRateSLAM;
+    sigmaqy = ( 0.084501999200303 / (numIter) ) * samplingRateSLAM;
+    sigmaqz = ( 0.671779888139042 / (numIter) ) * samplingRateSLAM;
 
     xcov = sigmax*sigmax;
     ycov = sigmay*sigmay;

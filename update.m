@@ -76,7 +76,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                 figure(3);
                 angle = 2 * acos( q(1) );
                 angle = angle * (180/pi);
-                J = imrotate(I1, -angle,'bilinear');
+                J = imrotate(I1, 360-angle,'bilinear');
 %                 J = imtranslate(J,[15, 25]);
                 imshowpair(I3, J); 
                 pause(0.05);
@@ -84,11 +84,13 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %                 qnew = angle2quat( pitch, roll, -yaw, 'YXZ' );
 %                 q = qnew; 
                 
-                
+% Add loop closing to the result vector               
 % remove 'left_image' at the beginning and '.png' at the end
 % result: timestamp
                 tim  = fCurrentLoop{ i };
                 timD = str2double( tim( 11:end-4 ) );
+                add = 1;
+                if (add == 1)
                 if count == 0
                     statusRe     = 1;
                     resultVector = tvec;
@@ -100,6 +102,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                     timestamps   = [ timestamps; timD ];
                 end
                 count = count + 1;
+                end
             end
         end
         

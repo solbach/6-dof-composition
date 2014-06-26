@@ -31,7 +31,7 @@ for t = tt
     
     xTempNew = prediction( xTempLast, cPlcHldr, xa1, xa2, cPlcHldr );
     xTemp = [xTemp;  xTempNew];
-       
+        
 %     Only perform state augmentation and update every n Iterations.
     if mod(t, samplingRateSLAM) == 0
         
@@ -46,6 +46,7 @@ for t = tt
 %     Let the state-, covariance and timestamp-Vector grow
         X = [ X;  Xnew ];
         C = calcCov( C, Cnew, Jac1, Jac2 );  
+                
 %     safe timestamps of the odometry corresponding to each state
         tStateOdo = [ tStateOdo; tMeasureOdo(t) ];
 
@@ -53,12 +54,13 @@ for t = tt
         xOdomLast     = XOdom( ((updateCounter-2)*7)+1: (updateCounter-1)*7 );
         [Xnew, Cnew, Jac1, Jac2] = composition(xOdomLast, cLast, xTempLast, CovRel); 
         XOdom = [XOdom, Xnew];
+
+%     Reset temporal state variable of the prediction step
+        xTemp = [0; 0; 0; 1; 0; 0; 0];
         
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
     if mod(t,loopSample) == 0  
-%     Reset temporal state variable of the prediction step
-        xTemp = [0; 0; 0; 1; 0; 0; 0];
 %     Load Stereo Images from Database 
 %       ( --> corresponding to the current timestamp of the odometry)
         [fNameLeft, fNameRight, pos, status]= getStereoImageByTimestamp(...
@@ -100,24 +102,29 @@ for t = tt
 %             odometry or vice versa.
                 [hk H zk numLC] = calculateHhk( X, tStateOdo, ...
                                                     timestampsLC, zk );  
-                                                
+                                                             
 %             If number of loop closings is equal to 0 no hk had been 
 %             calculated so cancel all update procedures
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
 
+%             DEBUGGING
+                [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
+
 %             I.   Innovation: yk = zk - hk
                   yk = innovation( zk, hk );
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
-                  Sk = H * C * H';
+%                  Build covariance Rk depending on the #Loopclosings
+                  Rk = buildRk( CovMeas, numLC);  
+                  Sk = H * C * H' + Rk;
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
 %                   K  = C * H' * inv( Sk );  
                   K  = (C * H') / Sk;
                   
 %             IV.  update state estimate: X = X + K*yk
-                  X  = X + K * yk;
+%                   X  = X + K * yk;
                   
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;

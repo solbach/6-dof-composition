@@ -1,33 +1,26 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function [LCH LCZ XREF] = absLoopClosing(X, hk, zk)
+% This function calculates depending on the Loop Closings absolutes states
+% to display them in the later in the trajectory to illustrate the LC
+% IN  : X is the whole state vector
+%       hk Loop Closing from the point of view of the state vector
+%       zk Loop Closing from the point of view of the measurement
+% OUT : LCH absolute states with respect to hk
+%       LCZ absolute state with respect to zk
+%       XREF absolute reference state
 
-function out = rosBagFileReader(c)
+XREF = X(end-6:end);
+C = zeros(7,7);
+
+numLC = length( hk ) / 7;
+
+for i = 1:numLC
+    hkTemp = hk(i*7-6:i*7);
+    LCH(i*7-6:i*7) = composition(XREF, C, hkTemp, C);
     
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-        out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%           out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end
-%     out2 = sym( out );
-%     out(1,1)
-%     size = [590, 88];
-%     out = load('bag/viso.txt', 'uint64');    
-     
-%     fid = fopen('bag/viso.txt');
-%     % read, and transpose so samevals = myvals
-%     out = fread(fid, [88 590], 'uint64')';
-%     fclose(fid);
-     
-%     A = csvread('bag/viso.txt', 0,0);
-    
-%     x3 = sym('3^(1/3)');
-%     vpa(x3)
-           
+    zkTemp = zk(i*7-6:i*7);
+    LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
+end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
