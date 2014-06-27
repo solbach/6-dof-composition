@@ -11,14 +11,14 @@ numLC = length( LCH ) / 7;
 for i = 1:numLC
 
     type = '*r';
-    plot3([XREF(1) LCH(i*7-6)], [XREF(1) LCH(i*7-5)], [XREF(1) LCH(i*7-4)], type);
+    plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
     type = '-r';
-    plot3([XREF(1) LCH(i*7-6)], [XREF(1) LCH(i*7-5)], [XREF(1) LCH(i*7-4)], type);
+    plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
     
-    type = '+g';
-    plot3([XREF(1) LCZ(i*7-6)], [XREF(1) LCZ(i*7-5)], [XREF(1) LCZ(i*7-4)], type);
+    type = '*g';
+    plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
     type = '-g';
-    plot3([XREF(1) LCZ(i*7-6)], [XREF(1) LCZ(i*7-5)], [XREF(1) LCZ(i*7-4)], type);
+    plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
 
 end
 
@@ -38,7 +38,7 @@ zlabel('z');
 
 % Plot updated state-vector
 [cX cY cZ] = stateVectorToXYZ(X);
-type = '-k';
+type = '--k';
 plot3(cX', cY', cZ', type);
 
 % Plot groundtruth

@@ -98,7 +98,7 @@ for t = tt
 %             taken from the state-vector (state estimations) corresponding
 %             to the detected loop closing. In terms of EKF this is hk. the
 %             parameter zk is important to update it inside this function.
-%             In case we have not to every loop closing a corresponding
+%             In case we do not have to every loop closing a corresponding
 %             odometry or vice versa.
                 [hk H zk numLC] = calculateHhk( X, tStateOdo, ...
                                                     timestampsLC, zk );  
@@ -108,7 +108,7 @@ for t = tt
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
 
-%             DEBUGGING
+%             DEBUGGING ( to show loopclosings )
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 
 %             I.   Innovation: yk = zk - hk
@@ -123,7 +123,7 @@ for t = tt
 %                   K  = C * H' * inv( Sk );  
                   K  = (C * H') / Sk;
                   
-%             IV.  update state estimate: X = X + K*yk
+%             IV.  Update state estimate: X = X + K*yk
 %                   X  = X + K * yk;
                   
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
