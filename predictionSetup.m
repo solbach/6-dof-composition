@@ -3,11 +3,11 @@
 X   = [0; 0; 0; 1; 0; 0; 0];
 
 % sampling rate of the whole algorithm
-samplingRateSLAM = 20;
+samplingRateSLAM = 15;
 
 % how many images should be discarded for the update to not perform a loop
 % closing with yourself? discards the n-th last images of the set of images
-imageDiscard = 1;
+imageDiscard = 4;
 
 % covariance matrix C
 C   = zeros( 7, 7 );

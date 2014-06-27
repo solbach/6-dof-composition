@@ -17,7 +17,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %           testing. The more the better
 %        numInliers      -> defines the minimum number of inliers
     numLoopClosings = 9;
-    numInliersMin   = 13;
+    numInliersMin   = 20;
 
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
@@ -48,7 +48,6 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
 % III. Perform backprojection
-            length(inlierPtsLeft)
 % III.a) Calculate 3D Points
             P3 = zeros(length( inlierPtsLeft ), 3);
             for m = 1:length( inlierPtsLeft )
@@ -79,7 +78,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                 J = imrotate(I1, 360-angle,'bilinear');
 %                 J = imtranslate(J,[15, 25]);
                 imshowpair(I3, J); 
-                pause(0.05);
+%                 pause(0.05);
 %                 [pitch roll yaw] = quat2angle(q, 'YXZ');
 %                 qnew = angle2quat( pitch, roll, -yaw, 'YXZ' );
 %                 q = qnew; 

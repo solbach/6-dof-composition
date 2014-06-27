@@ -22,7 +22,7 @@ function [inlierPtsLeft, inlierPtsRight, inlierOriginalRightUp, status] = findLo
     inlierOriginalLeft = inlierOriginalLeft(indexPairs(:, 1));
     matchedPoints2 = SIFT3(indexPairs(:, 2));
 
-%     This function will fail if we have one inlier
+%     This function will fail if we have just one inlier
     if(length(inlierOriginalLeft) > 1)
         [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
             estimateGeometricTransform(inlierOriginalLeft,matchedPoints2,'similarity');

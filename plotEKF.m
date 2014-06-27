@@ -3,18 +3,20 @@
 % get a more dynamic experience.
 
 figure(6);
-clf;
+% clf;
 hold on;
 
 numLC = length( LCH ) / 7;
 
 for i = 1:numLC
-
+% Plot Loop Closings correspondencies of the state vector (hk)
     type = '*r';
     plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
     type = '-r';
     plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
-    
+
+
+% Plot Loop Closings given by the measurement (zk)    
     type = '*g';
     plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
     type = '-g';
@@ -48,8 +50,8 @@ dX   = gt( :, 2 );
 dY   = gt( :, 3 );
 dZ   = gt( :, 4 );
 
-type = '-r';
-% plot3(dX, dY, dZ, type);
+type = '-b';
+plot3(dX, dY, dZ, type);
 hold off;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach

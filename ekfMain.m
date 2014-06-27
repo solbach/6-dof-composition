@@ -82,9 +82,12 @@ for t = tt
 %           Pass already observed Images to update function (discard the
 %           last n (--> pos - n) )
             fCurrentLoop = fLoop(1:end-imageDiscard);
-
-            [zk timestampsLC status] = update( ILeft, IRight, ...
+            status = 0;
+            if ( t > 820 )
+                [zk timestampsLC status] = update( ILeft, IRight, ...
                                                   fCurrentLoop, pathLeft );
+            end
+            
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
@@ -124,8 +127,10 @@ for t = tt
                   K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
-%                   X  = X + K * yk;
-                  
+                lad = 0;
+                if ( lad == 1 )
+                  X  = X + K * yk;
+                end
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
                   C  = ( eye( size( prodKH ) ) - prodKH ) * C;
@@ -137,7 +142,7 @@ for t = tt
               end
               numLC
               plotEKF;
-              pause(0.3);
+%               pause(0.3);
              end
           end
        end 
