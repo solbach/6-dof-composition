@@ -15,7 +15,7 @@ function [inlierPtsLeft, inlierPtsRight, inlierOriginalRightUp, status] = findLo
 %       have been found)
 
     [desc3, SIFT3] = findFeature(I3);
-    indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true);
+    indexPairs = matchFeatures(descLeft, desc3, 'Prenormalized', true, 'MatchThreshold', 80);
 
     %  Update both sides of stereo images!
     inlierOriginalRight = inlierOriginalRight(indexPairs(:, 1));

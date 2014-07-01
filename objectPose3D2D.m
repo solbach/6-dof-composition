@@ -7,17 +7,21 @@ function [tvec, q, rvec, numInliers] = objectPose3D2D(ObjP, ImgP)
 %      numInliers Number of inliers used to solve the algorithm
 
 % Camera Matrix
-    K = [749.642742046463 * 0.5, 0.0, 539.67454188334 * 0.5; ...
-           0.0, 718.738253774844 * 0.5, 410.819033898981 * 0.5; ...
-           0.0, 0.0, 1.0
-        ];
+%     K = [749.642742046463 * 0.5, 0.0, 539.67454188334 * 0.5; ...
+%            0.0, 718.738253774844 * 0.5, 410.819033898981 * 0.5; ...
+%            0.0, 0.0, 1.0
+%         ];
+    
+    P = [663.847783169875 * 0.5, 0.0, 509.298866271973 * 0.5; ...
+         0.0, 663.847783169875 * 0.5, 384.118202209473 * 0.5; ...
+         0.0, 0.0, 1.0];
     
     disCoeff = [];
 % object pose from 3D-2D point correspondences 
 % using MexOpenCV an alternative could be POSIT
 % (http://www.cfar.umd.edu/~daniel/Site_2/Code.html)
-    [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, K, disCoeff, ...
-                                              'IterationsCount', 999);
+    [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, P, disCoeff, ...
+                                              'ReprojectionError', 2.0);
 %     [rvec, tvec, inliers] = cv.solvePnPRansac(ObjP, ImgP, K);
     numInliers = size(inliers);
     rvec       = cv.Rodrigues(rvec);

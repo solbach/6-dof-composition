@@ -17,7 +17,7 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorresponde
 %       descLeft Surf Descriptors of left Image
    
 %     I.  Retrieve the locations of matched points. The SURF feature vectors are already normalized.
-    indexPairs = matchFeatures(f1, f2, 'Prenormalized', true);
+    indexPairs = matchFeatures(f1, f2, 'Prenormalized', true, 'MatchThreshold', 80);
     f1Red = f1(indexPairs(:, 1),:); 
     matchedPoints1 = vpts1(indexPairs(:, 1));
     matchedPoints2 = vpts2(indexPairs(:, 2));

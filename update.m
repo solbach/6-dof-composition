@@ -76,7 +76,12 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                 angle = 2 * acos( q(1) );
                 angle = angle * (180/pi);
                 J = imrotate(I1, 360-angle,'bilinear');
-%                 J = imtranslate(J,[15, 25]);
+                K = [749.642742046463 * 0.5, 0.0, 539.67454188334 * 0.5; ...
+                    0.0, 718.738253774844 * 0.5, 410.819033898981 * 0.5; ...
+                    0.0, 0.0, 1.0
+                    ];
+                tVecP = K * tvec;
+                J = imtranslate(J,[-tVecP(1), tVecP(2), tVecP(3)]);
                 imshowpair(I3, J); 
 %                 pause(0.05);
 %                 [pitch roll yaw] = quat2angle(q, 'YXZ');
