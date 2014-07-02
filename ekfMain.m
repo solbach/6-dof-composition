@@ -77,7 +77,9 @@ for t = tt
 %           if status == 1 corresponding stereo image pair has been
 %           found: look for loop closing
             ILeft  = imread([pathLeft '/' fNameLeft]);  
-            IRight = imread([pathRight '/' fNameRight]);  
+            IRight = imread([pathRight '/' fNameRight]); 
+            
+            fNameLeft
         
 %           Pass already observed Images to update function (discard the
 %           last n (--> pos - n) )
