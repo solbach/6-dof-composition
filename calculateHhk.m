@@ -28,7 +28,7 @@ function [hk H zk numLC] = calculateHhk( X, tStateOdo, timestampsLC, zk )
     timeRef = timestampsLC( end );
     
     posRef = find( abs( tStateOdo - timeRef ) < 100000000 );
-
+    posRef = 112;
     xRef = X( (posRef(1)*7-6):(posRef(1)*7) );
 
 %     safe the number of discarded elements

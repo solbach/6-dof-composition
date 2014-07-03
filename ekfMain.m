@@ -33,7 +33,7 @@ for t = tt
     xTemp = [xTemp;  xTempNew];
         
 %     Only perform state augmentation and update every n Iterations.
-    if mod(t, samplingRateSLAM) == 0
+    if ( (mod(t, samplingRateSLAM) == 0 ) || (t >= 2080) )
         
 %%     STATE AUGMENTATION STEP
         updateCounter = length( X ) / 7 + 1;
@@ -60,13 +60,13 @@ for t = tt
         
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
-    if mod(t,loopSample) == 0  
+    if mod(t,loopSample) == 0
 %     Load Stereo Images from Database 
 %       ( --> corresponding to the current timestamp of the odometry)
         [fNameLeft, fNameRight, pos, status]= getStereoImageByTimestamp(...
                                                     tMeasureOdo(t), ...
                                                     fLeft, fRight);
-                                                
+         t                                       
 %     safe fNameLeft as already observed image in a new vector
         fLoop{ end+1 } =  fNameLeft;
         
@@ -78,23 +78,56 @@ for t = tt
 %           found: look for loop closing
             ILeft  = imread([pathLeft '/' fNameLeft]);  
             IRight = imread([pathRight '/' fNameRight]); 
-            
-            fNameLeft
-        
+                    
 %           Pass already observed Images to update function (discard the
 %           last n (--> pos - n) )
             fCurrentLoop = fLoop(1:end-imageDiscard);
             status = 0;
-            if ( t > 820 )
+            if ( false )
                 [zk timestampsLC status] = update( ILeft, IRight, ...
                                                   fCurrentLoop, pathLeft );
+            end
+            
+            if ( t == length( aX ) )
+                loopref(1) = -2.5061685700299999e-02;
+                loopref(2) = -5.9013884093100000e-01;
+                loopref(3) = 9.8463955687999996e-02;
+                loopref(4) = 8.4426161073399997e-01; 
+                loopref(5) = -6.2113055901100002e-03;
+                loopref(6) = -9.3214105010599999e-02;
+                loopref(7) = -5.2772614389500005e-01;
+               
+                
+%                 loopref(1) = 0.0385721300908;
+%                 loopref(2) = -0.611410164052;
+%                 loopref(3) = 0.299691895725;
+%                 loopref(4) = 0.820155325534; 
+%                 loopref(5) = 0.0645235765888;
+%                 loopref(6) = -0.16744686225;
+%                 loopref(7) = -0.54327110947;
+                
+                loopref = loopref';
+                
+                looppoint(1) = 0.0;
+                looppoint(2) = 0.0;
+                looppoint(3) = 0.0;
+                looppoint(4) = 1.0;
+                looppoint(5) = 0.0;
+                looppoint(6) = 0.0;
+                looppoint(7) = 0.0;
+                
+                timestampsLC = 1330526261888036013;
+                timeRef = 1330526526087194920;
+                status = 1;
+                cova = zeros(7,7);
+                zk = relativeMotionFromAbsoluteMotionUQ(loopref, cova, looppoint, cova)
             end
             
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
 %             (left image) at the end of the timestamp vector
-                timeRef = str2double( fNameLeft( 11:end-4 ) );
+%                 timeRef = str2double( fNameLeft( 11:end-4 ) );
                 timestampsLC = [ timestampsLC; timeRef ];
 
 %             Applying the Kalman-Equations
@@ -125,7 +158,7 @@ for t = tt
                   Sk = H * C * H' + Rk;
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
-%                   K  = C * H' * inv( Sk );  
+%                   K  = C * H' * inv( Sk );  0
                   K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
@@ -136,11 +169,11 @@ for t = tt
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
                   C  = ( eye( size( prodKH ) ) - prodKH ) * C;
-                  t
-                  C2 = C;
-                  C2 = C2 / max( max( C2 ) );
-                  figure(5);
-                  imshow( C2 );
+%                   t
+%                   C2 = C;
+%                   C2 = C2 / max( max( C2 ) );
+%                   figure(5);
+%                   imshow( C2 );
               end
               numLC
               plotEKF;

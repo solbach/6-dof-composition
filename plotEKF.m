@@ -8,19 +8,27 @@ hold on;
 
 numLC = length( LCH ) / 7;
 
+                GTSTART(1) = -2.5061685700299999e-02;
+                GTSTART(2) = -5.9013884093100000e-01;
+                GTSTART(3) = 9.8463955687999996e-02;
+                GTSTART(4) = 8.4426161073399997e-01; 
+                GTSTART(5) = -6.2113055901100002e-03;
+                GTSTART(6) = -9.3214105010599999e-02;
+                GTSTART(7) = -5.2772614389500005e-01;
+
 for i = 1:numLC
 % Plot Loop Closings correspondencies of the state vector (hk)
     type = '*r';
     plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
-    type = '-r';
+    type = '--r';
     plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
 
 
 % Plot Loop Closings given by the measurement (zk)    
     type = '*g';
-    plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
-    type = '-g';
-    plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
+    plot3([GTSTART(1) LCZ(i*7-6)], [GTSTART(2) LCZ(i*7-5)], [GTSTART(3) LCZ(i*7-4)], type);
+    type = '--g';
+    plot3([GTSTART(1) LCZ(i*7-6)], [GTSTART(2) LCZ(i*7-5)], [GTSTART(3) LCZ(i*7-4)], type);
 
 end
 
@@ -34,9 +42,9 @@ ylabel('y');
 zlabel('z');
 
 % Plot pure odometry
-% [oX oY oZ] = stateVectorToXYZ(XOdom);
-% type = '-b';
-% plot3(oX', oY', oZ', type);
+[oX oY oZ] = stateVectorToXYZ(XOdom);
+type = '-g';
+plot3(oX', oY', oZ', type);
 
 % Plot updated state-vector
 [cX cY cZ] = stateVectorToXYZ(X);

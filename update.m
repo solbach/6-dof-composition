@@ -17,7 +17,7 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 %           testing. The more the better
 %        numInliers      -> defines the minimum number of inliers
     numLoopClosings = 9;
-    numInliersMin   = 20;
+    numInliersMin   = 17;
 
 % In the case that no loop closing has been found we need to asign some
 % values to the return parameters, otherwise MATLAB will strike
@@ -72,16 +72,18 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
             if( numInliers(1) >= numInliersMin )
 %                 Otherwise add it to the resultVector
 %                 Get timestamps from filename
-                figure(3);
+                
+                P = [663.847783169875 * 0.5, 0.0, 509.298866271973 * 0.5; ...
+                     0.0, 663.847783169875 * 0.5 , 384.118202209473 * 0.5; ...
+                     0.0, 0.0, 1.0 ];
+                
+                tVecP = P * tvec;
                 angle = 2 * acos( q(1) );
                 angle = angle * (180/pi);
-                J = imrotate(I1, 360-angle,'bilinear');
-                K = [749.642742046463 * 0.5, 0.0, 539.67454188334 * 0.5; ...
-                    0.0, 718.738253774844 * 0.5, 410.819033898981 * 0.5; ...
-                    0.0, 0.0, 1.0
-                    ];
-                tVecP = K * tvec;
-                J = imtranslate(J,[-tVecP(1), tVecP(2), tVecP(3)]);
+                
+                J = imtranslate(I1,[tVecP(2), tVecP(1), tVecP(3)]);
+                J = imrotate(J, angle,'crop');
+                figure(3);
                 imshowpair(I3, J); 
 %                 pause(0.05);
 %                 [pitch roll yaw] = quat2angle(q, 'YXZ');

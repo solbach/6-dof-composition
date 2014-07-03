@@ -8,6 +8,14 @@ function [LCH LCZ XREF] = absLoopClosing(X, hk, zk)
 %       LCZ absolute state with respect to zk
 %       XREF absolute reference state
 
+loopref(1) = -2.5061685700299999e-02;
+                loopref(2) = -5.9013884093100000e-01;
+                loopref(3) = 9.8463955687999996e-02;
+                loopref(4) = 8.4426161073399997e-01; 
+                loopref(5) = -6.2113055901100002e-03;
+                loopref(6) = -9.3214105010599999e-02;
+                loopref(7) = -5.2772614389500005e-01;
+
 XREF = X(end-6:end);
 C = zeros(7,7);
 
@@ -18,7 +26,9 @@ for i = 1:numLC
     LCH(i*7-6:i*7) = composition(XREF, C, hkTemp, C);
     
     zkTemp = zk(i*7-6:i*7);
-    LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
+    
+    LCZ(i*7-6:i*7) = composition(loopref, C, zkTemp, C);
+%     LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
 end
 
 end
