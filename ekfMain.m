@@ -74,20 +74,23 @@ for t = tt
 %           if status == 0 no corresponding stereo image pair has been
 %           found: skip this
         else
-%           if status == 1 corresponding stereo image pair has been
-%           found: look for loop closing
-            ILeft  = imread([pathLeft '/' fNameLeft]);  
-            IRight = imread([pathRight '/' fNameRight]); 
-                    
-%           Pass already observed Images to update function (discard the
-%           last n (--> pos - n) )
-            fCurrentLoop = fLoop(1:end-imageDiscard);
-            
-            status = 0;
+% %           if status == 1 corresponding stereo image pair has been
+% %           found: look for loop closing
+%             ILeft  = imread([pathLeft '/' fNameLeft]);  
+%             IRight = imread([pathRight '/' fNameRight]); 
+%                     
+% %           Pass already observed Images to update function (discard the
+% %           last n (--> pos - n) )
+%             fCurrentLoop = fLoop(1:end-imageDiscard);
+%             
+%             status = 0;
+% 
+%             [zk timestampsLC status] = update( ILeft, IRight, ...
+%                                                   fCurrentLoop, pathLeft );
 
-            [zk timestampsLC status] = update( ILeft, IRight, ...
-                                                  fCurrentLoop, pathLeft );
-         
+%             Test the filter with correct image registration. 
+            [zk timestampsLC status] = testUpdate( tMeasureOdo(t) )
+
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
