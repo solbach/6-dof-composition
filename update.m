@@ -42,8 +42,14 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
             findLoopClosing(inlierOriginalLeft, inlierOriginalRight, descLeft, I3);
     
         if (status == 0 && length( inlierPtsLeft ) >= numInliersMin)
-            figure(7); imshow(I3);   
-            figure(9); showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight,'montage');
+%             Show some Figures:
+            stereoFig = figure(1);
+            set(stereoFig,'name','Stereo Images','numbertitle','off');
+            showMatchedFeatures(I1,I2,inlierPtsLeft,inlierPtsRight,'montage');
+            
+            loopclosingFig = figure(2);
+            set(loopclosingFig,'name','Loop Closing','numbertitle','off');
+            showMatchedFeatures(I1,I3,inlierPtsLeft,inlierPtsRight,'montage');
         
 %       status: 0 = no error, 1 = input does not contain enough points, 
 %               2 = Not enough inliers have been found.
@@ -83,7 +89,9 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                 
                 J = imtranslate(I1,[tVecP(2), tVecP(1), tVecP(3)]);
                 J = imrotate(J, angle,'crop');
-                figure(3);
+                
+                lcMatchingFig = figure(3);
+                set(lcMatchingFig,'name','Matching: Reference and LC','numbertitle','off');
                 imshowpair(I3, J); 
 %                 pause(0.05);
 %                 [pitch roll yaw] = quat2angle(q, 'YXZ');
@@ -95,8 +103,6 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
 % result: timestamp
                 tim  = fCurrentLoop{ i };
                 timD = str2double( tim( 11:end-4 ) );
-                add = 1;
-                if (add == 1)
                 if count == 0
                     statusRe     = 1;
                     resultVector = tvec;
@@ -108,7 +114,6 @@ function [resultVector timestamps statusRe] = update( I1, I2, fCurrentLoop, path
                     timestamps   = [ timestamps; timD ];
                 end
                 count = count + 1;
-                end
             end
         end
         

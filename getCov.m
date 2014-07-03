@@ -2,32 +2,15 @@ function COV = getCov(samplingRateSLAM)
 % This function provides the covariance measured by hand of the used
 % dataset
 
-%     numIter = 105;
-      numIter = 160;
-
-%     sigmax = ( 0.339 / (2*numIter) ) * samplingRateSLAM;
-%     sigmay = ( 0.036 / (2*numIter) ) * samplingRateSLAM;
-%     sigmaz = ( 0.097 / (2*numIter) ) * samplingRateSLAM;
-%     sigmaqw = ( 0.0655719331 / (2*numIter) ) * samplingRateSLAM;
-%     sigmaqx = ( 0.42345473 / (2*numIter) ) * samplingRateSLAM;
-%     sigmaqy = ( 0.3535431 / (2*numIter) ) * samplingRateSLAM;
-%     sigmaqz = ( 0.10389277 / (2*numIter) ) * samplingRateSLAM;
-% 
-%     sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
-%     sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
-%     sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
-%     sigmaqw = ( 1.880284430914108 / (numIter) ) * samplingRateSLAM;
-%     sigmaqx = ( 0.012862493640703 / (numIter) ) * samplingRateSLAM;
-%     sigmaqy = ( 0.084501999200303 / (numIter) ) * samplingRateSLAM;
-%     sigmaqz = ( 0.671779888139042 / (numIter) ) * samplingRateSLAM;
-%     
-    sigmax = ( 0.1106*500 / (numIter) ) * samplingRateSLAM;
-    sigmay = ( 0.0111*500 / (numIter) ) * samplingRateSLAM;
-    sigmaz = ( -0.0763*500 / (numIter) ) * samplingRateSLAM;
-    sigmaqw = ( 1.880284430914108*500 / (numIter) ) * samplingRateSLAM;
-    sigmaqx = ( 0.012862493640703*500 / (numIter) ) * samplingRateSLAM;
-    sigmaqy = ( 0.084501999200303*500 / (numIter) ) * samplingRateSLAM;
-    sigmaqz = ( 0.671779888139042*500 / (numIter) ) * samplingRateSLAM;
+    numIter = 160;
+      
+    sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
+    sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
+    sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
+    sigmaqw = ( 1.880284430914108 / (numIter) ) * samplingRateSLAM;
+    sigmaqx = ( 0.012862493640703 / (numIter) ) * samplingRateSLAM;
+    sigmaqy = ( 0.084501999200303 / (numIter) ) * samplingRateSLAM;
+    sigmaqz = ( 0.671779888139042 / (numIter) ) * samplingRateSLAM;
 
     xcov = sigmax*sigmax;
     ycov = sigmay*sigmay;

@@ -33,7 +33,7 @@ for t = tt
     xTemp = [xTemp;  xTempNew];
         
 %     Only perform state augmentation and update every n Iterations.
-    if ( (mod(t, samplingRateSLAM) == 0 ) || (t >= 2080) )
+    if ( mod(t, samplingRateSLAM) == 0 )
         
 %%     STATE AUGMENTATION STEP
         updateCounter = length( X ) / 7 + 1;
@@ -82,52 +82,17 @@ for t = tt
 %           Pass already observed Images to update function (discard the
 %           last n (--> pos - n) )
             fCurrentLoop = fLoop(1:end-imageDiscard);
+            
             status = 0;
-            if ( false )
-                [zk timestampsLC status] = update( ILeft, IRight, ...
+
+            [zk timestampsLC status] = update( ILeft, IRight, ...
                                                   fCurrentLoop, pathLeft );
-            end
-            
-            if ( t == length( aX ) )
-                loopref(1) = -2.5061685700299999e-02;
-                loopref(2) = -5.9013884093100000e-01;
-                loopref(3) = 9.8463955687999996e-02;
-                loopref(4) = 8.4426161073399997e-01; 
-                loopref(5) = -6.2113055901100002e-03;
-                loopref(6) = -9.3214105010599999e-02;
-                loopref(7) = -5.2772614389500005e-01;
-               
-                
-%                 loopref(1) = 0.0385721300908;
-%                 loopref(2) = -0.611410164052;
-%                 loopref(3) = 0.299691895725;
-%                 loopref(4) = 0.820155325534; 
-%                 loopref(5) = 0.0645235765888;
-%                 loopref(6) = -0.16744686225;
-%                 loopref(7) = -0.54327110947;
-                
-                loopref = loopref';
-                
-                looppoint(1) = 0.0;
-                looppoint(2) = 0.0;
-                looppoint(3) = 0.0;
-                looppoint(4) = 1.0;
-                looppoint(5) = 0.0;
-                looppoint(6) = 0.0;
-                looppoint(7) = 0.0;
-                
-                timestampsLC = 1330526261888036013;
-                timeRef = 1330526526087194920;
-                status = 1;
-                cova = zeros(7,7);
-                zk = relativeMotionFromAbsoluteMotionUQ(loopref, cova, looppoint, cova)
-            end
-            
+         
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
 %             (left image) at the end of the timestamp vector
-%                 timeRef = str2double( fNameLeft( 11:end-4 ) );
+                timeRef = str2double( fNameLeft( 11:end-4 ) );
                 timestampsLC = [ timestampsLC; timeRef ];
 
 %             Applying the Kalman-Equations
@@ -150,7 +115,7 @@ for t = tt
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 
 %             I.   Innovation: yk = zk - hk
-                  yk = innovation( zk, hk );
+                  yk = zk - hk
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on the #Loopclosings
@@ -162,22 +127,16 @@ for t = tt
                   K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
-                lad = 0;
-                if ( lad == 1 )
                   X  = X + K * yk;
-                end
+                  
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
                   C  = ( eye( size( prodKH ) ) - prodKH ) * C;
-%                   t
-%                   C2 = C;
-%                   C2 = C2 / max( max( C2 ) );
-%                   figure(5);
-%                   imshow( C2 );
               end
-              numLC
+              
+%             [DEBUG] Called to see states during runtime 
               plotEKF;
-%               pause(0.3);
+              pause(0.3);
              end
           end
        end 
