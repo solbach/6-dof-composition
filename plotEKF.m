@@ -7,22 +7,23 @@ set(trajectoriyFig,'name','Trajectory: Blue GT, Black Odometry, Red Updated','nu
 % clf;
 hold on;
 
-numLC = length( LCH ) / 7;
+if ( exist('LCH') )
+    numLC = length( LCH ) / 7;
+    for i = 1:numLC
+    % Plot Loop Closings correspondencies of the state vector (hk)
+        type = '*c';
+        plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
+        type = '--c';
+        plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
 
-for i = 1:numLC
-% Plot Loop Closings correspondencies of the state vector (hk)
-    type = '*c';
-    plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
-    type = '--c';
-    plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
 
+    % Plot Loop Closings given by the measurement (zk)    
+        type = '*m';
+        plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
+        type = '--m';
+        plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
 
-% Plot Loop Closings given by the measurement (zk)    
-    type = '*m';
-    plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
-    type = '--m';
-    plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
-
+    end
 end
 
 % Plot Covariance

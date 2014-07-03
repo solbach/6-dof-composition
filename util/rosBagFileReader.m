@@ -7,27 +7,13 @@ function out = rosBagFileReader(c)
     if c == 1
 %         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
 %         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-        out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
+%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
 %         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%           out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
+%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
+        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
     else
         out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end
-%     out2 = sym( out );
-%     out(1,1)
-%     size = [590, 88];
-%     out = load('bag/viso.txt', 'uint64');    
-     
-%     fid = fopen('bag/viso.txt');
-%     % read, and transpose so samevals = myvals
-%     out = fread(fid, [88 590], 'uint64')';
-%     fclose(fid);
-     
-%     A = csvread('bag/viso.txt', 0,0);
-    
-%     x3 = sym('3^(1/3)');
-%     vpa(x3)
-           
+    end           
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
