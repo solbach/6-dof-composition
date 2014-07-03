@@ -28,15 +28,21 @@ function [hk H zk numLC] = calculateHhk( X, tStateOdo, timestampsLC, zk )
     timeRef = timestampsLC( end );
     
     posRef = find( abs( tStateOdo - timeRef ) < 100000000 );
+    
+    if( length( posRef ) > 1)
+        posRef = posRef( length( posRef ) );
+    end
+    
     xRef = X( (posRef(1)*7-6):(posRef(1)*7) );
-
+    
 %     safe the number of discarded elements
     disc = 0;
+    pos  = 0;
     
     for i=1:(length(timestampsLC) - 1)
         pos = find( abs( tStateOdo - timestampsLC( i ) ) < 100000000 );
         
-        if( pos(1) ~= 0 )
+        if( pos ~= 0 )
             numLC = numLC + 1;
             x1  = X( (pos(1)*7-6):(pos(1)*7) );
         

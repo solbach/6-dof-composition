@@ -66,7 +66,7 @@ for t = tt
         [fNameLeft, fNameRight, pos, status]= getStereoImageByTimestamp(...
                                                     tMeasureOdo(t), ...
                                                     fLeft, fRight);
-         t                                       
+              t                     
 %     safe fNameLeft as already observed image in a new vector
         fLoop{ end+1 } =  fNameLeft;
         
@@ -89,9 +89,11 @@ for t = tt
 %                                                   fCurrentLoop, pathLeft );
 
 %             Test the filter with correct image registration. 
-            [zk timestampsLC status] = testUpdate( tMeasureOdo(t) )
-
+            [zk timestampsLC status] = testUpdate( tMeasureOdo(t) );
+                        
             if( status == 1 )
+              plotEKF;
+              pause(0.3);
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
 %             (left image) at the end of the timestamp vector
@@ -118,7 +120,8 @@ for t = tt
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 
 %             I.   Innovation: yk = zk - hk
-                  yk = zk - hk
+%                   yk = innovation(zk, hk);
+                    yk = zk - hk;
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on the #Loopclosings
@@ -138,6 +141,7 @@ for t = tt
               end
               
 %             [DEBUG] Called to see states during runtime 
+              timestampsLC
               plotEKF;
               pause(0.3);
              end
