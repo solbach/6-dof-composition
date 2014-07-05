@@ -42,8 +42,11 @@ zlabel('z');
 
 % Plot updated state-vector
 [cX cY cZ] = stateVectorToXYZ(X);
+[pitch roll yaw] = stateVectorToPitchRollYaw(X);
+% trajectory_MFILE(cX, cY, cZ, pitch, roll, yaw, 800, 0.5);
 type = '--r';
 plot3(cX', cY', cZ', type);
+
 
 % Plot groundtruth
 % Get groundtruth
@@ -51,6 +54,16 @@ gt = rosBagFileReader(2);
 dX   = gt( :, 2 );
 dY   = gt( :, 3 );
 dZ   = gt( :, 4 );
+dq1   = gt( :, 5 );
+dq2   = gt( :, 6 );
+dq3   = gt( :, 7 );
+dqw   = gt( :, 8 );
+    
+q = [dqw, dq1, dq2, dq3];
+  
+[pitch roll yaw] = quat2angle(q, 'YXZ');
+
+trajectory_MFILE(dX, dY, dZ, pitch, roll, yaw, 800, 0);
 
 type = '-b';
 plot3(dX, dY, dZ, type);

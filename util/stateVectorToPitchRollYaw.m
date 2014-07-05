@@ -1,44 +1,17 @@
-%% Prediction Setup
-% state vector X = [ X Y Z qw qx qy qz ]
-X   = [0; 0; 0; 1; 0; 0; 0];
+function [pitch roll yaw] = stateVectorToPitchRollYaw(XState)
+% This function takes a state vector and returns three vectors with in each
+% is one dimension (x, y or z) of all positions saved 
 
-% sampling rate of the whole algorithm
-samplingRateSLAM = 2;
+    qw = XState(4 : 7 : end);
+    q1 = XState(5 : 7 : end);
+    q2 = XState(6 : 7 : end);
+    q3 = XState(7 : 7 : end);
+    
+    q = [qw, q1, q2, q3];
+    
+    [pitch roll yaw] = quat2angle(q, 'YXZ');
 
-% how many images should be discarded for the update to not perform a loop
-% closing with yourself? discards the n-th last images of the set of images
-imageDiscard = 4;
-
-% covariance matrix C
-C   = zeros( 7, 7 );
-
-% Get information about the odometry- and measurement covariance
-CovRel  = getCov(samplingRateSLAM);
-CovMeas = CovRel * 1000;
-
-% sampling rate of plotting the ellipsoids
-ellipSamp = 30;
-
-% Get Data
-data = rosBagFileReader(1);
-
-% Get absolute states
-aX      = data( :, 4 );
-aY      = data( :, 5 );
-aZ      = data( :, 6 );
-aq1     = data( :, 7 );
-aq2     = data( :, 8 );
-aq3     = data( :, 9 );
-aqw     = data( :, 10 );
-
-% Get timestamps
-tMeasureOdo = data(:, 1);
-
-% Timestamps corresponding to elements in the state vector
-tStateOdo = 0;
-
-dt = 1;
-tt = 2:dt:length( aX );
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
