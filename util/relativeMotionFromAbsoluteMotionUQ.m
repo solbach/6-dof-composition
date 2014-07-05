@@ -11,50 +11,41 @@ function [R, cov, Jac1, Jac2] = relativeMotionFromAbsoluteMotionUQ(A1, cov1, A2,
     [R cov] = composition(invA1, covIn, A2, cov2);
        
      if nargout > 2
+        x1 = A1(1);
+        y1 = A1(2); 
+        z1 = A1(3);
+        q1 = A1(4);
+        q2 = A1(5); 
+        q3 = A1(6);
+        q4 = A1(7);
+        x2 = A2(1); 
+        y2 = A2(2); 
+        z2 = A2(3); 
+        q5 = A2(4); 
+        q6 = A2(5); 
+        q7 = A2(6); 
+        q8 = A2(7);         
          
-         Jac1 = [ ...
-                [ 2*A1(6)^2 + 2*A1(7)^2 - 1, - 2*A1(4)*A1(7) - ... 
-                    2*A1(5)*A1(6), 2*A1(4)*A1(6) - 2*A1(5)*A1(7), ...
-                    2*A2(2)*A1(7) - 2*A1(2)*A1(7) + 2*A1(3)*A1(6) - 2*A2(3)*A1(6), ...
-                    2*A2(2)*A1(6) - 2*A1(2)*A1(6) - 2*A1(3)*A1(7) + 2*A2(3)*A1(7), ...
-                    4*A1(1)*A1(6) - 4*A2(1)*A1(6) - 2*A1(2)*A1(5) + 2*A2(2)*A1(5) + ...
-                    2*A1(3)*A1(4) - 2*A2(3)*A1(4), 4*A1(1)*A1(7) - 4*A2(1)*A1(7) - ...
-                    2*A1(2)*A1(4) + 2*A2(2)*A1(4) - 2*A1(3)*A1(5) + 2*A2(3)*A1(5)]
-                [ 2*A1(4)*A1(7) - 2*A1(5)*A1(6), 2*A1(5)^2 + 2*A1(7)^2 - 1, ...
-                    - 2*A1(4)*A1(5) - 2*A1(6)*A1(7), 2*A1(1)*A1(7) - ...
-                    2*A2(1)*A1(7) - 2*A1(3)*A1(5) + 2*A2(3)*A1(5), 2*A2(1)*A1(6) - ...
-                    2*A1(1)*A1(6) + 4*A1(2)*A1(5) - 4*A2(2)*A1(5) - 2*A1(3)*A1(4) + ...
-                    2*A2(3)*A1(4), 2*A2(1)*A1(5) - 2*A1(1)*A1(5) - 2*A1(3)*A1(7) + ...
-                    2*A2(3)*A1(7), 2*A1(1)*A1(4) - 2*A2(1)*A1(4) + 4*A1(2)*A1(7) - ...
-                    4*A2(2)*A1(7) - 2*A1(3)*A1(6) + 2*A2(3)*A1(6)]
-                [ - 2*A1(4)*A1(6) - 2*A1(5)*A1(7), 2*A1(4)*A1(5) - 2*A1(6)*A1(7), ...
-                    2*A1(5)^2 + 2*A1(6)^2 - 1, 2*A2(1)*A1(6) - 2*A1(1)*A1(6) + ...
-                    2*A1(2)*A1(5) - 2*A2(2)*A1(5), 2*A2(1)*A1(7) - 2*A1(1)*A1(7) + ...
-                    2*A1(2)*A1(4) - 2*A2(2)*A1(4) + 4*A1(3)*A1(5) - 4*A2(3)*A1(5), ...
-                    2*A2(1)*A1(4) - 2*A1(1)*A1(4) - 2*A1(2)*A1(7) + 2*A2(2)*A1(7) + ...
-                    4*A1(3)*A1(6) - 4*A2(3)*A1(6), ...
-                    2*A2(1)*A1(5) - 2*A1(1)*A1(5) - 2*A1(2)*A1(6) + 2*A2(2)*A1(6)]
-                [ 0, 0, 0, -A2(4), -A2(5), -A2(6), -A2(7)]
-                [ 0, 0, 0, -A2(5), A2(4), A2(7), -A2(6)]
-                [ 0, 0, 0, -A2(6), -A2(7), A2(4), A2(5)]
-                [ 0, 0, 0, -A2(7), A2(6), -A2(5), A2(4)]
-                ];
+        Jac1 = [
+[             2*conj(q3)^2 + 2*conj(q4)^2 - 1, - 2*conj(q1)*conj(q4) - 2*conj(q2)*conj(q3),   2*conj(q1)*conj(q3) - 2*conj(q2)*conj(q4), 2*y2*conj(q4) - 2*y1*conj(q4) + 2*z1*conj(q3) - 2*z2*conj(q3),                                 2*y2*conj(q3) - 2*y1*conj(q3) - 2*z1*conj(q4) + 2*z2*conj(q4), 4*x1*conj(q3) - 4*x2*conj(q3) - 2*y1*conj(q2) + 2*y2*conj(q2) + 2*z1*conj(q1) - 2*z2*conj(q1), 4*x1*conj(q4) - 4*x2*conj(q4) - 2*y1*conj(q1) + 2*y2*conj(q1) - 2*z1*conj(q2) + 2*z2*conj(q2)]
+[   2*conj(q1)*conj(q4) - 2*conj(q2)*conj(q3),             2*conj(q2)^2 + 2*conj(q4)^2 - 1, - 2*conj(q1)*conj(q2) - 2*conj(q3)*conj(q4), 2*x1*conj(q4) - 2*x2*conj(q4) - 2*z1*conj(q2) + 2*z2*conj(q2), 2*x2*conj(q3) - 2*x1*conj(q3) + 4*y1*conj(q2) - 4*y2*conj(q2) - 2*z1*conj(q1) + 2*z2*conj(q1),                                 2*x2*conj(q2) - 2*x1*conj(q2) - 2*z1*conj(q4) + 2*z2*conj(q4), 2*x1*conj(q1) - 2*x2*conj(q1) + 4*y1*conj(q4) - 4*y2*conj(q4) - 2*z1*conj(q3) + 2*z2*conj(q3)]
+[ - 2*conj(q1)*conj(q3) - 2*conj(q2)*conj(q4),   2*conj(q1)*conj(q2) - 2*conj(q3)*conj(q4),             2*conj(q2)^2 + 2*conj(q3)^2 - 1, 2*x2*conj(q3) - 2*x1*conj(q3) + 2*y1*conj(q2) - 2*y2*conj(q2), 2*x2*conj(q4) - 2*x1*conj(q4) + 2*y1*conj(q1) - 2*y2*conj(q1) + 4*z1*conj(q2) - 4*z2*conj(q2), 2*x2*conj(q1) - 2*x1*conj(q1) - 2*y1*conj(q4) + 2*y2*conj(q4) + 4*z1*conj(q3) - 4*z2*conj(q3),                                 2*x2*conj(q2) - 2*x1*conj(q2) - 2*y1*conj(q3) + 2*y2*conj(q3)]
+[                                           0,                                           0,                                           0,                                                           -q5,                                                                                           -q6,                                                                                           -q7,                                                                                           -q8]
+[                                           0,                                           0,                                           0,                                                           -q6,                                                                                            q5,                                                                                            q8,                                                                                           -q7]
+[                                           0,                                           0,                                           0,                                                           -q7,                                                                                           -q8,                                                                                            q5,                                                                                            q6]
+[                                           0,                                           0,                                           0,                                                           -q8,                                                                                            q7,                                                                                           -q6,                                                                                            q5]];
  
-         Jac2 = [ ...
-                [ 1 - 2*A1(7)^2 - 2*A1(6)^2, 2*A1(4)*A1(7) + 2*A1(5)*A1(6), ...
-                    2*A1(5)*A1(7) - 2*A1(4)*A1(6), 0, 0, 0, 0]
-                [ 2*A1(5)*A1(6) - 2*A1(4)*A1(7), 1 - 2*A1(7)^2 - 2*A1(5)^2, ...
-                    2*A1(4)*A1(5) + 2*A1(6)*A1(7), 0, 0, 0, 0]
-                [ 2*A1(4)*A1(6) + 2*A1(5)*A1(7), 2*A1(6)*A1(7) - 2*A1(4)*A1(5), ...
-                    1 - 2*A1(6)^2 - 2*A1(5)^2, 0, 0, 0, 0]
-                [ 0, 0, 0, -A1(4), -A1(5), -A1(6), -A1(7)]
-                [ 0, 0, 0,  A1(5), -A1(4), -A1(7),  A1(6)]
-                [ 0, 0, 0,  A1(6),  A1(7), -A1(4), -A1(5)]
-                [ 0, 0, 0,  A1(7), -A1(6),  A1(5), -A1(4)]
-                ];
+         
+        Jac2 = [
+[           1 - 2*conj(q4)^2 - 2*conj(q3)^2, 2*conj(q1)*conj(q4) + 2*conj(q2)*conj(q3), 2*conj(q2)*conj(q4) - 2*conj(q1)*conj(q3),         0,         0,         0,         0]
+[ 2*conj(q2)*conj(q3) - 2*conj(q1)*conj(q4),           1 - 2*conj(q4)^2 - 2*conj(q2)^2, 2*conj(q1)*conj(q2) + 2*conj(q3)*conj(q4),         0,         0,         0,         0]
+[ 2*conj(q1)*conj(q3) + 2*conj(q2)*conj(q4), 2*conj(q3)*conj(q4) - 2*conj(q1)*conj(q2),           1 - 2*conj(q3)^2 - 2*conj(q2)^2,         0,         0,         0,         0]
+[                                         0,                                         0,                                         0, -conj(q1), -conj(q2), -conj(q3), -conj(q4)]
+[                                         0,                                         0,                                         0,  conj(q2), -conj(q1), -conj(q4),  conj(q3)]
+[                                         0,                                         0,                                         0,  conj(q3),  conj(q4), -conj(q1), -conj(q2)]
+[                                         0,                                         0,                                         0,  conj(q4), -conj(q3),  conj(q2), -conj(q1)]];
+ 
      end
-    
-    
     
 end
 
@@ -66,7 +57,7 @@ function f()
     x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
     cov1  = zeros( 7, 7 );
     cov2  = zeros( 7, 7 );
-    [p_r cov] = relativeMotionFromAbsoluteMotionUQ(x1, cov1, x2, cov2)
+    [p_r cov] = relativeMotionFromAbsoluteMotionUQ(x1, cov1, x2, cov2);
     Jac1 = jacobian(p_r, x1)
     Jac2 = jacobian(p_r, x2)
 end
