@@ -28,28 +28,23 @@ function [Xminus cov] = inversion(X, C)
                -qinv' ];
                
      if nargout > 1
-        Jac = [...
-               [ 2*X(6)^2 + 2*X(7)^2 - 1, - 2*X(4)*X(7) - 2*X(5)*X(6), ...
-                    2*X(4)*X(6) - 2*X(5)*X(7), 2*X(3)*X(6) - 2*X(2)*X(7), ...
-                    - 2*X(2)*X(6) - 2*X(3)*X(7), ...
-                    4*X(1)*X(6) - 2*X(2)*X(5) + 2*X(3)*X(4), ...
-                    4*X(1)*X(7) - 2*X(2)*X(4) - 2*X(3)*X(5)]
-               [ 2*X(4)*X(7) - 2*X(5)*X(6), 2*X(5)^2 + 2*X(7)^2 - 1, ...
-                    - 2*X(4)*X(5) - 2*X(6)*X(7), ...
-                    2*X(1)*X(7) - 2*X(3)*X(5), ...
-                    4*X(2)*X(5) - 2*X(1)*X(6) - 2*X(3)*X(4), ...
-                    - 2*X(1)*X(5) - 2*X(3)*X(7), ...
-                    2*X(1)*X(4) + 4*X(2)*X(7) - 2*X(3)*X(6)]
-               [ - 2*X(4)*X(6) - 2*X(5)*X(7),   2*X(4)*X(5) - 2*X(6)*X(7), ...
-                    2*X(5)^2 + 2*X(6)^2 - 1, 2*X(2)*X(5) - 2*X(1)*X(6), ...
-                    2*X(2)*X(4) - 2*X(1)*X(7) + 4*X(3)*X(5), ...
-                    4*X(3)*X(6) - 2*X(2)*X(7) - 2*X(1)*X(4), ...
-                    - 2*X(1)*X(5) - 2*X(2)*X(6)]
-               [ 0, 0, 0, -1, 0, 0, 0]
-               [ 0, 0, 0, 0, 1, 0, 0]
-               [ 0, 0, 0, 0, 0, 1, 0]
-               [ 0, 0, 0, 0, 0, 0, 1]];
-           
+        x1 = X(1);
+        y1 = X(2); 
+        z1 = X(3);
+        q1 = X(4);
+        q2 = X(5); 
+        q3 = X(6);
+        q4 = X(7);
+        
+       Jac =[ 
+[             2*conj(q3)^2 + 2*conj(q4)^2 - 1, - 2*conj(q1)*conj(q4) - 2*conj(q2)*conj(q3),   2*conj(q1)*conj(q3) - 2*conj(q2)*conj(q4), 2*z1*conj(q3) - 2*y1*conj(q4),               - 2*y1*conj(q3) - 2*z1*conj(q4), 4*x1*conj(q3) - 2*y1*conj(q2) + 2*z1*conj(q1), 4*x1*conj(q4) - 2*y1*conj(q1) - 2*z1*conj(q2)]
+[   2*conj(q1)*conj(q4) - 2*conj(q2)*conj(q3),             2*conj(q2)^2 + 2*conj(q4)^2 - 1, - 2*conj(q1)*conj(q2) - 2*conj(q3)*conj(q4), 2*x1*conj(q4) - 2*z1*conj(q2), 4*y1*conj(q2) - 2*x1*conj(q3) - 2*z1*conj(q1),               - 2*x1*conj(q2) - 2*z1*conj(q4), 2*x1*conj(q1) + 4*y1*conj(q4) - 2*z1*conj(q3)]
+[ - 2*conj(q1)*conj(q3) - 2*conj(q2)*conj(q4),   2*conj(q1)*conj(q2) - 2*conj(q3)*conj(q4),             2*conj(q2)^2 + 2*conj(q3)^2 - 1, 2*y1*conj(q2) - 2*x1*conj(q3), 2*y1*conj(q1) - 2*x1*conj(q4) + 4*z1*conj(q2), 4*z1*conj(q3) - 2*y1*conj(q4) - 2*x1*conj(q1),               - 2*x1*conj(q2) - 2*y1*conj(q3)]
+[                                           0,                                           0,                                           0,                            -1,                                             0,                                             0,                                             0]
+[                                           0,                                           0,                                           0,                             0,                                             1,                                             0,                                             0]
+[                                           0,                                           0,                                           0,                             0,                                             0,                                             1,                                             0]
+[                                           0,                                           0,                                           0,                             0,                                             0,                                             0,                                             1]];
+ 
          cov = Jac * C * transpose( Jac );
   
      end
@@ -62,7 +57,7 @@ function f()
     syms x1 y1 z1 q1 q2 q3 q4;
     x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
     cov = zeros( 7,7 );
-    [p_r cov] = inversion(x1, cov)
+    p_r = inversion(x1, cov);
     Jac = jacobian(p_r, x1)
 end
 

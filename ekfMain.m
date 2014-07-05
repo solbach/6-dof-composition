@@ -85,11 +85,11 @@ for t = tt
 %             
 %             status = 0;
 % 
-%             [zk timestampsLC status] = update( ILeft, IRight, ...
+%             [zk timestampsLC status] = imageRegistration( ILeft, IRight, ...
 %                                                   fCurrentLoop, pathLeft );
 
 %             Test the filter with correct image registration. 
-            [zk timestampsLC status] = testUpdate( tMeasureOdo(t) );
+            [zk timestampsLC status] = testImageRegistration( tMeasureOdo(t) );
                         
             if( status == 1 )
               plotEKF;
@@ -120,8 +120,8 @@ for t = tt
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 
 %             I.   Innovation: yk = zk - hk
-%                   yk = innovation(zk, hk);
-                    yk = zk - hk;
+                  yk = innovation(zk, hk);
+%                     yk = zk - hk;
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on the #Loopclosings
@@ -129,8 +129,8 @@ for t = tt
                   Sk = H * C * H' + Rk;
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
-%                   K  = C * H' * inv( Sk );  0
-                  K  = (C * H') / Sk;
+                  K  = C * H' * inv( Sk );
+%                   K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
                   X  = X + K * yk;
@@ -143,7 +143,7 @@ for t = tt
 %             [DEBUG] Called to see states during runtime 
               timestampsLC
               plotEKF;
-              pause(0.3);
+              drawnow;
              end
           end
        end 

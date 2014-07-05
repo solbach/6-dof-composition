@@ -3,7 +3,7 @@
 X   = [0; 0; 0; 1; 0; 0; 0];
 
 % sampling rate of the whole algorithm
-samplingRateSLAM = 2;
+samplingRateSLAM = 1;
 
 % how many images should be discarded for the update to not perform a loop
 % closing with yourself? discards the n-th last images of the set of images
@@ -14,7 +14,7 @@ C   = zeros( 7, 7 );
 
 % Get information about the odometry- and measurement covariance
 CovRel  = getCov(samplingRateSLAM);
-CovMeas = CovRel/10000;
+CovMeas = CovRel * 1000;
 
 % sampling rate of plotting the ellipsoids
 ellipSamp = 30;
