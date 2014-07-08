@@ -1,13 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALISATION
+clear;
 
 predictionSetup;
 updateSetup;
 
-percent  = 0;
-XOdom    = [0; 0; 0; 1; 0; 0; 0];
-xTemp    = [0; 0; 0; 1; 0; 0; 0];
-cPlcHldr = zeros( 7, 7 );
+percent   = 0;
+XOdom     = [0; 0; 0; 1; 0; 0; 0];
+xTemp     = [0; 0; 0; 1; 0; 0; 0];
+cPlcHldr  = zeros( 7, 7 );
 tStateOdo = tMeasureOdo(1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -17,10 +18,12 @@ for t = tt
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
     q1 = [aqw(t-1), aq1(t-1), aq2(t-1), aq3(t-1)];   
-    q1 = quatNormal( q1 );
+    q1 = quatNormal( q1 );    
+    q1 = addAngleToQuaternion(q1, 0, 0, pi/2);
         
     q2 = [aqw(t), aq1(t), aq2(t), aq3(t)];
-    q2 = quatNormal( q2 );
+    q2 = quatNormal( q2 );    
+    q2 = addAngleToQuaternion(q2, 0, 0, pi/2);
         
 %     State Vectors (x, y, z, qw, qx, qy, qz)
     xa1  = [ aX(t-1), aY(t-1), aZ(t-1), q1(1), q1(2), q1(3), q1(4) ];
@@ -92,8 +95,6 @@ for t = tt
             [zk timestampsLC status] = testImageRegistration( tMeasureOdo(t) );
                         
             if( status == 1 )
-              plotEKF;
-              pause(0.3);
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
 %             (left image) at the end of the timestamp vector
@@ -120,8 +121,8 @@ for t = tt
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 
 %             I.   Innovation: yk = zk - hk
-                  yk = innovation(zk, hk);
-%                     yk = zk - hk;
+%                   yk = innovation(zk, hk);
+                    yk = zk - hk;
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on the #Loopclosings
@@ -130,18 +131,19 @@ for t = tt
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
                   K  = C * H' * inv( Sk );
-%                   K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
+
+                  plotEKF;
+                  drawnow;
                   X  = X + K * yk;
-                  
+                                    
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
                   C  = ( eye( size( prodKH ) ) - prodKH ) * C;
               end
               
 %             [DEBUG] Called to see states during runtime 
-              timestampsLC
               plotEKF;
               drawnow;
              end

@@ -20,7 +20,7 @@ sizeC = length(C)/7;
     C( (sizeC+1)*7-6:(sizeC+1)*7, (sizeC+1)*7-6:(sizeC+1)*7 ) = Cnew;
 
 % Put information to the last column and row of C
-    for i=1:sizeC
+%     for i=1:sizeC
 % %     column --> C(i,n+1) = C(i,n)*Jac1'
 %         C( i*7-6:i*7, (sizeC+1)*7-6:(sizeC+1)*7 ) = C( i*7-6:i*7, sizeC*7-6:sizeC*7 ) ...
 %                                                                    * Jac1';

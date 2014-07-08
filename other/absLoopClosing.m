@@ -19,6 +19,7 @@ for i = 1:numLC
     
     zkTemp = zk(i*7-6:i*7);
     LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
+    
 end
 
 end

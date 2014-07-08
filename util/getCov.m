@@ -16,10 +16,10 @@ function COV = getCov(samplingRateSLAM)
     sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
     sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
     sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
-    sigmaqw = ( 1.880284430914108 / (numIter) ) * samplingRateSLAM;
-    sigmaqx = ( 0.012862493640703 / (numIter) ) * samplingRateSLAM;
-    sigmaqy = ( 0.084501999200303 / (numIter) ) * samplingRateSLAM;
-    sigmaqz = ( 0.671779888139042 / (numIter) ) * samplingRateSLAM;
+    sigmaqw = ( 0.010284430914108 / (numIter*1000) ) * samplingRateSLAM;
+    sigmaqx = ( 0.012862493640703 / (numIter*1000) ) * samplingRateSLAM;
+    sigmaqy = ( 0.014501999200303 / (numIter*1000) ) * samplingRateSLAM;
+    sigmaqz = ( 0.011779888139042 / (numIter*1000) ) * samplingRateSLAM;
 
     xcov = sigmax*sigmax;
     ycov = sigmay*sigmay;

@@ -41,9 +41,9 @@ zlabel('z');
 % plot3(oX', oY', oZ', type);
 
 % Plot updated state-vector
-[cX cY cZ] = stateVectorToXYZ(X);
-[pitch roll yaw] = stateVectorToPitchRollYaw(X);
-% trajectory_MFILE(cX, cY, cZ, pitch, roll, yaw, 800, 0.5);
+[cX, cY, cZ] = stateVectorToXYZ(X);
+[pitch, roll, yaw] = stateVectorToPitchRollYaw(X);
+trajectory_MFILE(cX, cY, cZ, pitch, roll, yaw, 800, 0.5);
 type = '--r';
 plot3(cX', cY', cZ', type);
 
@@ -60,16 +60,20 @@ dq3   = gt( :, 7 );
 dqw   = gt( :, 8 );
     
 q = [dqw, dq1, dq2, dq3];
-  
-[pitch roll yaw] = quat2angle(q, 'YXZ');
 
-trajectory_MFILE(dX, dY, dZ, pitch, roll, yaw, 800, 0);
+% Add 90 degree
+q = addAngleToQuaternion(q, 0, 0, pi/2);
 
+[pitch, roll, yaw] = quat2angle(q, 'YXZ');
+
+% trajectory_MFILE(dX, dY, dZ, pitch, roll, yaw, 800, 0);
+[dX, dY, dZ] = rotatePositions(dX, dY, dZ, 0, 0, pi/2);
 type = '-b';
 plot3(dX, dY, dZ, type);
-hold off;
 
+hold off;
 axis equal;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.

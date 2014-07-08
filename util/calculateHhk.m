@@ -40,8 +40,8 @@ function [hk H zk numLC] = calculateHhk( X, tStateOdo, timestampsLC, zk )
     pos  = 0;
     
     for i=1:(length(timestampsLC) - 1)
-        pos = max( find( abs( tStateOdo - timestampsLC( i ) ) < 100000000 ) );
-        pos
+        pos = max( find( abs( tStateOdo - timestampsLC( i ) ) < 100000000) );
+        
         if( pos ~= 0 )
             numLC = numLC + 1;
             x1  = X( (pos(1)*7-6):(pos(1)*7) );

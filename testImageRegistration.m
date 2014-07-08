@@ -25,6 +25,16 @@ function [zk timestampsLC status] = testImageRegistration(refTime)
         zk(6) = data(posRef, 7);
         zk(7) = data(posRef, 8);
         
+%       TESTING:
+        q = zk(4:7);
+        t = zk(1:3);
+        q = addAngleToQuaternion(q, 0, 0, pi/2);
+%         zk(4:7) = q;
+        
+        R = angle2dcm( 0, 0, pi/2, 'YXZ' );
+        t = R * t';    
+        zk(1:3) = t(1:3);
+        
         zk = zk';
         
         status = 1;
