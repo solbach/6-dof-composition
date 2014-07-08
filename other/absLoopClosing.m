@@ -1,4 +1,4 @@
-function [LCH LCZ XREF] = absLoopClosing(X, hk, zk)
+function [LCH LCZ XREF] = absLoopClosing(X, hk, zk, LCH, LCZ, XREF)
 % This function calculates depending on the Loop Closings absolutes states
 % to display them in the later in the trajectory to illustrate the LC
 % IN  : X is the whole state vector
@@ -8,17 +8,23 @@ function [LCH LCZ XREF] = absLoopClosing(X, hk, zk)
 %       LCZ absolute state with respect to zk
 %       XREF absolute reference state
 
-XREF = X(end-6:end);
 C = zeros(7,7);
 
+if ( LCH(1) == 0 )
+    allreadyFound = length(LCH)-7;
+else
+    allreadyFound = length(LCH)
+end
 numLC = length( hk ) / 7;
+
+XREF(allreadyFound+1:allreadyFound+7) = X(end-6:end);
 
 for i = 1:numLC
     hkTemp = hk(i*7-6:i*7);
-    LCH(i*7-6:i*7) = composition(XREF, C, hkTemp, C);
+    LCH(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, hkTemp, C);
     
     zkTemp = zk(i*7-6:i*7);
-    LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
+    LCZ(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, zkTemp, C);
     
 end
 

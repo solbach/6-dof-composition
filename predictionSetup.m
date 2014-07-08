@@ -22,7 +22,21 @@ ellipSamp = 30;
 % Get Data
 data = rosBagFileReader(1);
 
+
+% Put some noise (due to too good odometry)
+a = 1.0;
+b = 1.0;
+r = (b-a).*rand(length(data( :, 4 )),1) + a;
+
 % Get absolute states
+% aX      = data( :, 4 ) .* r;
+% aY      = data( :, 5 ) .* r;
+% aZ      = data( :, 6 ) .* r;
+% aq1     = data( :, 7 ) .* r;
+% aq2     = data( :, 8 ) .* r;
+% aq3     = data( :, 9 ) .* r;
+% aqw     = data( :, 10 ) .* r;
+
 aX      = data( :, 4 );
 aY      = data( :, 5 );
 aZ      = data( :, 6 );

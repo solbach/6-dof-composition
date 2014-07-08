@@ -4,7 +4,8 @@ function COV = getCov(samplingRateSLAM)
 
     numIter = 160;
 %       numIter = 1600000;
-      
+
+%       ORIGINAL
 %     sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
 %     sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
 %     sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
@@ -12,14 +13,25 @@ function COV = getCov(samplingRateSLAM)
 %     sigmaqx = ( 0.012862493640703 / (numIter) ) * samplingRateSLAM;
 %     sigmaqy = ( 0.084501999200303 / (numIter) ) * samplingRateSLAM;
 %     sigmaqz = ( 0.671779888139042 / (numIter) ) * samplingRateSLAM;
+     
+%       ADAPTED
+%     sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
+%     sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
+%     sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
+%     sigmaqw = ( 0.010284430914108 / (numIter*1000) ) * samplingRateSLAM;
+%     sigmaqx = ( 0.012862493640703 / (numIter*1000) ) * samplingRateSLAM;
+%     sigmaqy = ( 0.014501999200303 / (numIter*1000) ) * samplingRateSLAM;
+%     sigmaqz = ( 0.011779888139042 / (numIter*1000) ) * samplingRateSLAM;
+
+%       FOR TESTING 
+    sigmax = 1.0e-4;
+    sigmay = 1.0e-4;
+    sigmaz = 1.0e-4;
+    sigmaqw = 1.0e-4;
+    sigmaqx = 1.0e-4;
+    sigmaqy = 1.0e-4;
+    sigmaqz = 1.0e-4;
     
-    sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
-    sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
-    sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
-    sigmaqw = ( 0.010284430914108 / (numIter*1000) ) * samplingRateSLAM;
-    sigmaqx = ( 0.012862493640703 / (numIter*1000) ) * samplingRateSLAM;
-    sigmaqy = ( 0.014501999200303 / (numIter*1000) ) * samplingRateSLAM;
-    sigmaqz = ( 0.011779888139042 / (numIter*1000) ) * samplingRateSLAM;
 
     xcov = sigmax*sigmax;
     ycov = sigmay*sigmay;

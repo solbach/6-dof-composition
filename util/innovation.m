@@ -1,7 +1,7 @@
 function yk = innovation(zk, hk)
 % This function applies a pure innovation to the position (x,y,z) and a
 % special innovation to the orientation part (qw, q1, q2, q3) as follows:
-%   quaternions --> euler angles --> diff(pitch, roll, yaw) --> quaternion
+%   quaternions --> abs(q1) - abs(q2)
 % INPUT : zk loopclosings from imageregistrations
 %         hk loopclosing from statevector
 % OUTPUT: yk innovation calculated as stated above
@@ -10,28 +10,12 @@ yk = zk - hk;
 
 for i=1:length(zk)/7
 
-%          show rotation of zk and hk
-         rotZK = zk(i*7-3:i*7);
-         rotHK = hk(i*7-3:i*7);         
-
-         [pitchZ rollZ yawZ] = quat2angle(rotZK', 'YXZ');
-         [pitchZ rollZ yawZ] * 180/pi;
+    qZk = zk(i*7-3:i*7);
+    qHk = hk(i*7-3:i*7);   
          
-         [pitchH rollH yawH] = quat2angle(rotHK', 'YXZ');
-         [pitchH rollH yawH] * 180/pi;  
-         
-         pitchDiff = pitchZ - pitchH;
-         rollDiff = rollZ - rollH;
-         yawDiff = yawZ - yawH;         
+    yk(i*7-3:i*7) = abs(qZk) - abs(qHk);     
 
-         qDiff = angle2quat( pitchDiff, rollDiff, yawDiff, 'YXZ' );         
-
-         yk(i*7-3:i*7) = qDiff;         
-
-         in = yk(i*7-6:i*7);
-         s = sum( abs( in ) );
-
-     end
+end
 
 end
 

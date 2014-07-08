@@ -11,6 +11,11 @@ xTemp     = [0; 0; 0; 1; 0; 0; 0];
 cPlcHldr  = zeros( 7, 7 );
 tStateOdo = tMeasureOdo(1);
 
+counterUpdates = 0;
+LCH  = [0, 0, 0, 0, 0, 0, 0]; 
+LCZ  = [0, 0, 0, 0, 0, 0, 0];
+XREF = [0, 0, 0, 0, 0, 0, 0];
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN LOOP
 for t = tt
@@ -118,34 +123,37 @@ for t = tt
 %             perform UPDATE for all found loop closings
 
 %             DEBUGGING ( to show loopclosings )
-                [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
+                [LCH LCZ XREF] = absLoopClosing(X, hk, zk, LCH, LCZ, XREF);
 
 %             I.   Innovation: yk = zk - hk
 %                   yk = innovation(zk, hk);
-                    yk = zk - hk;
+                    yk = abs(zk) - abs(hk);
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
-%                  Build covariance Rk depending on the #Loopclosings
+%                  Build covariance Rk depending on #Loopclosings
                   Rk = buildRk( CovMeas, numLC);  
                   Sk = H * C * H' + Rk;
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
+%                   Sk = eye(7,7);
                   K  = C * H' * inv( Sk );
                   
 %             IV.  Update state estimate: X = X + K*yk
 
-                  plotEKF;
-                  drawnow;
+%                   plotEKF;
+%                   drawnow;
                   X  = X + K * yk;
+                  d = max(max(K))
                                     
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
                   C  = ( eye( size( prodKH ) ) - prodKH ) * C;
+                  counterUpdates = counterUpdates + 1
               end
               
 %             [DEBUG] Called to see states during runtime 
-              plotEKF;
-              drawnow;
+%               plotEKF;
+%               drawnow;
              end
           end
        end 
