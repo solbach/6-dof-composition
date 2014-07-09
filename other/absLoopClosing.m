@@ -10,21 +10,29 @@ function [LCH LCZ XREF] = absLoopClosing(X, hk, zk, LCH, LCZ, XREF)
 
 C = zeros(7,7);
 
-if ( LCH(1) == 0 )
-    allreadyFound = length(LCH)-7;
-else
-    allreadyFound = length(LCH)
-end
+% if ( LCH(1) == 0 )
+%     allreadyFound = length(LCH)-7;
+% else
+%     allreadyFound = length(LCH)
+% end
 numLC = length( hk ) / 7;
+% 
+% XREF(allreadyFound+1:allreadyFound+7) = X(end-6:end);
 
-XREF(allreadyFound+1:allreadyFound+7) = X(end-6:end);
+XREF = X(end-6:end);
 
 for i = 1:numLC
+%     hkTemp = hk(i*7-6:i*7);
+%     LCH(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, hkTemp, C);
+%     
+%     zkTemp = zk(i*7-6:i*7);
+%     LCZ(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, zkTemp, C);
+
     hkTemp = hk(i*7-6:i*7);
-    LCH(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, hkTemp, C);
+    LCH(i*7-6:i*7) = composition(XREF, C, hkTemp, C);
     
     zkTemp = zk(i*7-6:i*7);
-    LCZ(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, zkTemp, C);
+    LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
     
 end
 

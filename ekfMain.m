@@ -126,8 +126,8 @@ for t = tt
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk, LCH, LCZ, XREF);
 
 %             I.   Innovation: yk = zk - hk
-%                   yk = innovation(zk, hk);
-                    yk = abs(zk) - abs(hk);
+                  yk = innovation(zk, hk);
+%                     yk = abs(zk) - abs(hk);
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on #Loopclosings
@@ -140,8 +140,8 @@ for t = tt
                   
 %             IV.  Update state estimate: X = X + K*yk
 
-%                   plotEKF;
-%                   drawnow;
+                  plotEKF;
+                  drawnow;
                   X  = X + K * yk;
                   d = max(max(K))
                                     

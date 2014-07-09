@@ -12,16 +12,16 @@ if ( exist('LCH') )
     for i = 1:numLC
     % Plot Loop Closings correspondencies of the state vector (hk)
         type = '*c';
-        plot3([XREF(i*7-6) LCH(i*7-6)], [XREF(i*7-5) LCH(i*7-5)], [XREF(i*7-4) LCH(i*7-4)], type);
+        plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
         type = '--c';
-        plot3([XREF(i*7-6) LCH(i*7-6)], [XREF(i*7-5) LCH(i*7-5)], [XREF(i*7-4) LCH(i*7-4)], type);
+        plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
 
 
     % Plot Loop Closings given by the measurement (zk)    
         type = '*m';
-        plot3([XREF(i*7-6) LCZ(i*7-6)], [XREF(i*7-5) LCZ(i*7-5)], [XREF(i*7-4) LCZ(i*7-4)], type);
+        plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
         type = '--m';
-        plot3([XREF(i*7-6) LCZ(i*7-6)], [XREF(i*7-5) LCZ(i*7-5)], [XREF(i*7-4) LCZ(i*7-4)], type);
+        plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
 
     end
 end
@@ -42,8 +42,8 @@ zlabel('z');
 
 % Plot updated state-vector
 [cX, cY, cZ] = stateVectorToXYZ(X);
-[pitch, roll, yaw] = stateVectorToPitchRollYaw(X);
-trajectory_MFILE(cX, cY, cZ, pitch, roll, yaw, 800, 0.5);
+% [pitch, roll, yaw] = stateVectorToPitchRollYaw(X);
+% trajectory_MFILE(cX, cY, cZ, pitch, roll, yaw, 800, 0.5);
 type = '--r';
 plot3(cX', cY', cZ', type);
 

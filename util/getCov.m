@@ -24,13 +24,13 @@ function COV = getCov(samplingRateSLAM)
 %     sigmaqz = ( 0.011779888139042 / (numIter*1000) ) * samplingRateSLAM;
 
 %       FOR TESTING 
-    sigmax = 1.0e-4;
-    sigmay = 1.0e-4;
-    sigmaz = 1.0e-4;
-    sigmaqw = 1.0e-4;
-    sigmaqx = 1.0e-4;
-    sigmaqy = 1.0e-4;
-    sigmaqz = 1.0e-4;
+    sigmax = 1.0e-3;
+    sigmay = 1.0e-3;
+    sigmaz = 1.0e-3;
+    sigmaqw = 1.0e-3;
+    sigmaqx = 1.0e-3;
+    sigmaqy = 1.0e-3;
+    sigmaqz = 1.0e-3;
     
 
     xcov = sigmax*sigmax;

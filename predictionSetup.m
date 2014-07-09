@@ -3,7 +3,7 @@
 X   = [0; 0; 0; 1; 0; 0; 0];
 
 % sampling rate of the whole algorithm
-samplingRateSLAM = 2;
+samplingRateSLAM = 1;
 
 % how many images should be discarded for the update to not perform a loop
 % closing with yourself? discards the n-th last images of the set of images
@@ -14,7 +14,7 @@ C   = zeros( 7, 7 );
 
 % Get information about the odometry- and measurement covariance
 CovRel  = getCov(samplingRateSLAM);
-CovMeas = CovRel * 1000;
+CovMeas = CovRel * 10000;
 
 % sampling rate of plotting the ellipsoids
 ellipSamp = 30;
@@ -25,25 +25,25 @@ data = rosBagFileReader(1);
 
 % Put some noise (due to too good odometry)
 a = 1.0;
-b = 1.0;
+b = 1.05;
 r = (b-a).*rand(length(data( :, 4 )),1) + a;
 
 % Get absolute states
-% aX      = data( :, 4 ) .* r;
-% aY      = data( :, 5 ) .* r;
-% aZ      = data( :, 6 ) .* r;
-% aq1     = data( :, 7 ) .* r;
-% aq2     = data( :, 8 ) .* r;
-% aq3     = data( :, 9 ) .* r;
-% aqw     = data( :, 10 ) .* r;
+aX      = data( :, 4 ) .* r;
+aY      = data( :, 5 ) .* r;
+aZ      = data( :, 6 ) .* r;
+aq1     = data( :, 7 ) .* r;
+aq2     = data( :, 8 ) .* r;
+aq3     = data( :, 9 ) .* r;
+aqw     = data( :, 10 ) .* r;
 
-aX      = data( :, 4 );
-aY      = data( :, 5 );
-aZ      = data( :, 6 );
-aq1     = data( :, 7 );
-aq2     = data( :, 8 );
-aq3     = data( :, 9 );
-aqw     = data( :, 10 );
+% aX      = data( :, 4 );
+% aY      = data( :, 5 );
+% aZ      = data( :, 6 );
+% aq1     = data( :, 7 );
+% aq2     = data( :, 8 );
+% aq3     = data( :, 9 );
+% aqw     = data( :, 10 );
 
 % Get timestamps
 tMeasureOdo = data(:, 1);
