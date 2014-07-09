@@ -48,7 +48,7 @@ for t = tt
         xTempLast = xTemp( ((predictionCounter-1)*7)+1: predictionCounter*7 );
         xLast     = X( ((updateCounter-2)*7)+1: (updateCounter-1)*7 );
         cLast     = C( (updateCounter-1)*7-6:(updateCounter-1)*7, (updateCounter-1)*7-6:(updateCounter-1)*7 );
-
+%         cLast = eye(7,7);
         [Xnew, Cnew, Jac1, Jac2] = composition(xLast, cLast, xTempLast, CovRel); 
 
 %     Let the state-, covariance and timestamp-Vector grow
@@ -131,7 +131,7 @@ for t = tt
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on #Loopclosings
-                  Rk = buildRk( CovMeas, numLC);  
+                  Rk = buildRk( CovMeas, numLC );  
                   Sk = H * C * H' + Rk;
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
@@ -142,13 +142,19 @@ for t = tt
 
                   plotEKF;
                   drawnow;
+                 upda = 0;
+                 if (upda == 1)
                   X  = X + K * yk;
                   d = max(max(K))
+                  
+                  plotEKF;
+                  drawnow;
                                     
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
                   C  = ( eye( size( prodKH ) ) - prodKH ) * C;
                   counterUpdates = counterUpdates + 1
+                 end
               end
               
 %             [DEBUG] Called to see states during runtime 
@@ -163,6 +169,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PLOT EVERYTHING
 plotEKF;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Evaluation
+calculateError;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB

@@ -2,10 +2,11 @@ function COV = getCov(samplingRateSLAM)
 % This function provides the covariance measured by hand of the used
 % dataset
 
-    numIter = 160;
+      numIter = 26.63;
+%     numIter = 160;
 %       numIter = 1600000;
 
-%       ORIGINAL
+%       ORIGINAL ( First Try )
 %     sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
 %     sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
 %     sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
@@ -14,7 +15,7 @@ function COV = getCov(samplingRateSLAM)
 %     sigmaqy = ( 0.084501999200303 / (numIter) ) * samplingRateSLAM;
 %     sigmaqz = ( 0.671779888139042 / (numIter) ) * samplingRateSLAM;
      
-%       ADAPTED
+%       ADAPTED ( Second Try )
 %     sigmax = ( 0.1106 / (numIter) ) * samplingRateSLAM;
 %     sigmay = ( 0.0111 / (numIter) ) * samplingRateSLAM;
 %     sigmaz = ( -0.0763 / (numIter) ) * samplingRateSLAM;
@@ -23,16 +24,25 @@ function COV = getCov(samplingRateSLAM)
 %     sigmaqy = ( 0.014501999200303 / (numIter*1000) ) * samplingRateSLAM;
 %     sigmaqz = ( 0.011779888139042 / (numIter*1000) ) * samplingRateSLAM;
 
-%       FOR TESTING 
-    sigmax = 1.0e-3;
-    sigmay = 1.0e-3;
-    sigmaz = 1.0e-3;
-    sigmaqw = 1.0e-3;
-    sigmaqx = 1.0e-3;
-    sigmaqy = 1.0e-3;
-    sigmaqz = 1.0e-3;
-    
+%       FOR TESTING ( Third Try )
+    jitter = 1.0;
+    sigmax = 1.0e-3 * jitter;
+    sigmay = 1.0e-3 * jitter;
+    sigmaz = 1.0e-3 * jitter;
+    sigmaqw = 1.0e-3 * jitter;
+    sigmaqx = 1.0e-3 * jitter;
+    sigmaqy = 1.0e-3 * jitter;
+    sigmaqz = 1.0e-3 * jitter;
 
+%       REAL :-D
+%     sigmax = ( 0.0360267217 / (numIter) ) * samplingRateSLAM;
+%     sigmay = ( 0.0788127795 / (numIter) ) * samplingRateSLAM;
+%     sigmaz = ( 0.3440952487 / (numIter) ) * samplingRateSLAM;
+%     sigmaqw = ( 0.7890208235 / (numIter) ) * samplingRateSLAM;
+%     sigmaqx = ( 0.0958590889 / (numIter) ) * samplingRateSLAM;
+%     sigmaqy = ( 0.5040415918 / (numIter) ) * samplingRateSLAM;
+%     sigmaqz = ( 1.425139848 / (numIter) ) * samplingRateSLAM;   
+    
     xcov = sigmax*sigmax;
     ycov = sigmay*sigmay;
     zcov = sigmaz*sigmaz;

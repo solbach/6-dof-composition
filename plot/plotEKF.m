@@ -35,7 +35,7 @@ xlabel('x');
 ylabel('y');
 zlabel('z');
 
-% % Plot pure odometry
+% Plot pure odometry
 % [oX oY oZ] = stateVectorToXYZ(XOdom);
 % type = '--k';
 % plot3(oX', oY', oZ', type);

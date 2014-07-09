@@ -1,58 +1,20 @@
-%% Prediction Setup
-% state vector X = [ X Y Z qw qx qy qz ]
-X   = [0; 0; 0; 1; 0; 0; 0];
+function qresult = addAngleToQuaternion(q, pitch, roll, yaw)
+% This function adds angles to quaternion
+% INPUT : q quaternion (qw, q1, q2, q3)
+%         pitch pitch-angle in radians
+%         roll roll-angle in radians
+%         yaw yaw-angle in radians
+% OUTPUT: qresult result quaternion with added angles
 
-% sampling rate of the whole algorithm
-samplingRateSLAM = 2;
+    [pitchq, rollq, yawq] = quat2angle(q, 'YXZ');
+    
+    pitch = pitch + pitchq;
+    roll  = roll + rollq;
+    yaw   = yaw + yawq;
+    
+    qresult = angle2quat(pitch, roll, yaw, 'YXZ');
 
-% how many images should be discarded for the update to not perform a loop
-% closing with yourself? discards the n-th last images of the set of images
-imageDiscard = 4;
-
-% covariance matrix C
-C   = zeros( 7, 7 );
-
-% Get information about the odometry- and measurement covariance
-CovRel  = getCov(samplingRateSLAM);
-CovMeas = CovRel / 1e+10;
-
-% sampling rate of plotting the ellipsoids
-ellipSamp = 30;
-
-% Get Data
-data = rosBagFileReader(1);
-
-
-% Put some noise (due to too good odometry)
-a = 1.0;
-b = 1.0;
-r = (b-a).*rand(length(data( :, 4 )),1) + a;
-
-% Get absolute states
-aX      = data( :, 4 ) .* r;
-aY      = data( :, 5 ) .* r;
-aZ      = data( :, 6 ) .* r;
-aq1     = data( :, 7 ) .* r;
-aq2     = data( :, 8 ) .* r;
-aq3     = data( :, 9 ) .* r;
-aqw     = data( :, 10 ) .* r;
-
-% aX      = data( :, 4 );
-% aY      = data( :, 5 );
-% aZ      = data( :, 6 );
-% aq1     = data( :, 7 );
-% aq2     = data( :, 8 );
-% aq3     = data( :, 9 );
-% aqw     = data( :, 10 );
-
-% Get timestamps
-tMeasureOdo = data(:, 1);
-
-% Timestamps corresponding to elements in the state vector
-tStateOdo = 0;
-
-dt = 1;
-tt = 2:dt:length( aX );
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
