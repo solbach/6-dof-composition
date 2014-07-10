@@ -142,11 +142,12 @@ for t = tt
 
                   plotEKF;
                   drawnow;
-                 upda = 0;
+                 upda = 1;
                  if (upda == 1)
                   X  = X + K * yk;
                   d = max(max(K))
                   
+                  trajectoryError(X, XOdom, tStateOdo);
                   plotEKF;
                   drawnow;
                                     
@@ -173,6 +174,7 @@ plotEKF;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Evaluation
 calculateError;
+trajectoryError(X, XOdom, tStateOdo);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB

@@ -26,13 +26,13 @@ function COV = getCov(samplingRateSLAM)
 
 %       FOR TESTING ( Third Try )
     jitter = 1.0;
-    sigmax = 1.0e-3 * jitter;
-    sigmay = 1.0e-3 * jitter;
-    sigmaz = 1.0e-3 * jitter;
-    sigmaqw = 1.0e-3 * jitter;
-    sigmaqx = 1.0e-3 * jitter;
-    sigmaqy = 1.0e-3 * jitter;
-    sigmaqz = 1.0e-3 * jitter;
+    sigmax = 1.0e-2 * jitter;
+    sigmay = 1.0e-2 * jitter;
+    sigmaz = 1.0e-2 * jitter;
+    sigmaqw = 0.5e-2 * jitter;
+    sigmaqx = 0.5e-2 * jitter;
+    sigmaqy = 0.5e-2 * jitter;
+    sigmaqz = 0.5e-2 * jitter;
 
 %       REAL :-D
 %     sigmax = ( 0.0360267217 / (numIter) ) * samplingRateSLAM;

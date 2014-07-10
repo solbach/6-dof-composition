@@ -14,7 +14,16 @@ C   = zeros( 7, 7 );
 
 % Get information about the odometry- and measurement covariance
 CovRel  = getCov(samplingRateSLAM);
-CovMeas = CovRel / 1e+10;
+% CovMeas = CovRel / 1e+10;
+
+    CovMeas      = zeros( 7, 7 );
+    CovMeas(1,1) = CovRel(1,1) / 1e+10; % X
+    CovMeas(2,2) = CovRel(2,2) / 1e+10; % Y
+    CovMeas(3,3) = CovRel(3,3) * 1e+2; % Z
+    CovMeas(4,4) = CovRel(4,4) * 1e+2; % qw
+    CovMeas(5,5) = CovRel(5,5) * 1e+2; % q1
+    CovMeas(6,6) = CovRel(6,6) * 1e+2; % q2
+    CovMeas(7,7) = CovRel(7,7) * 1e+2; % q3
 
 % sampling rate of plotting the ellipsoids
 ellipSamp = 30;

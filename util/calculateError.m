@@ -54,11 +54,8 @@ end
 % Calculate Average Error
 numSamples = length(X)/7;
 
-sumOdom = sum(errorOdom);
-sumEKF  = sum(errorEKF);
-
-% X,Y,Z ---> 60cm less \w EKF
-% X,Y   ---> 70cm less \w EKF
+sumOdom = sum(errorOdom)
+sumEKF  = sum(errorEKF)
 
 averageErrorOdom = sumOdom / numSamples;
 averageErrorEKF  = sumEKF / numSamples;
