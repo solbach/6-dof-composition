@@ -1,5 +1,6 @@
 %% Trajectory Error between GT - Odometry and GT - EKF-Result
-function [errorOdom, errorEKF] = trajectoryError(X, XOdom, tStateOdo)
+function [errorOdom, errorEKF, diffEKF_Roll, diffEKF_Pitch, diffEKF_Yaw ...
+          diffOdom_Roll, diffOdom_Pitch, diffOdom_Yaw] = trajectoryError(X, XOdom, tStateOdo)
 % This function calculates the error between GT - Odometry and GT - EKF
 % Therefore it calculates the distance to a fixed reference point. The
 % distances are calculated always with correspondend points. Let ID a
@@ -15,7 +16,11 @@ function [errorOdom, errorEKF] = trajectoryError(X, XOdom, tStateOdo)
 %          XOdom is the pure Odometry (dead reckoning)
 %          tStateOdo are all state-timestamps up to time
 % OUTPUT : errorOdom is the error of the Odometry
-%          errorEKF is the error of tht EKF-Approach
+%          errorEKF is the error of the EKF-Approach
+%          ANGLES the error of roll, pitch and yaw for EKF and Odom
+
+% Variable for travelled meters
+traveled = 0;
 
 % Get groundtruth
 gt = rosBagFileReader(2);
@@ -42,13 +47,28 @@ end
 
 % Find reference States
 GTA   = [ dX(tsGTIndexA); dY(tsGTIndexA); dZ(tsGTIndexA) ];
+qGTA = [ dqw(tsGTIndexA); dq1(tsGTIndexA); dq2(tsGTIndexA); dq3(tsGTIndexA) ];
+[pitchGTA, rollGTA, yawGTA] = quat2angle(qGTA', 'YXZ');
+
 EKFA  = [ X(tsTrajIndexA*7-6); X(tsGTIndexA*7-5); X(tsGTIndexA*7-4) ];
+qEKFA = [ X(tsTrajIndexA*7-3); X(tsGTIndexA*7-2); X(tsGTIndexA*7-1); X(tsGTIndexA*7) ];
+[pitchEKFA, rollEKFA, yawEKFA] = quat2angle(qEKFA', 'YXZ');
+
 OdomA = [ XOdom(tsTrajIndexA*7-6); XOdom(tsGTIndexA*7-5); XOdom(tsGTIndexA*7-4) ];
+qOdomA = [ XOdom(tsTrajIndexA*7-3); XOdom(tsGTIndexA*7-2); XOdom(tsGTIndexA*7-1); XOdom(tsGTIndexA*7) ];
+[pitchOdomA, rollOdomA, yawOdomA] = quat2angle(qOdomA', 'YXZ');
 
 % Prepare error vectors. Due to this initialisation they are forced to be
 % column-vetor
 diffEKF_GTU  = [ 0; 0 ];
+diffEKF_Roll = [ 0; 0 ];
+diffEKF_Pitch = [ 0; 0 ];
+diffEKF_Yaw = [ 0; 0 ];
+
 diffOdom_GTU = [ 0; 0 ];
+diffOdom_Roll = [ 0; 0 ];
+diffOdom_Pitch = [ 0; 0 ];
+diffOdom_Yaw = [ 0; 0 ];
 
 % Find reference in the following trajectory between GT and EKF
 tsGTIndexB   = 0;
@@ -61,17 +81,27 @@ for j = tsGTIndexA:length(dT)
     if(tsTrajIndexB ~= 0)
         counter = counter +1;
 
+%         Save traveled meters
+        if(counter == 1)
+            traveled = traveled + euclidDistance( [GTA(1); GTA(2); GTA(3)], [dX(j); dY(j); dZ(j)] );
+        else
+            traveled = traveled + euclidDistance( [GTB(1); GTB(2); GTB(3)], [dX(j); dY(j); dZ(j)] );
+        end
 %         I.   Calculate the difference between GT  Point A and B
-        GTB = [ dX(j); dY(j); dZ(j) ];
-        [ diffVecGT maxVGT normVGT] = distanceVector(GTA, GTB);
+        GTB = [ dX(j); dY(j); dZ(j) ]; 
+        [ pitchGTB, rollGTB, yawGTB ] = quat2angle( [dqw(j); dq1(j); dq2(j); dq3(j)]' , 'YXZ' );
+        [ diffVecGT maxVGT normVGT ] = distanceVector(GTA, GTB);  
+        
         
 %         II.  Calculate the difference between EKF Corresponding Point A and B
         EKFB = [ X(tsTrajIndexB*7-6); X(tsTrajIndexB*7-5); X(tsTrajIndexB*7-4) ];
-        [ diffVecEKF maxVEKF normVEKF] = distanceVector(EKFA, EKFB);
+        [ pitchEKFB, rollEKFB, yawEKFB ] = quat2angle( [X(tsTrajIndexB*7-3); X(tsTrajIndexB*7-2); X(tsTrajIndexB*7-1);X(tsTrajIndexB*7)]' , 'YXZ' );
+        [ diffVecEKF maxVEKF normVEKF ] = distanceVector(EKFA, EKFB);
 
 %         III.  Calculate the difference between Odom Corresponding Point A and B
         OdomB = [ XOdom(tsTrajIndexB*7-6); XOdom(tsTrajIndexB*7-5); XOdom(tsTrajIndexB*7-4) ];
-        [ diffVecOdom maxVOdom normVOdom] = distanceVector(OdomA, OdomB);
+        [ pitchOdomB, rollOdomB, yawOdomB ] = quat2angle( [XOdom(tsTrajIndexB*7-3); XOdom(tsTrajIndexB*7-2); XOdom(tsTrajIndexB*7-1);XOdom(tsTrajIndexB*7)]' , 'YXZ' );
+        [ diffVecOdom maxVOdom normVOdom ] = distanceVector(OdomA, OdomB);
 
 %         IV.   Differences bettween each and GT
         currentDiff   = normVGT - normVEKF;
@@ -79,12 +109,37 @@ for j = tsGTIndexA:length(dT)
         
         currentDiff   = normVGT - normVOdom;
         diffOdom_GTU(counter) = sqrt( currentDiff * currentDiff );
+        
+        currentDiff   = (pitchGTB*180/pi) - (pitchEKFB*180/pi);
+        diffEKF_Pitch(counter) = sqrt( currentDiff * currentDiff );
+        currentDiff   = (rollGTB*180/pi) - (rollEKFB*180/pi);
+        diffEKF_Roll(counter) = sqrt( currentDiff * currentDiff );
+        currentDiff   = (yawGTB*180/pi) - (yawEKFB*180/pi);
+        diffEKF_Yaw(counter) = sqrt( currentDiff * currentDiff );
+        
+        currentDiff   = (pitchGTB*180/pi) - (pitchOdomB*180/pi);
+        diffOdom_Pitch(counter) = sqrt( currentDiff * currentDiff );
+        currentDiff   = (rollGTB*180/pi) - (rollOdomB*180/pi);
+        diffOdom_Roll(counter) = sqrt( currentDiff * currentDiff );
+        currentDiff   = (yawGTB*180/pi) - (yawOdomB*180/pi);
+        diffOdom_Yaw(counter) = sqrt( currentDiff * currentDiff );
+        
     end
 end
 
 % Build the sum of the error vectors
 errorOdom = sum(diffEKF_GTU)
 errorEKF  = sum(diffOdom_GTU)
+
+errorOdomPitch = sum(diffOdom_Pitch)
+errorOdomRoll = sum(diffOdom_Roll)
+errorOdomYaw = sum(diffOdom_Yaw)
+
+errorEKFPitch = sum(diffEKF_Pitch)
+errorEKFRoll = sum(diffEKF_Roll)
+errorEKFYaw = sum(diffEKF_Yaw)
+
+traveled
 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
