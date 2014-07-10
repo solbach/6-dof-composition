@@ -127,17 +127,18 @@ for j = tsGTIndexA:length(dT)
     end
 end
 
-% Build the sum of the error vectors
-errorOdom = sum(diffEKF_GTU)
-errorEKF  = sum(diffOdom_GTU)
+% Build the sum of the error vectors and divide by traveled to get the
+% error per traveled meters ratio
+errorOdom = sum(diffEKF_GTU) / traveled
+errorEKF  = sum(diffOdom_GTU) / traveled
 
-errorOdomPitch = sum(diffOdom_Pitch)
-errorOdomRoll = sum(diffOdom_Roll)
-errorOdomYaw = sum(diffOdom_Yaw)
+errorOdomPitch = sum(diffOdom_Pitch) / traveled;
+errorOdomRoll = sum(diffOdom_Roll) / traveled;
+errorOdomYaw = sum(diffOdom_Yaw) / traveled;
 
-errorEKFPitch = sum(diffEKF_Pitch)
-errorEKFRoll = sum(diffEKF_Roll)
-errorEKFYaw = sum(diffEKF_Yaw)
+errorEKFPitch = sum(diffEKF_Pitch) / traveled;
+errorEKFRoll = sum(diffEKF_Roll) / traveled;
+errorEKFYaw = sum(diffEKF_Yaw) / traveled;
 
 traveled
 
