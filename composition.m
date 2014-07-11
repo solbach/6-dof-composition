@@ -1,11 +1,26 @@
-function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2)
+function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2, noise)
 %   The actual Composition is done here. Including the calculation 
 %   of both Jacobians and the resulting covariances
+% INPUT  : X1 absolute state
+%          C1 covaraince corresponding to X1
+%          X2 relative state
+%          C2 covaraince corresponding to X2
+%          noise is a flag to perform a noise addition (1) or not (0)
 
 %   Important Notes:
-%       - This is a special version using quaternions
+%       - This version is using quaternions
 %       - The states need quaternions and should look like follows:
 %           * X = [X, Y, Z, w, x, y, z], where [w, x, y, z] = q
+
+%      put noise to the relative motion this is more likely simulating an
+%      error of the odometry
+if ( noise ~= 0 )
+%     define sigma matrix
+%     sigma for x y z qw q1 q2 q3
+    sigmas = [0.5 0.5 0.5 0.5 0.5 0.5 0.5]; 
+    SIGMA = diag(sigmas);
+    Xplus = addNoiseToState(X2, SIGMA);
+end
 
 % get quaternions from data
     q1 = [ X1(4), X1(5), X1(6), X1(7) ];
@@ -31,7 +46,7 @@ function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2)
                rot(2); ...
                rot(3); ...
                rot(4)];
-    
+           
      if nargout > 1
          
         x1 = X1(1);
@@ -72,7 +87,6 @@ Jac2 =[
             
          Cov  = Jac1 * C1 * transpose( Jac1 ) + Jac2 * C2 * transpose( Jac2 );
      end
-
 end
 
 %%
