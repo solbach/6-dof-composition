@@ -1,4 +1,4 @@
-function [zk timestampsLC status] = testImageRegistration(refTime)
+function [zk timestampsLC status posRef] = testImageRegistration(refTime)
 
 %     define output
       zk = 0;
@@ -8,9 +8,10 @@ function [zk timestampsLC status] = testImageRegistration(refTime)
 
 %     load precalculated loop closings
       data     = double( dlmread( 'bag/ROS/loop_closures_wo_errors.txt', ',' ) );
+%       data     = double( dlmread( 'bag/ROS/loop_closures.txt', ',' ) );
         
 %     find loop closing with refTime (2. Timestamp) as reference 
-      posRef = find( abs(data(:,1) - refTime) < 100000000 );
+      posRef = max(find( abs(data(:,1) - refTime) < 100000000 ));
 
       if( posRef ~= 0)
 %     save loopTime (2. Timestamp) to timestampsLC
@@ -39,4 +40,7 @@ function [zk timestampsLC status] = testImageRegistration(refTime)
         
         status = 1;
       end
+      posRef
+      posRef
+      posRef
 end

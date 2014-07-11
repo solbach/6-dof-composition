@@ -10,6 +10,7 @@ XOdom     = [0; 0; 0; 1; 0; 0; 0];
 xTemp     = [0; 0; 0; 1; 0; 0; 0];
 cPlcHldr  = zeros( 7, 7 );
 tStateOdo = tMeasureOdo(1);
+posOld    = -1;
 
 counterUpdates = 0;
 LCH  = [0, 0, 0, 0, 0, 0, 0]; 
@@ -97,8 +98,14 @@ for t = tt
 %                                                   fCurrentLoop, pathLeft );
 
 %             Test the filter with correct image registration. 
-            [zk timestampsLC status] = testImageRegistration( tMeasureOdo(t) );
-                        
+            [zk timestampsLC status pos] = testImageRegistration( tMeasureOdo(t) );
+            
+            if ( posOld == pos )
+                status = 0;
+            else
+                posOld = pos;
+            end
+            
             if( status == 1 )
 %             If status is equal to 1 we have at least one loop closing
 %             Don't forget to safe the timestamp of the reference Image
@@ -136,7 +143,7 @@ for t = tt
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
 %                   Sk = eye(7,7);
-                  K  = C * H' * inv( Sk );
+                  K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
 

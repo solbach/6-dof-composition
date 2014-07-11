@@ -129,8 +129,8 @@ end
 
 % Build the sum of the error vectors and divide by traveled to get the
 % error per traveled meters ratio
-errorOdom = sum(diffEKF_GTU) / traveled
-errorEKF  = sum(diffOdom_GTU) / traveled
+errorOdom = sum(diffOdom_GTU) / traveled
+errorEKF  = sum(diffEKF_GTU) / traveled
 
 errorOdomPitch = sum(diffOdom_Pitch) / traveled;
 errorOdomRoll = sum(diffOdom_Roll) / traveled;
