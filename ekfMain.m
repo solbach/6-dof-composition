@@ -49,7 +49,7 @@ for t = tt
         xLast     = X( ((updateCounter-2)*7)+1: (updateCounter-1)*7 );
         cLast     = C( (updateCounter-1)*7-6:(updateCounter-1)*7, (updateCounter-1)*7-6:(updateCounter-1)*7 );
 %         cLast = eye(7,7);
-        [Xnew, Cnew, Jac1, Jac2] = composition(xLast, cLast, xTempLast, CovRel); 
+        [Xnew, Cnew, Jac1, Jac2] = composition(xLast, cLast, xTempLast, CovRel, 1); 
 
 %     Let the state-, covariance and timestamp-Vector grow
         X = [ X;  Xnew ];
@@ -60,7 +60,7 @@ for t = tt
 
 %     safe the odometry for later debugging  
         xOdomLast     = XOdom( ((updateCounter-2)*7)+1: (updateCounter-1)*7 );
-        [Xnew, Cnew, Jac1, Jac2] = composition(xOdomLast, cLast, xTempLast, CovRel); 
+        [Xnew, Cnew, Jac1, Jac2] = composition(xOdomLast, cLast, xTempLast, CovRel, 1); 
         XOdom = [XOdom, Xnew];
 
 %     Reset temporal state variable of the prediction step
@@ -145,8 +145,8 @@ for t = tt
                  upda = 1;
                  if (upda == 1)
                   X  = X + K * yk;
-                  d = max(max(K))
                   
+                  d = max(max(K))
                   trajectoryError(X, XOdom, tStateOdo);
                   plotEKF;
                   drawnow;

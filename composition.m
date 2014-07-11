@@ -14,12 +14,13 @@ function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2, noise)
 
 %      put noise to the relative motion this is more likely simulating an
 %      error of the odometry
-if ( noise ~= 0 )
+if nargin == 8
 %     define sigma matrix
 %     sigma for x y z qw q1 q2 q3
-    sigmas = [0.5 0.5 0.5 0.5 0.5 0.5 0.5]; 
+    s = 3e-10;
+    sigmas = [s s s s s s s]; 
     SIGMA = diag(sigmas);
-    Xplus = addNoiseToState(X2, SIGMA);
+    X2 = addNoiseToState(X2, SIGMA)';
 end
 
 % get quaternions from data
