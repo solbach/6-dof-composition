@@ -7,7 +7,7 @@ samplingRateSLAM = 2;
 
 % how many images should be discarded for the update to not perform a loop
 % closing with yourself? discards the n-th last images of the set of images
-imageDiscard = 4;
+imageDiscard = 3;
 
 % covariance matrix C
 C   = zeros( 7, 7 );
@@ -17,13 +17,13 @@ CovRel  = getCov(samplingRateSLAM);
 % CovMeas = CovRel / 1e+10;
 
     CovMeas      = zeros( 7, 7 );
-    CovMeas(1,1) = CovRel(1,1) / 1e+10; % X
-    CovMeas(2,2) = CovRel(2,2) / 1e+10; % Y
-    CovMeas(3,3) = CovRel(3,3) * 1e+2; % Z
-    CovMeas(4,4) = CovRel(4,4) * 1e+2; % qw
-    CovMeas(5,5) = CovRel(5,5) * 1e+2; % q1
-    CovMeas(6,6) = CovRel(6,6) * 1e+2; % q2
-    CovMeas(7,7) = CovRel(7,7) * 1e+2; % q3
+    CovMeas(1,1) = CovRel(1,1) / 1e+12; % X
+    CovMeas(2,2) = CovRel(2,2) / 1e+12; % Y
+    CovMeas(3,3) = CovRel(3,3) * 1e+3; % Z
+    CovMeas(4,4) = CovRel(4,4) * 1e+3; % qw
+    CovMeas(5,5) = CovRel(5,5) * 1e+3; % q1
+    CovMeas(6,6) = CovRel(6,6) * 1e+3; % q2
+    CovMeas(7,7) = CovRel(7,7) * 1e+3; % q3
 
 % sampling rate of plotting the ellipsoids
 ellipSamp = 30;

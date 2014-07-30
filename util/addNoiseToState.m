@@ -4,8 +4,9 @@ function XNoise = addNoiseToState(X, SIGMA)
 %          SIGMA sigma matrix (7x7)
 % OUTPUT : XNoise state with noise
     
-% For reproducibility
+% For reproducibility (comment for evaluation)
     rng('default');  
+
     XNoise = mvnrnd(X,SIGMA,1);
 
 end

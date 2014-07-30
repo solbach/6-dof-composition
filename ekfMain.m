@@ -1,6 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% EVALUATION
+% For the sake of an automized evaluation...
+repetitions = 1;
+kindof = '3e-10';
+
+for oop = 1:repetitions
+
+    timeStart = cputime;
+    oop
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALISATION
-clear;
+% clear;
 
 predictionSetup;
 updateSetup;
@@ -75,7 +85,7 @@ for t = tt
         [fNameLeft, fNameRight, pos, status]= getStereoImageByTimestamp(...
                                                     tMeasureOdo(t), ...
                                                     fLeft, fRight);
-              t                     
+                                   
 %     safe fNameLeft as already observed image in a new vector
         fLoop{ end+1 } =  fNameLeft;
         
@@ -128,7 +138,7 @@ for t = tt
 %             calculated so cancel all update procedures
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
-
+                t
 %             DEBUGGING ( to show loopclosings )
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk, LCH, LCZ, XREF);
 
@@ -147,16 +157,16 @@ for t = tt
                   
 %             IV.  Update state estimate: X = X + K*yk
 
-                  plotEKF;
-                  drawnow;
+%                   plotEKF;
+%                   drawnow;
                  upda = 1;
                  if (upda == 1)
                   X  = X + K * yk;
                   
-                  d = max(max(K))
+%                   d = max(max(K))
                   trajectoryError(X, XOdom, tStateOdo);
-                  plotEKF;
-                  drawnow;
+%                   plotEKF;
+%                   drawnow;
                                     
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
@@ -180,7 +190,10 @@ plotEKF;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Evaluation
-trajectoryError(X, XOdom, tStateOdo);
+timeTotal = cputime - timeStart;
+trajectoryError(X, XOdom, tStateOdo, oop, kindof, timeTotal);
+
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB

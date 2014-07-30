@@ -54,8 +54,8 @@ end
 %%
 function f()
 %%
-    syms x1 y1 z1 q1 q2 q3 q4;
-    x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
+    syms xasdX yasdX zasdX q_wasdX q_1asdX q_2asdX q_3asdX;
+    x1 = [ xasdX, yasdX, zasdX, q_wasdX, q_1asdX, q_2asdX, q_3asdX ];
     cov = zeros( 7,7 );
     p_r = inversion(x1, cov);
     Jac = jacobian(p_r, x1)

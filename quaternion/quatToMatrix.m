@@ -1,8 +1,6 @@
+function A = quatToMatrix(q)
 % Util program to convert a quaternion to a rotation-matrix
 % Remember quaternion representation is as follows: q = [ qw q2 q3 q4]
-
-function A = quatToMatrix(q)
-
     qw = q(1);
     qx = q(2); 
     qy = q(3);
@@ -15,6 +13,15 @@ function A = quatToMatrix(q)
             2.0 *qx*qz - 2.0 *qy*qw, 2.0 *qy*qz + 2.0 *qx*qw, ...
                 1.0  - 2.0 *qx*qx - 2.0 *qy*qy, 0.0 ;
             0.0 , 0.0 , 0.0 , 1.0 ];   
+end
+
+function f()
+%%
+    syms q_w q_1 q_2 q_3;
+    q = [ q_w, q_1, q_2, q_3 ];
+    
+    A = quatToMatrix(q);
+    A
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

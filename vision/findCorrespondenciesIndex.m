@@ -21,11 +21,11 @@ function [inlierPtsLeft, inlierPtsRight, Rt, status, descLeft] = findCorresponde
     f1Red = f1(indexPairs(:, 1),:); 
     matchedPoints1 = vpts1(indexPairs(:, 1));
     matchedPoints2 = vpts2(indexPairs(:, 2));
-      
+    
 %     II.  Exclude the outliers, and compute the transformation matrix.
     [Rt, inlierPtsLeft, inlierPtsRight, status] = ...
         estimateGeometricTransform(matchedPoints1,matchedPoints2,'similarity');
-         
+    
 %     III. Update Indexlist of Descriptor, this is not done in
 %     estimateGeometricTransform() - Function by matlab
     index = zeros(inlierPtsLeft.Count, 1);

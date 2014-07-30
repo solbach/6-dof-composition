@@ -39,8 +39,7 @@ function [zk timestampsLC status posRef] = testImageRegistration(refTime)
         zk = zk';
         
         status = 1;
+                
+        posRef
       end
-      posRef
-      posRef
-      posRef
 end

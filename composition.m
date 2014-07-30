@@ -5,7 +5,7 @@ function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2, noise)
 %          C1 covaraince corresponding to X1
 %          X2 relative state
 %          C2 covaraince corresponding to X2
-%          noise is a flag to perform a noise addition (1) or not (0)
+%          noise is a flag to perform a noise addition (set) or not (unset)
 
 %   Important Notes:
 %       - This version is using quaternions
@@ -93,13 +93,14 @@ end
 %%
 function f()
 %%
-    syms x1 y1 z1 q1 q2 q3 q4 x2 y2 z2 q5 q6 q7 q8;
-    x1 = [ x1, y1, z1, q1, q2, q3, q4 ];
-    x2 = [ x2, y2, z2, q5, q6, q7, q8 ];
+    syms xasdX yasdX zasdX q_wasdX q_1asdX q_2asdX q_3asdX xasdY yasdY zasdY q_wasdY q_1asdY q_2asdY q_3asdY;
+    x1 = [ xasdX, yasdX, zasdX, q_wasdX, q_1asdX, q_2asdX, q_3asdX ];
+    x2 = [ xasdY, yasdY, zasdY, q_wasdY, q_1asdY, q_2asdY, q_3asdY ];
     cov1  = zeros( 7, 7 );
     cov2  = zeros( 7, 7 );
     [p_r cov] = composition(x1, cov1, x2, cov2);
-    Jac1 = jacobian(p_r, x1)
+    p_r;
+%     Jac1 = jacobian(p_r, x1)
     Jac2 = jacobian(p_r, x2)
 end
 

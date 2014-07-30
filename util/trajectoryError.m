@@ -1,6 +1,6 @@
 %% Trajectory Error between GT - Odometry and GT - EKF-Result
 function [errorOdom, errorEKF, diffEKF_Roll, diffEKF_Pitch, diffEKF_Yaw ...
-          diffOdom_Roll, diffOdom_Pitch, diffOdom_Yaw] = trajectoryError(X, XOdom, tStateOdo)
+          diffOdom_Roll, diffOdom_Pitch, diffOdom_Yaw] = trajectoryError(X, XOdom, tStateOdo, o, type, timeTotal)
 % This function calculates the error between GT - Odometry and GT - EKF
 % Therefore it calculates the distance to a fixed reference point. The
 % distances are calculated always with correspondend points. Let ID a
@@ -15,6 +15,8 @@ function [errorOdom, errorEKF, diffEKF_Roll, diffEKF_Pitch, diffEKF_Yaw ...
 % INPUT  : X is the EKF updated state-vector
 %          XOdom is the pure Odometry (dead reckoning)
 %          tStateOdo are all state-timestamps up to time
+%          o is the current loop iteration
+%          type which type of evaluation
 % OUTPUT : errorOdom is the error of the Odometry
 %          errorEKF is the error of the EKF-Approach
 %          ANGLES the error of roll, pitch and yaw for EKF and Odom
@@ -142,6 +144,27 @@ errorEKFYaw = sum(diffEKF_Yaw) / traveled;
 
 traveled
 
+if nargin > 3
+    output = traveled;
+    output = [output; errorOdom];
+    output = [output; errorEKF];
+    output = [output; errorOdomPitch];
+    output = [output; errorOdomRoll];
+    output = [output; errorOdomYaw];
+    output = [output; errorEKFPitch];
+    output = [output; errorEKFRoll];
+    output = [output; errorEKFYaw];
+    output = [output; timeTotal];
+
+    no = int2str(o);
+    file = 'out/';
+    file = strcat(file, type);
+    file = strcat(file, '-');
+    file = strcat(file, no);
+    file = strcat(file, '.txt');
+    dlmwrite(file, output,'precision','%.6f', 'delimiter','\n');
+end
+    
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
