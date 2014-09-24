@@ -2,29 +2,8 @@
 % It's old Code and probably it has to be change in the near future to
 % get a more dynamic experience.
 
-trajectoriyFig = figure(4);
-set(trajectoriyFig,'name','Trajectory: Blue GT, Black Odometry, Red Updated','numbertitle','off');
-clf;
+clf(trajectoriyFig);
 hold on;
-
-% if ( exist('LCH') )
-%     numLC = length( LCH ) / 7;
-%     for i = 1:numLC
-%     % Plot Loop Closings correspondencies of the state vector (hk)
-%         type = '*c';
-%         plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
-%         type = '--c';
-%         plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
-% 
-% 
-%     % Plot Loop Closings given by the measurement (zk)    
-%         type = '*m';
-%         plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
-%         type = '--m';
-%         plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
-% 
-%     end
-% end
 
 % Plot Covariance
 % III. plot error ellipsoid
@@ -37,15 +16,15 @@ zlabel('z');
 
 % Plot pure odometry
 [oX oY oZ] = stateVectorToXYZ(XOdom);
-type = '--k';
-plot3(oX', oY', oZ', type);
+type = '-xk';
+plot3(oX', oY', oZ', type, 'LineWidth',2);
 
 % Plot updated state-vector
 [cX, cY, cZ] = stateVectorToXYZ(X);
 % [pitch, roll, yaw] = stateVectorToPitchRollYaw(X);
 % trajectory_MFILE(cX, cY, cZ, pitch, roll, yaw, 800, 0.5);
-type = '--r';
-plot3(cX', cY', cZ', type);
+type = '-diamondr';
+plot3(cX', cY', cZ', type, 'LineWidth',2);
 
 
 % Plot groundtruth
@@ -68,12 +47,46 @@ q = addAngleToQuaternion(q, 0, 0, pi/2);
 
 % trajectory_MFILE(dX, dY, dZ, pitch, roll, yaw, 800, 0);
 [dX, dY, dZ] = rotatePositions(dX, dY, dZ, 0, 0, pi/2);
-type = '-b';
-plot3(dX, dY, dZ, type);
+type = '-ob';
+plot3(dX, dY, dZ, type, 'LineWidth',2);
 
+% 
+% if ( exist('LCH') )
+%     numLC = length( LCH ) / 7;
+%     for i = 1:numLC
+%     % Plot Loop Closings correspondencies of the state vector (hk)
+%         type = '-*c';
+%         plot3([XREF(1) LCH(i*7-6)], [XREF(2) LCH(i*7-5)], [XREF(3) LCH(i*7-4)], type);
+% 
+%     % Plot Loop Closings given by the measurement (zk)    
+%         type = '-squarem';
+%         plot3([XREF(1) LCZ(i*7-6)], [XREF(2) LCZ(i*7-5)], [XREF(3) LCZ(i*7-4)], type);
+%     end
+% end
+
+if ( LCH(1) ~= -1 )
+% Plot Loop Closings correspondencies of the state vector (hk)
+%         type = '-*c';
+%         plot3([XREF(1) LCH(1)], [XREF(2) LCH(2)], [XREF(3) LCH(3)], type, 'LineWidth', 2);
+
+% Plot Loop Closings given by the measurement (zk)    
+        type = '-squareg';
+%         plot3([XREF(1) LCZ(1)], [XREF(2) LCZ(2)], [XREF(3) LCZ(3)], type, 'LineWidth', 2);
+end
+
+if ( LCH(1) ~= -1 )
+%     legend('Odometry', 'EKF-SLAM', 'Ground Truth', 'Loop Closing')
+else
+    legend('Odometry', 'EKF-SLAM', 'Ground Truth')
+end
+legend('Odometry', 'EKF-SLAM', 'Ground Truth')
+
+LCH(1) = -1;
+
+%title('comparison of localization')
+grid on;
 hold off;
-axis equal;
-
+%axis equal;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.

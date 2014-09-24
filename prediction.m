@@ -1,8 +1,12 @@
 function [x cov Jac1 Jac2] = prediction( x, cov, ax1, ax2, cRel )
-
+% This function predicts the next pose
 % INPUT:    x is the current absolute pose
 %           xa1 is the first absolute pose provided by libViso
 %           xa2 is the second
+% OUTPUT:   x is a new absolute pose composed from x, ax1 and ax2
+%           cov the covariance beloning to x
+%           Jac1 Jacobian matrix 1
+%           Jac2 Jacobian matrix 2
            
     s   = relativeMotionFromAbsoluteMotionUQ(ax1, cov, ax2, cov);
 

@@ -1,43 +1,16 @@
-function [LCH LCZ XREF] = absLoopClosing(X, hk, zk)
-% This function calculates depending on the Loop Closings absolutes states
-% to display them in the later in the trajectory to illustrate the LC
-% IN  : X is the whole state vector
-%       hk Loop Closing from the point of view of the state vector
-%       zk Loop Closing from the point of view of the measurement
-% OUT : LCH absolute states with respect to hk
-%       LCZ absolute state with respect to zk
-%       XREF absolute reference state
+function videoWriter(write, writerObj)
+% This function writes the current figure to a compressed AVI file, 
+% using Motion JPEG codec 
+% INPUT:    start is a variable which will, if 1, write to the file 
+%           and otherwise to close
 
-C = zeros(7,7);
-
-% if ( LCH(1) == 0 )
-%     allreadyFound = length(LCH)-7;
-% else
-%     allreadyFound = length(LCH)
-% end
-numLC = length( hk ) / 7;
-% 
-% XREF(allreadyFound+1:allreadyFound+7) = X(end-6:end);
-
-XREF = X(end-6:end);
-
-for i = 1:numLC
-%     hkTemp = hk(i*7-6:i*7);
-%     LCH(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, hkTemp, C);
-%     
-%     zkTemp = zk(i*7-6:i*7);
-%     LCZ(i*7-6+allreadyFound:i*7+allreadyFound) = composition(XREF, C, zkTemp, C);
-
-    hkTemp = hk(i*7-6:i*7);
-    LCH(i*7-6:i*7) = composition(XREF, C, hkTemp, C);
-    
-    zkTemp = zk(i*7-6:i*7);
-    LCZ(i*7-6:i*7) = composition(XREF, C, zkTemp, C);
-    
+if write == 1
+    frame = getframe;
+    writeVideo(writerObj,frame);
+else
+    close(writerObj);
 end
-
-end
-
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
 % All rights reserved.

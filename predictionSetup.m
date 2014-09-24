@@ -7,7 +7,7 @@ samplingRateSLAM = 2;
 
 % how many images should be discarded for the update to not perform a loop
 % closing with yourself? discards the n-th last images of the set of images
-imageDiscard = 3;
+imageDiscard = 0;
 
 % covariance matrix C
 C   = zeros( 7, 7 );

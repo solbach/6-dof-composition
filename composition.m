@@ -14,10 +14,10 @@ function [Xplus Cov Jac1 Jac2] = composition(X1, C1, X2, C2, noise)
 
 %      put noise to the relative motion this is more likely simulating an
 %      error of the odometry
-if nargin == 8
+if nargin == 5
 %     define sigma matrix
 %     sigma for x y z qw q1 q2 q3
-    s = 3e-10;
+    s = 3e-9;
     sigmas = [s s s s s s s]; 
     SIGMA = diag(sigmas);
     X2 = addNoiseToState(X2, SIGMA)';

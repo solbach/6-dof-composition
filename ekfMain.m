@@ -2,12 +2,22 @@
 %% EVALUATION
 % For the sake of an automized evaluation...
 repetitions = 1;
-kindof = '3e-10';
+kindof = '3e-9';
+
+writerObj = VideoWriter('out/writerTest.avi');
+open(writerObj);
 
 for oop = 1:repetitions
 
     timeStart = cputime;
     oop
+    
+    trajectoriyFig = figure(4);
+    clf(trajectoriyFig);
+    set(trajectoriyFig,'name','Trajectory: Blue GT, Black Odometry, Red Updated','numbertitle','off');
+    title('comparison of localization')
+    set(trajectoriyFig, 'Position', [0 0 1600 900])
+        
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALISATION
 % clear;
@@ -23,13 +33,15 @@ tStateOdo = tMeasureOdo(1);
 posOld    = -1;
 
 counterUpdates = 0;
-LCH  = [0, 0, 0, 0, 0, 0, 0]; 
-LCZ  = [0, 0, 0, 0, 0, 0, 0];
-XREF = [0, 0, 0, 0, 0, 0, 0];
+% LCH  = [0, 0, 0, 0, 0, 0, 0]; 
+LCH(1) = -1;
+% LCZ  = [0, 0, 0, 0, 0, 0, 0];
+% XREF = [0, 0, 0, 0, 0, 0, 0];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN LOOP
 for t = tt
+
 %%     PREDICTION STEP
 % xa1 is the first absolute Pose provided by libViso
 % xa2 the second
@@ -53,6 +65,11 @@ for t = tt
         
 %     Only perform state augmentation and update every n Iterations.
     if ( mod(t, samplingRateSLAM) == 0 )
+        
+%         plotEKF;    
+%         drawnow;
+%         frame = getframe(trajectoriyFig);
+%         writeVideo(writerObj, frame);
         
 %%     STATE AUGMENTATION STEP
         updateCounter = length( X ) / 7 + 1;
@@ -80,6 +97,7 @@ for t = tt
 %%      UPDATE STEP
 %     Try to find Loop closing candidate with a certain sampling rate
     if mod(t,loopSample) == 0
+        
 %     Load Stereo Images from Database 
 %       ( --> corresponding to the current timestamp of the odometry)
         [fNameLeft, fNameRight, pos, status]= getStereoImageByTimestamp(...
@@ -139,9 +157,10 @@ for t = tt
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
                 t
+                t
+                t
 %             DEBUGGING ( to show loopclosings )
-                [LCH LCZ XREF] = absLoopClosing(X, hk, zk, LCH, LCZ, XREF);
-
+                [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 %             I.   Innovation: yk = zk - hk
                   yk = innovation(zk, hk);
 %                     yk = abs(zk) - abs(hk);
@@ -161,12 +180,15 @@ for t = tt
 %                   drawnow;
                  upda = 1;
                  if (upda == 1)
+%                   plotEKF;    
+%                   drawnow;
+%                   frame = getframe(trajectoriyFig);
+%                   writeVideo(writerObj, frame);
+     
                   X  = X + K * yk;
                   
 %                   d = max(max(K))
                   trajectoryError(X, XOdom, tStateOdo);
-%                   plotEKF;
-%                   drawnow;
                                     
 %             V.   update covariance estimate: C = ( 1-K*H ) * C
                   prodKH = K*H;
@@ -187,6 +209,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PLOT EVERYTHING
 plotEKF;
+drawnow;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Evaluation
@@ -198,6 +221,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB
 % clearMATLAB;
+frame = getframe(trajectoriyFig);
+%writeVideo(writerObj,frame);
+close(writerObj);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
