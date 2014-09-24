@@ -1,22 +1,10 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% EVALUATION
-% For the sake of an automized evaluation...
-repetitions = 1;
-kindof = '3e-9';
-
-writerObj = VideoWriter('out/writerTest.avi');
-open(writerObj);
-
-for oop = 1:repetitions
-
-    timeStart = cputime;
-    oop
+timeStart = cputime;
     
-    trajectoriyFig = figure(4);
-    clf(trajectoriyFig);
-    set(trajectoriyFig,'name','Trajectory: Blue GT, Black Odometry, Red Updated','numbertitle','off');
-    title('comparison of localization')
-    set(trajectoriyFig, 'Position', [0 0 1600 900])
+trajectoriyFig = figure(4);
+clf(trajectoriyFig);
+set(trajectoriyFig,'name','Trajectory: Blue GT, Black Odometry, Red Updated','numbertitle','off');
+title('comparison of localization')
+set(trajectoriyFig, 'Position', [0 0 1600 900])
         
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% INITIALISATION
@@ -68,8 +56,6 @@ for t = tt
         
 %         plotEKF;    
 %         drawnow;
-%         frame = getframe(trajectoriyFig);
-%         writeVideo(writerObj, frame);
         
 %%     STATE AUGMENTATION STEP
         updateCounter = length( X ) / 7 + 1;
@@ -156,14 +142,11 @@ for t = tt
 %             calculated so cancel all update procedures
               if ( numLC ~= 0 )
 %             perform UPDATE for all found loop closings
-                t
-                t
-                t
+
 %             DEBUGGING ( to show loopclosings )
                 [LCH LCZ XREF] = absLoopClosing(X, hk, zk);
 %             I.   Innovation: yk = zk - hk
                   yk = innovation(zk, hk);
-%                     yk = abs(zk) - abs(hk);
 
 %             II.  Innovation covariance: Sk = H * C * H^T + Rk 
 %                  Build covariance Rk depending on #Loopclosings
@@ -171,13 +154,12 @@ for t = tt
                   Sk = H * C * H' + Rk;
 
 %             III. Kalman gain: K = C * H^T * Sk^-1
-%                   Sk = eye(7,7);
                   K  = (C * H') / Sk;
                   
 %             IV.  Update state estimate: X = X + K*yk
 
-%                   plotEKF;
-%                   drawnow;
+                  plotEKF;
+                  drawnow;
                  upda = 1;
                  if (upda == 1)
 %                   plotEKF;    
@@ -212,18 +194,8 @@ plotEKF;
 drawnow;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Evaluation
-timeTotal = cputime - timeStart;
-trajectoryError(X, XOdom, tStateOdo, oop, kindof, timeTotal);
-
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SHUTTING DOWN MATLAB
 % clearMATLAB;
-frame = getframe(trajectoriyFig);
-%writeVideo(writerObj,frame);
-close(writerObj);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Copyright (c) 2014, Markus Solbach
