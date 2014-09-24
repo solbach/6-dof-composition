@@ -1,19 +1,27 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function [dx dy dz] = rotatePositions(dx, dy, dz, pitch, roll, yaw)
+% This function rotates x-, y- and z-vectors around a certain angle
+% INPUT  : dx column vector with all x-coordinates
+%          dy column vector with all y-coordinates
+%          dz column vector with all z-coordinates
+%          pitch rotates all elements around pitch (given in radians)
+%          roll rotates all elements around roll (given in radians)
+%          yaw rotates all elements around yaw (given in radians)
+% OUTPUT : same as input but rotated
 
-function out = rosBagFileReader(c)
+    R = angle2dcm( pitch, roll, yaw, 'YXZ' );    
+    t = [0;0;0];
     
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end           
+    for i = 1:length(dx)
+        t(1) = dx(i);
+        t(2) = dy(i);
+        t(3) = dz(i);
+        
+        t = R * t;    
+        
+        dx(i) = t(1);
+        dy(i) = t(2);
+        dz(i) = t(3);
+    end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,19 +1,18 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function distance = euclidDistance( pos1, pos2 )
+% This function calculates the euclidean distance between two given points
+% INPUT  : pos1 first position
+%          pos2 second position
+% OUTPUT : distance euclidean distance between both points
 
-function out = rosBagFileReader(c)
-    
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end           
+% calculate difference in x, y and z direction
+diffX = pos1(1) - pos2(1);
+diffY = pos1(2) - pos2(2);
+diffZ = pos1(3) - pos2(3);
+
+% calculate euclidean distance d = sqrt(x²+y²+...+n²)
+
+distance = sqrt(diffX*diffX + diffY*diffY + diffZ*diffZ);
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,19 +1,14 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
-
-function out = rosBagFileReader(c)
+function XNoise = addNoiseToState(X, SIGMA)
+% This function adds zero mean noise to a given state
+% INPUT  : X state as follows X = [x y z qw q1 q2 q3]
+%          SIGMA sigma matrix (7x7)
+% OUTPUT : XNoise state with noise
     
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end           
+% For reproducibility (comment for evaluation)
+    rng('default');  
+
+    XNoise = mvnrnd(X,SIGMA,1);
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

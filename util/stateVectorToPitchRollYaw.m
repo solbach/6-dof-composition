@@ -1,19 +1,16 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function [pitch roll yaw] = stateVectorToPitchRollYaw(XState)
+% This function takes a state vector and returns three vectors with in each
+% is one dimension (x, y or z) of all positions saved 
 
-function out = rosBagFileReader(c)
+    qw = XState(4 : 7 : end);
+    q1 = XState(5 : 7 : end);
+    q2 = XState(6 : 7 : end);
+    q3 = XState(7 : 7 : end);
     
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end           
+    q = [qw, q1, q2, q3];
+    
+    [pitch roll yaw] = quat2angle(q, 'YXZ');
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

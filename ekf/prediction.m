@@ -1,19 +1,17 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function [x cov Jac1 Jac2] = prediction( x, cov, ax1, ax2, cRel )
+% This function predicts the next pose
+% INPUT:    x is the current absolute pose
+%           xa1 is the first absolute pose provided by libViso
+%           xa2 is the second
+% OUTPUT:   x is a new absolute pose composed from x, ax1 and ax2
+%           cov the covariance beloning to x
+%           Jac1 Jacobian matrix 1
+%           Jac2 Jacobian matrix 2
+           
+    s   = relativeMotionFromAbsoluteMotionUQ(ax1, cov, ax2, cov);
 
-function out = rosBagFileReader(c)
+    [x cov Jac1 Jac2] = composition(x, cov, s, cRel);    
     
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end           
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

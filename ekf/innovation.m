@@ -1,19 +1,22 @@
-% Util program to read ROS visual odometry data
-%   input:    filename
-%   output:   Vector of Vector
+function yk = innovation(zk, hk)
+% This function applies a pure innovation to the position (x,y,z) and a
+% special innovation to the orientation part (qw, q1, q2, q3) as follows:
+%   quaternions --> abs(q1) - abs(q2)
+% INPUT : zk loopclosings from imageregistrations
+%         hk loopclosing from statevector
+% OUTPUT: yk innovation calculated as stated above
 
-function out = rosBagFileReader(c)
-    
-    if c == 1
-%         out     = double( dlmread( 'bag/viso2_online_optima3_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/testSet/odo_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/viso2_loop_pool_optical_edit.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/small/viso2_loop_pool_optical_edit_small.txt', ',' ) );
-%         out     = double( dlmread( 'bag/new/fovis_amphoras.txt', ',' ) );
-        out     = double( dlmread( 'bag/ROS/viso2edit.txt', ',' ) );
-    else
-        out     = double( dlmread( 'bag/gt2_adapted.txt', ',' ) );
-    end           
+yk = zk - hk;
+
+for i=1:length(zk)/7
+
+    qZk = zk(i*7-3:i*7);
+    qHk = hk(i*7-3:i*7);   
+         
+    yk(i*7-3:i*7) = abs(qZk) - abs(qHk);     
+
+end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

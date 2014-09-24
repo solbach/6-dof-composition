@@ -1,29 +1,21 @@
-composition6DOF
-===============
+6 DOF EKF SLAM in Underwater Environments
+==========================================
 
-* IN PROGRESS (not completed yet, project clean up is really needed)
+* Correcting visual odometry by the usage of an EKF SLAM approach
 * Full 3D Frame Composition with six degrees of freedom
-* Transformation Composition-Function using Quaternions
-* Transformation Inversion-Function using Quaternions
-* Jacobians
-* Covariances
+* Usage of Quaternions to represent the orientation
+* Jacobian Matrices
 * A lot of Utilization-Function
-	* relative motion from absolute motion 
- 	* rosbag (visualodometry message) reader (really simple --> uses a pre-captured text file)
-	* quaternion to rotation-matrix
-	* invert quaternion
-	* multiplication quaternion
 * Simple Simulator
-* Written in Matlab (should also work with Octave)
-* More information can be taken from COMPOSITION.m
+* Written in Matlab (Usage of only One CPU Core)
 
 ## Prerequisite
 * OpenCV (>=2.4.0)
 * mexopencv [1]
 
 ## Install
-* add util subfolder to matlab paths
-* run compMainUQ.m
+* add all subfolder to matlab paths
+* run ekfMain.m
 
 ## My Setup
 * Ubuntu 12.04
